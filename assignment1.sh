@@ -35,37 +35,37 @@ total_questions=0
 echo -e "$CP Assignment 1 Verification $CW"
 
 echo -ne "$CY At least 2 GB of Memory"
+total_questions+=1
 if [[ $(grep MemTotal /proc/meminfo | awk '{print $2}') -gt 1548288 ]]; then
     echo -e "$CG OK $CR"
-    correct_answers=correct_answers+1
-    total_questions=total_questions+1
+    correct_answers+=1
 else
     echo -e "$CR ERROR $CG"
 fi
 
 echo -ne "$CY One Virtual Disk of at least 20 GB in size (Fixed size)"
+total_questions+=1
 if [[ $(df -h / | awk '{print $2}' | tail -1 | sed '{s/G//g}') -gt 15 ]]; then
     echo -e "$CG OK $CR"
-    correct_answers=correct_answers+1
-    total_questions=total_questions+1
+    correct_answers+=1
 else
     echo -e "$CR ERROR $CG"
 fi
 
 echo -ne "$CY At least 1 CPU"
+total_questions+=1
 if [[ $(grep processor /proc/cpuinfo | wc -l) -gt 0 ]]; then
     echo -e "$CG OK $CR"
-    correct_answers=correct_answers+1
-    total_questions=total_questions+1
+    correct_answers+=1
 else
     echo -e "$CR ERROR $CG"
 fi
 
 echo -ne "$CY Ensure the Virtual Machine can reach the Internet"
+total_questions+=1
 if [[ $(wget -q --spider http://google.com; echo $?) -eq 0 ]]; then
     echo -e "$CG OK $CR"
-    correct_answers=correct_answers+1
-    total_questions=total_questions+1
+    correct_answers+=1
 else
     echo -e "$CR ERROR $CG"
 fi 
