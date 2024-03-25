@@ -32,12 +32,12 @@ CW='\e[0;37m' # White
 correct_answers=0
 total_questions=0
 
-pass() {
+_pass() {
    echo -e "$CG PASS $CR"
     ((correct_answers++))
 }
 
-fail() {
+_fail() {
    echo -e "$CR FAIL $CG"
 }
 
@@ -47,19 +47,19 @@ echo -e "$CC ===================================================="
 
 echo -ne "$CY At least 2 GB of Memory"
 ((total_questions++))
-if [[ $(grep MemTotal /proc/meminfo | awk '{print $2}') -gt 1548288 ]]; then pass; else fail; fi
+if [[ $(grep MemTotal /proc/meminfo | awk '{print $2}') -gt 1548288 ]]; then _pass; else _fail; fi
 
 echo -ne "$CY One Virtual Disk of at least 20 GB in size (Fixed size)"
 ((total_questions++))
-if [[ $(df -h / | awk '{print $2}' | tail -1 | sed '{s/G//g}') -gt 15 ]]; then pass; else fail; fi
+if [[ $(df -h / | awk '{print $2}' | tail -1 | sed '{s/G//g}') -gt 15 ]]; then _pass; else _fail; fi
 
 echo -ne "$CY At least 1 CPU"
 ((total_questions++))
-if [[ $(grep processor /proc/cpuinfo | wc -l) -gt 0 ]]; then pass; else fail; fi
+if [[ $(grep processor /proc/cpuinfo | wc -l) -gt 0 ]]; then _pass; else _fail; fi
 
 echo -ne "$CY Ensure the Virtual Machine can reach the Internet"
 ((total_questions++))
-if [[ $(wget -q --spider http://google.com; echo $?) -eq 0 ]]; then pass; else fail; fi
+if [[ $(wget -q --spider http://google.com; echo $?) -eq 0 ]]; then _pass; else _fail; fi
 
 (( final_grade = (100 / ${total_questions}) * ${correct_answers} ))
 echo -e "$CP FINAL GRADE: $CC ${final_grade} $CW"
