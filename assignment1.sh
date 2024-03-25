@@ -41,26 +41,25 @@ fail() {
    echo -e "$CR FAIL $CG"
 }
 
-echo ""
 echo -e "$CC ===================================================="
 echo -e "$CP Assignment 1 Verification $CW"
 echo -e "$CC ===================================================="
 
 echo -ne "$CY At least 2 GB of Memory"
 ((total_questions++))
-[[ $(grep MemTotal /proc/meminfo | awk '{print $2}') -gt 1548288 ]] || pass && fail;
+if [[ $(grep MemTotal /proc/meminfo | awk '{print $2}') -gt 1548288 ]]; then pass; else fail; fi
 
 echo -ne "$CY One Virtual Disk of at least 20 GB in size (Fixed size)"
 ((total_questions++))
-[[ $(df -h / | awk '{print $2}' | tail -1 | sed '{s/G//g}') -gt 15 ]] || pass && fail;
+if [[ $(df -h / | awk '{print $2}' | tail -1 | sed '{s/G//g}') -gt 15 ]]; then pass; else fail; fi
 
 echo -ne "$CY At least 1 CPU"
 ((total_questions++))
-[[ $(grep processor /proc/cpuinfo | wc -l) -gt 0 ]] || pass && fail;
+if [[ $(grep processor /proc/cpuinfo | wc -l) -gt 0 ]]; then pass; else fail; fi
 
 echo -ne "$CY Ensure the Virtual Machine can reach the Internet"
 ((total_questions++))
-[[ $(wget -q --spider http://google.com; echo $?) -eq 0 ]] || pass && fail;
+if [[ $(wget -q --spider http://google.com; echo $?) -eq 0 ]]; then pass; else fail; fi
 
 (( final_grade = (100 / ${total_questions}) * ${correct_answers} ))
 echo -e "$CP FINAL GRADE: $CC ${final_grade} $CW"
