@@ -32,43 +32,35 @@ CW='\e[0;37m' # White
 correct_answers=0
 total_questions=0
 
+pass() {
+   echo -e "$CG PASS $CR"
+    ((correct_answers++))
+}
+
+fail() {
+   echo -e "$CR FAIL $CG"
+}
+
+echo ""
+echo -e "$CC ===================================================="
 echo -e "$CP Assignment 1 Verification $CW"
+echo -e "$CC ===================================================="
 
 echo -ne "$CY At least 2 GB of Memory"
 ((total_questions++))
-if [[ $(grep MemTotal /proc/meminfo | awk '{print $2}') -gt 1548288 ]]; then
-    echo -e "$CG OK $CR"
-    ((correct_answers++))
-else
-    echo -e "$CR ERROR $CG"
-fi
+[[ $(grep MemTotal /proc/meminfo | awk '{print $2}') -gt 1548288 ]] || pass && fail
 
 echo -ne "$CY One Virtual Disk of at least 20 GB in size (Fixed size)"
 ((total_questions++))
-if [[ $(df -h / | awk '{print $2}' | tail -1 | sed '{s/G//g}') -gt 15 ]]; then
-    echo -e "$CG OK $CR"
-    ((correct_answers++))
-else
-    echo -e "$CR ERROR $CG"
-fi
+[[ $(df -h / | awk '{print $2}' | tail -1 | sed '{s/G//g}') -gt 15 ]] || pass && fail
 
 echo -ne "$CY At least 1 CPU"
 ((total_questions++))
-if [[ $(grep processor /proc/cpuinfo | wc -l) -gt 0 ]]; then
-    echo -e "$CG OK $CR"
-    ((correct_answers++))
-else
-    echo -e "$CR ERROR $CG"
-fi
+[[ $(grep processor /proc/cpuinfo | wc -l) -gt 0 ]] || pass && fail
 
 echo -ne "$CY Ensure the Virtual Machine can reach the Internet"
 ((total_questions++))
-if [[ $(wget -q --spider http://google.com; echo $?) -eq 0 ]]; then
-    echo -e "$CG OK $CR"
-    ((correct_answers++))
-else
-    echo -e "$CR ERROR $CG"
-fi 
+[[ $(wget -q --spider http://google.com; echo $?) -eq 0 ]] || pass && fail
 
 (( final_grade = (100 / ${total_questions}) * ${correct_answers} ))
 echo -e "$CP FINAL GRADE: $CC ${final_grade} $CW"
