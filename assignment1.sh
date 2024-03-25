@@ -71,5 +71,5 @@ else
 fi 
 
 (( final_grade = (100 / ${total_questions}) * ${correct_answers} ))
-echo -e "$CP FINAL GRADE: ${final_grade} $CW"
+echo -e "$CP FINAL GRADE: $CC ${final_grade} $CW"
 echo ""
