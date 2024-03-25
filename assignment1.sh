@@ -48,19 +48,19 @@ echo -e "$CC ===================================================="
 
 echo -ne "$CY At least 2 GB of Memory"
 ((total_questions++))
-[[ $(grep MemTotal /proc/meminfo | awk '{print $2}') -gt 1548288 ]] || pass && fail
+[[ $(grep MemTotal /proc/meminfo | awk '{print $2}') -gt 1548288 ]] || fail && pass
 
 echo -ne "$CY One Virtual Disk of at least 20 GB in size (Fixed size)"
 ((total_questions++))
-[[ $(df -h / | awk '{print $2}' | tail -1 | sed '{s/G//g}') -gt 15 ]] || pass && fail
+[[ $(df -h / | awk '{print $2}' | tail -1 | sed '{s/G//g}') -gt 15 ]] || fail && pass
 
 echo -ne "$CY At least 1 CPU"
 ((total_questions++))
-[[ $(grep processor /proc/cpuinfo | wc -l) -gt 0 ]] || pass && fail
+[[ $(grep processor /proc/cpuinfo | wc -l) -gt 0 ]] || fail && pass
 
 echo -ne "$CY Ensure the Virtual Machine can reach the Internet"
 ((total_questions++))
-[[ $(wget -q --spider http://google.com; echo $?) -eq 0 ]] || pass && fail
+[[ $(wget -q --spider http://google.com; echo $?) -eq 0 ]] || fail && pass
 
 (( final_grade = (100 / ${total_questions}) * ${correct_answers} ))
 echo -e "$CP FINAL GRADE: $CC ${final_grade} $CW"
