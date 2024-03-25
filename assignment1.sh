@@ -70,11 +70,5 @@ else
     echo -e "$CR ERROR $CG"
 fi 
 
-final_grade = ( 100.0 / ${total_questions} ) * ${correct_answers}
+final_grade=( 100.0 / ${total_questions} ) * ${correct_answers}
 echo -ne "$CP FINAL GRADE: ${final_grade} $CW"
-
-
-
-
-
-
