@@ -6,19 +6,16 @@
 # Purpose: This script will run the verifications of assignment 1
 
 # CHALLENGE:
-#
-# Install Virtualization Software (VirtualBox, VMWare, Qemu, or HyperV) 
-# on your computer (VirtualBox is recommended for its user-friendly interface). 
-# Once installed, create a Virtual Machine and install a Linux server using the latest 
-# Fedora Workstation Image from The Fedora Project
-#
-# Ensure your virtual machine meets the following minimal requirements:
-#
-#    At least 2 GB of Memory
-#    One Virtual Disk of at least 20 GB in size (Fixed size)
-#    At least 1 CPU
-#    Ensure the Virtual Machine can reach the Internet
-# 
+# Create a script named sysmonitor.sh and position it in the /sysadm/bin Directory. 
+# This script should serve as a tool to monitor system resources, providing a concise output with critical performance information.
+# The script should generate the following output featuring the relevant details:
+# Performance Report
+#     Hostname:
+#     Date:
+#     Load Average:
+#     Number of CPUs:
+#     Total Memory:
+#     Total SWAP:
 
 CB='\e[0;30m' # Black - Regular
 CR='\e[0;31m' # Red

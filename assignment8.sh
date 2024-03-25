@@ -15,17 +15,12 @@ CC='\e[0;36m' # Cyan
 CW='\e[0;37m' # White
 
 TITLE="Assignment 8 Verification"
+
+echo ""
 echo -e "$CP $TITLE $CW"
-
-echo -e "$CY Congratulations on completing the class! $CW"
-echo -e "$CG You've undoubtedly gained a lot of knowledge, and while questions may arise, continuous practice is the key to solidifying your skills. $CW"
-echo -e "$CL With dedication, you'll soon find yourself evolving into a Linux expert.
- $CW"
-echo -e "$CP Embrace the world of Linux! $CW"
+echo -e "$CL Congratulations on completing the class! $CW"
+echo -e "$CY You've undoubtedly gained a lot of knowledge, and while questions may arise, continuous practice is the key to solidifying your skills. $CW"
+echo -e "$CL With dedication, you'll soon find yourself evolving into a Linux expert. $CW"
+echo -e "$CY Embrace the world of Linux! $CW"
 echo -e "$CC Wishing you the best of luck on your journey! $CW"
-
-
-cat /hosted.file
-echo "Adding a line to the file..." > /hosted.file
-touch /hosted.file2
-
+echo ""
