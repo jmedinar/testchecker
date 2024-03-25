@@ -3,18 +3,33 @@
 # Author: Professor Juan Medina
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
-# Purpose: This script will run the verifications of assignment 1
 
-CB='\e[0;30m' # Black - Regular
-CR='\e[0;31m' # Red
-CG='\e[0;32m' # Green
-CY='\e[0;33m' # Yellow
-CL='\e[0;34m' # Blue
-CP='\e[0;35m' # Purple
-CC='\e[0;36m' # Cyan
-CW='\e[0;37m' # White
+# Black           # Red             # Green         # Yellow
+CB='\e[0;30m';    CR='\e[0;31m';    CG='\e[0;32m';  CY='\e[0;33m';
+# Blue            # Purple          # Cyan          # White
+CL='\e[0;34m';    CP='\e[0;35m';    CC='\e[0;36m';  CW='\e[0;37m'; 
 
-TITLE="Assignment 8 Verification"
+version=8
+correct_answers=0
+total_questions=0
+
+_msg() {
+   echo -ne "$CY $1"
+   ((total_questions++))
+}
+
+_pass() {
+   echo -e "$CG PASS $CR"
+   ((correct_answers++))
+}
+
+_fail() {
+   echo -e "$CR FAIL $CG"
+}
+
+echo -e "$CC ===================================================="
+echo -e "$CP Assignment ${version} Verification $CW"
+echo -e "$CC ===================================================="
 
 echo ""
 echo -e "$CP $TITLE $CW"
