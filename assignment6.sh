@@ -38,8 +38,7 @@ $CY Please submit the $CL SOURCE CODE $CY of your $CW sysmonitor.sh $CY script o
 # _msg "Verifying sysmonitor.sh"
 #     if [[ $(/sysadm/bin/processFile.sh /etc/passwd 2>&1 | grep method | wc -l) -eq 0 ]]; then _pass; else _fail; fi
     
-# (( final_grade = (100 / ${total_questions}) * ${correct_answers} ))
-# echo -e "$CP FINAL GRADE: $CC ${final_grade} $CW"
+#printf "$CP FINAL GRADE: $CC %.0f $CW" $(echo "(100/$total_questions)*$correct_answers" | bc -l)
 # echo ""
 
 # CHALLENGE:

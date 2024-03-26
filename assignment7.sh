@@ -32,22 +32,21 @@ echo -e "$CP Assignment ${version} Verification $CW"
 echo -e "$CC ===================================================="
 
 _msg "The cheese application has been successfully uninstalled"
-    if [[ $(rpm -qa | grep cheese-[[:digit:]] &>/dev/null; echo $?) -ne 0 ]]; then _pass; else _fail; fi
-          
-_msg "Apache must be installed"
-    if [[ $(rpm -qa | grep ^httpd-[[:digit:]] &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-    
-_msg "Typora must be installed"
-    if [[ $(ls /opt/bin/T*/Typora &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-    
-_msg "TuxPaint must be installed"
-    if [[ $(rpm -qa | grep tuxpaint &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-    
-_msg "Created website"
-    if [[ $(grep -E "Assignment 7|Learning Linux" /var/www/html/index.html &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-    
-(( final_grade = (100 / ${total_questions}) * ${correct_answers} ))
-echo -e "$CP FINAL GRADE: $CC ${final_grade} $CW"
+if [[ $(rpm -qa | grep cheese-[[:digit:]] &>/dev/null; echo $?) -ne 0 ]]; then _pass; else _fail; fi
+
+_msg "Apache(httpd) must be installed"
+if [[ $(rpm -qa | grep ^httpd-[[:digit:]] &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
+
+_msg "Typora must be installed at the /opt directory"
+if [[ $(ls /opt/bin/T*/Typora &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
+
+_msg "The TuxPaint application must be installed"
+if [[ $(rpm -qa | grep tuxpaint &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
+
+_msg "The requested website was created"
+if [[ $(grep -E "Assignment 7|Learning Linux" /var/www/html/index.html &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
+
+printf "$CP FINAL GRADE: $CC %.0f $CW" $(echo "(100/$total_questions)*$correct_answers" | bc -l)
 echo ""
 
 # CHALLENGE:
@@ -63,3 +62,4 @@ echo ""
 #         <p>Learning Linux.</p>
 #     </body>
 # </html>
+#

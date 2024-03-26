@@ -31,20 +31,19 @@ echo -e "$CC ===================================================="
 echo -e "$CP Assignment ${version} Verification $CW"
 echo -e "$CC ===================================================="
 
-_msg "At least 2 GB of Memory"
+_msg "Memory:"
    if [[ $(grep MemTotal /proc/meminfo | awk '{print $2}') -gt 1548288 ]]; then _pass; else _fail; fi
 
-_msg "One Virtual Disk of at least 20 GB in size (Fixed size)"
+_msg "Disk:"
    if [[ $(df -h / | awk '{print $2}' | tail -1 | sed '{s/G//g}') -gt 15 ]]; then _pass; else _fail; fi
 
-_msg "At least 1 CPU"
+_msg "CPU:"
    if [[ $(grep processor /proc/cpuinfo | wc -l) -gt 0 ]]; then _pass; else _fail; fi
 
-_msg "Ensure the Virtual Machine can reach the Internet"
+_msg "Internet:"
    if [[ $(wget -q --spider http://google.com; echo $?) -eq 0 ]]; then _pass; else _fail; fi
 
-(( final_grade = (100 / ${total_questions}) * ${correct_answers} ))
-echo -e "$CP FINAL GRADE: $CC ${final_grade} $CW"
+printf "$CP FINAL GRADE: $CC %.0f $CW" $(echo "(100/$total_questions)*$correct_answers" | bc -l)
 echo ""
 
 # CHALLENGE:

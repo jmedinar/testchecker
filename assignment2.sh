@@ -34,34 +34,40 @@ echo -e "$CC ===================================================="
 report="/home/$(who am i | awk '{print $1}')/backup/system-backup.info"
 
 _msg "System report file exist ~/backup/system-backup.info"
-    if [[ $(ls -l ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
+if [[ $(ls -l ${report} &>/dev/null; echo $?) -eq 0 ]]
+then 
+    _pass
 
-_msg "The Fully Qualified Domain Name FQDN hostname of the system"
-    if [[ $(grep $(hostname -f) ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
+    _msg "Full Hostname:"
+        if [[ $(grep $(hostname -f) ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
 
-_msg "The current date of the system"
-    if [[ $(grep 'CDT $(date +%Y)' ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-        
-_msg "The uptime information of the system"
-    if [[ $(grep "load average" ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-        
-_msg "Contains your lastname in the proper format"
-    if [[ $(grep 'LASTNAME' ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
+    _msg "Current Date:"
+        if [[ $(grep -E 'CDT|$(date +%Y)' ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
 
-_msg "The internal content of the /etc/resolv.conf file"
-    if [[ $(grep 'nameserver' ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-    
-_msg "The list of files in the folder /var/log/ sorted alphabetically"
-    if [[ $(grep 'boot.log' ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-    
-_msg "The report of file system space usage for the /home folder"
-    if [[ $(grep 'Filesystem' ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-    
-_msg "The output of the 'apropos uname' command without the word 'kernel'"
-    if [[ $(grep uname ${report} | grep kernel &>/dev/null; echo $?) -ne 0 ]]; then _pass; else _fail; fi
+    _msg "Uptime Information:"
+        if [[ $(grep "load average" ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
 
-(( final_grade = (100 / ${total_questions}) * ${correct_answers} ))
-echo -e "$CP FINAL GRADE: $CC ${final_grade} $CW"
+    _msg "Lastname in the Proper Format:"
+        if [[ $(grep 'LASTNAME' ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
+
+    _msg "Content of the /etc/resolv.conf File"
+        if [[ $(grep 'nameserver' ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
+
+    _msg "List of Files in the /var/log/ Directory"
+        if [[ $(grep 'boot.log' ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
+
+    _msg "Space Usage for the /home Directory"
+        if [[ $(grep 'Filesystem' ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
+
+    _msg "The 'apropos uname' Command Output Without the String 'kernel'"
+        if [[ $(grep uname ${report} | grep -v kernel &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
+
+else 
+    _fail
+    echo -e "$CR The verification process cannot proceed whithout the presence of the ~/backup/system-backup.info file. $CW"
+fi
+
+printf "$CP FINAL GRADE: $CC %.0f $CW" $(echo "(100/$total_questions)*$correct_answers" | bc -l)
 echo ""
 
 # CHALLENGE:
@@ -75,3 +81,4 @@ echo ""
 #     The list of files in the folder /var/log/ sorted alphabetically.
 #     The report of file system space usage for the /home folder.
 #     Run the command apropos uname and piped to the grep command to remove the lines containing the word kernel.
+
