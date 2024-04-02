@@ -117,10 +117,10 @@ then
         _own  $base_dir/logs $realuser
         _file $base_dir/logs/stdout.log
         _mode $base_dir/logs/stdout.log 644
-        _own  $base_dir/logs/stdout.log root
+        _own  $base_dir/logs/stdout.log $realuser
         _file $base_dir/logs/stderr.log
         _mode $base_dir/logs/stderr.log 644
-        _own  $base_dir/logs/stderr.log root
+        _own  $base_dir/logs/stderr.log $realuser
     fi
 
     echo -e "$CL Verifying $base_dir/scripts requirements$CW"
