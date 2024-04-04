@@ -43,6 +43,7 @@ today=$(date)
 
 _run_as_root
 _internet_connection
+
 #TODO: Verify running on the last version
 
 clear
