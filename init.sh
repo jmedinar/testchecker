@@ -50,12 +50,10 @@ wget -q $(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3Rj
 chmod 700 /usr/bin/testchecker
 
 echo -e "${CY} Setting up the prompt..."
-echo "
-if [[ $EUID -eq 0 ]]; then C=31; else C=32; fi
+echo 'if [[ $EUID -eq 0 ]]; then C=31; else C=32; fi
 SC="\[\e[${C}m\]"
 RC="\[\e[0m\]"
-export PS1="${SC}\u@\h \w${RC}\$ "
-" >> /etc/bashrc
+export PS1="${SC}\u@\h \w${RC}\$ ' >> /etc/bashrc
 
 echo -e "${CY} Setting up the hostname..."
 hostnamectl set-hostname fedora
