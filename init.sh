@@ -53,7 +53,7 @@ echo -e "${CY} Setting up the prompt..."
 echo 'if [[ $EUID -eq 0 ]]; then C=31; else C=32; fi
 SC="\[\e[${C}m\]"
 RC="\[\e[0m\]"
-export PS1="${SC}\u@\h \w${RC}\$ ' >> /etc/bashrc
+export PS1="${SC}\u@\h \w${RC}\$ "' >> /etc/bashrc
 
 echo -e "${CY} Setting up the hostname..."
 hostnamectl set-hostname fedora
