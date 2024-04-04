@@ -4,7 +4,7 @@ title="TEST CHECKER"
 # Author: Professor Juan Medina
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
-version="2.1"
+version="2.2"
 # Purpose: This script will gatter VM and Student information
 #          and will execute the interactive test verification scripts
 
