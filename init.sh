@@ -47,7 +47,8 @@ fi
 
 echo -e "${CY} Setting up the testchecker tool..."
 wget -q $(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vdGVzdGNoZWNrZXIuc2gK" | base64 -d) -P /usr/bin/testchecker
-chmod +x /usr/bin/testchecker
+chmod +x /usr/bin/testchecker.sh
+ln -s /usr/bin/testchecker.sh /usr/bin/testchecker
 
 echo -e "${CY} Setting up the prompt..."
 echo "
