@@ -12,6 +12,11 @@ version="2.1"
 CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m'
 # Purple          Cyan           White
 CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
+sname=$(who am i | awk '{print $1}')
+sid=0
+uuid=$(dmidecode -s system-uuid)
+hostname=$(hostname -f)
+today=$(date)
 
 _run_as_root() {
 	# Verifying the Script was Executed with root Privileges
@@ -36,10 +41,14 @@ _internet_connection() {
 	fi
 }
 
-student=$(who am i | awk '{print $1}')
-uuid=$(dmidecode -s system-uuid)
-hostname=$(hostname -f)
-today=$(date)
+_get_student_id(){
+	read -p " Introduce your student numeric ID: " sid
+	if [[ $sid != 1* ]]
+	then
+		echo -e "${CR} Student id must be numerical. Starts with 1"
+		exit 4
+	fi
+}
 
 _run_as_root
 _internet_connection
@@ -52,8 +61,8 @@ echo -e "${CC} =================================================================
 echo -e "${CY}                        C O L L I N   C O L L E G E "
 echo -e "${CY}                         ${title} Version: ${version} "
 echo -e "${CC} ========================================================================="
-echo -e "${CG} DATE: ${CY} ${today} ${CG} STUDENT: ${CY} ${student} ${CW}"
-read -p " Introduce your student numeric ID: " studentid
+echo -e "${CG} DATE: ${CY} ${today} ${CG} STUDENT: ${CY} ${sname} ${CW}"
+_get_student_id
 read -p " Indicate the assignment to check [from 1 to 8]: " choice
 case ${choice} in
 	1) source <(curl -s $(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDEuc2gK" | base64 -d)) ;;
@@ -67,5 +76,5 @@ case ${choice} in
 	*) echo -e "${CR} Invalid choice. Exiting... ${CW} " && exit ;;
 esac
 echo -e "${CC} ========================================================================="
-echo -e "${CY} $(echo "${uuid},${student},${studentid},${hostname},${today}" | base64 -w 0)${CW}"
+echo -e "${CY} $(echo "${uuid},${stname},${sid},${hostname},${today}" | base64 -w 0)${CW}"
 echo ""
