@@ -51,18 +51,6 @@ chmod 700 /usr/bin/testchecker
 
 echo -e "${CY} Setting up the prompt..."
 echo '
-#!/urs/bin/env bash
-# Script: /etc/prompt
-# Author: Professor Juan Medina
-# Email: jmedina@collin.edu
-# Date: Apr 2024
-version="1.0"
-# Purpose: This script will setup the prompt for the student VM 
-#          in color green when running as a regular account
-#          in color red when running as administrator (root)
-#          This is to ensure the user is aware of their current 
-#          environment and the impact of his actions at all times
-
 rc="\[\e[31m\]"
 gc="\[\e[32m\]"
 rs="\[\e[0m\]"
@@ -73,8 +61,7 @@ then
 else
 	export PS1="${gc}\u@\h \w${rs}\$ "
 fi
-' > /etc/prompt
-echo "bash /etc/prompt" >> /etc/bashrc
+' >> /etc/bashrc
 
 echo -e "${CY} Setting up the hostname..."
 hostnamectl set-hostname fedora
