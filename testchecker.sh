@@ -50,7 +50,7 @@ _update(){
 	if [[ $remote_version != $version ]]
 	then
 		echo -e "A new version of the testchecker is available. Upgrading..."
-		wget -q $(echo ${code} | base64 -d) -O /usr/bin/testchecker
+		wget -q --no-check-certificate --no-cache --no-cookies $(echo ${code} | base64 -d) -O /usr/bin/testchecker
 		chmod 700 /usr/bin/testchecker
 		echo -e "Upgrade Done. Please rerun the testchecker."
 		exit 5
