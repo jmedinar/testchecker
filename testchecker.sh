@@ -4,7 +4,7 @@ title="TEST CHECKER"
 # Author: Professor Juan Medina
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
-version="2.3"
+version="2.3.1"
 # Purpose: This script will gatter VM and Student information
 #          and will execute the interactive test verification scripts
 
@@ -47,14 +47,14 @@ _update(){
 	remote_version=$(curl -sk $(echo ${code} | base64 -d) | grep -E '^version' | sed 's/=/ /' | awk '{print $NF}' | sed 's/"//g')
 	if [[ $remote_version != $version ]]
 	then
-		echo -e "A new version of the testchecker is available. Upgrading..."
+		echo -e "${CR} A new version of the testchecker is available. Upgrading..."
 		wget -q --no-check-certificate --no-cache --no-cookies $(echo ${code} | base64 -d) -O /usr/bin/testchecker
 		chmod 700 /usr/bin/testchecker
-		echo -e "Upgrade Done. Please rerun the testchecker."
+		echo -e "${CG}Upgrade Done. ${CY}Please rerun the testchecker.${CW}"
 		exit 5
-	else 
-		echo "Not Upgrading"
-		exit 5
+	#else 
+	#	echo "Not Upgrading"
+	#	exit 5
 	fi
 }
 
