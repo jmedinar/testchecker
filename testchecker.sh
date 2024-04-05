@@ -4,14 +4,12 @@ title="TEST CHECKER"
 # Author: Professor Juan Medina
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
-version="2.3.7"
+version="2.3.8"
 # Purpose: This script will gatter VM and Student information
 #          and will execute the interactive test verification scripts
 
-# Red             Green          Yellow            Blue
-CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m'
-# Purple          Cyan           White
-CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
+# Red         Green         Yellow        Blue  		Purple        Cyan          White
+CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
 sname=$(who am i | awk '{print $1}')
 sid=0
 uuid=$(dmidecode -s system-uuid)
