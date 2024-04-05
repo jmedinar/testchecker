@@ -24,6 +24,11 @@ _fail() {
    echo -e "$CR FAIL $CG"
 }
 
+_eval() {
+    eval $1 &>/dev/null
+    if [[ $? -eq 0 ]]; then _pass; else _fail; fi
+}
+
 echo -e "$CC ========================================================================="
 echo -e "$CP Assignment ${assignment} Verification $CW"
 echo -e "$CC ========================================================================="
@@ -34,31 +39,22 @@ _msg "System report file exist ~/backup/system-backup.info"
 if [[ $(ls -l ${report} &>/dev/null; echo $?) -eq 0 ]]
 then 
     _pass
-
     _msg "Full Hostname:"
-        if [[ $(grep $(hostname -f) ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-
+        _eval "grep $(hostname -f) ${report}"
     _msg "Current Date:"
-        if [[ $(grep -E 'CDT|$(date +%Y)' ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-
+        _eval "grep -E 'CDT|$(date +%Y)' ${report}"
     _msg "Uptime Information:"
-        if [[ $(grep "load average" ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-
+        _eval "grep 'load average' ${report}"
     _msg "Lastname in the Proper Format:"
-        if [[ $(grep 'LASTNAME' ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-
+        _eval "grep 'LASTNAME' ${report}"
     _msg "Content of the /etc/resolv.conf File"
-        if [[ $(grep 'nameserver' ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-
+        _eval "grep 'nameserver' ${report}"
     _msg "List of Files in the /var/log/ Directory"
-        if [[ $(grep 'boot.log' ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-
+        _eval "grep 'boot.log' ${report}"
     _msg "Space Usage for the /home Directory"
-        if [[ $(grep 'Filesystem' ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-
+        _eval "grep 'Filesystem' ${report}"
     _msg "The 'apropos uname' Command Output Without the String 'kernel'"
-        if [[ $(grep uname ${report} | grep -v kernel &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-
+        _eval "grep uname ${report} | grep -v kernel"
 else 
     _fail
     echo -e "$CR The verification process cannot proceed whithout the presence of the ~/backup/system-backup.info file. $CW"
@@ -78,4 +74,3 @@ echo ""
 #     The list of files in the folder /var/log/ sorted alphabetically.
 #     The report of file system space usage for the /home folder.
 #     Run the command apropos uname and piped to the grep command to remove the lines containing the word kernel.
-
