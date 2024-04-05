@@ -4,7 +4,7 @@ title="TEST CHECKER"
 # Author: Professor Juan Medina
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
-version="2.2"
+version="2.3"
 # Purpose: This script will gatter VM and Student information
 #          and will execute the interactive test verification scripts
 
@@ -51,8 +51,10 @@ _update(){
 		wget -q $(echo ${code} | base64 -d) -O /usr/bin/testchecker
 		chmod 700 /usr/bin/testchecker
 		echo -e "Upgrade Done. Please rerun the testchecker."
+		exit 5
 	else 
 		echo "Not Upgrading"
+		exit 5
 	fi
 }
 
@@ -67,8 +69,7 @@ _get_student_id(){
 
 _run_as_root
 _internet_connection
-
-#TODO: Verify running on the last version
+_update
 
 clear
 echo ""
