@@ -45,6 +45,8 @@ _update(){
 	# Check if running the latest version
 	code="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vdGVzdGNoZWNrZXIuc2gK" 
 	remote_version=$(curl -sk $(echo ${code} | base64 -d) | grep -E '^version' | sed 's/=/ /' | awk '{print $NF}')
+	echo "remote_version=$remote_version"
+	echo "current_version=$version"
 	if [[ $remote_version != $version ]]
 	then
 		echo -e "A new version of the testchecker is available. Upgrading..."
