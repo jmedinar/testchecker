@@ -13,8 +13,8 @@ echo -e "$CP Assignment ${version} Verification $CW"
 echo -e "$CC ===================================================="
 echo -e "$CL Congratulations on completing the class! $CW"
 echo -e "$CY You've undoubtedly gained a lot of knowledge, 
-and while questions may arise, 
-continuous practice is the key to solidifying your skills. $CW"
+ and while questions may arise, 
+ continuous practice is the key to solidifying your skills. $CW"
 echo -e "$CL With dedication, you'll soon find yourself evolving into a Linux expert. $CW"
 echo -e "$CY Embrace the world of Linux! $CW"
 echo -e "$CC Wishing you the best of luck on your journey! $CW"
