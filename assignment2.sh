@@ -4,32 +4,29 @@
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
 
-# Black           # Red             # Green         # Yellow
-CB='\e[0;30m';    CR='\e[0;31m';    CG='\e[0;32m';  CY='\e[0;33m';
-# Blue            # Purple          # Cyan          # White
-CL='\e[0;34m';    CP='\e[0;35m';    CC='\e[0;36m';  CW='\e[0;37m'; 
-
-version=2
-correct_answers=0
-total_questions=0
+# Black       Red           Green         Yellow        Blue          Purple        Cyan          White
+CB='\e[0;30m' CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
+assignment=2 
+ca=0  # Correct Answers
+tq=0  # Total Questions
 
 _msg() {
    echo -ne "$CY $1"
-   ((total_questions++))
+   ((tq++))
 }
 
 _pass() {
    echo -e "$CG PASS $CR"
-   ((correct_answers++))
+   ((ca++))
 }
 
 _fail() {
    echo -e "$CR FAIL $CG"
 }
 
-echo -e "$CC ===================================================="
-echo -e "$CP Assignment ${version} Verification $CW"
-echo -e "$CC ===================================================="
+echo -e "$CC ========================================================================="
+echo -e "$CP Assignment ${assignment} Verification $CW"
+echo -e "$CC ========================================================================="
 
 report="/home/$(who am i | awk '{print $1}')/backup/system-backup.info"
 
@@ -67,7 +64,7 @@ else
     echo -e "$CR The verification process cannot proceed whithout the presence of the ~/backup/system-backup.info file. $CW"
 fi
 
-printf "$CP FINAL GRADE: $CC %.0f $CW" $(echo "(100/$total_questions)*$correct_answers" | bc -l)
+printf "$CP FINAL GRADE: $CC %.0f $CW" $(echo "(100/$tq)*$ca" | bc -l)
 echo ""
 
 # CHALLENGE:

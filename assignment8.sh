@@ -6,11 +6,11 @@
 
 # Black       Red           Green         Yellow        Blue          Purple        Cyan          White
 CB='\e[0;30m' CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'; 
-version=8
+assignment=8
 
-echo -e "$CC ===================================================="
-echo -e "$CP Assignment ${version} Verification $CW"
-echo -e "$CC ===================================================="
+echo -e "$CC ========================================================================="
+echo -e "$CP Assignment ${assignment} Verification $CW"
+echo -e "$CC ========================================================================="
 echo -e "$CL Congratulations on completing the class! $CW"
 echo -e "$CY You've undoubtedly gained a lot of knowledge, 
  and while questions may arise, 

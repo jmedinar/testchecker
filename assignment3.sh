@@ -4,25 +4,22 @@
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
 
-# Black           # Red             # Green         # Yellow
-CB='\e[0;30m';    CR='\e[0;31m';    CG='\e[0;32m';  CY='\e[0;33m';
-# Blue            # Purple          # Cyan          # White
-CL='\e[0;34m';    CP='\e[0;35m';    CC='\e[0;36m';  CW='\e[0;37m'; 
-
-version=3
-correct_answers=0
-total_questions=0
+# Black       Red           Green         Yellow        Blue          Purple        Cyan          White
+CB='\e[0;30m' CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
+assignment=3
+ca=0
+tq=0
 base_dir="/opt/enterprise-app"
 realuser=$(who am i | awk '{print $1}')
 
 _msg() {
    echo -ne "$CY $1"
-   ((total_questions++))
+   ((tq++))
 }
 
 _pass() {
    echo -e "$CG PASS $CR"
-   ((correct_answers++))
+   ((ca++))
 }
 
 _fail() {
@@ -57,9 +54,9 @@ _stat() {
     if [[ $(grep -sE "$1:*.*$2:" ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
 }
 
-echo -e "$CC ===================================================="
-echo -e "$CP Assignment ${version} Verification $CW"
-echo -e "$CC ===================================================="
+echo -e "$CC ========================================================================="
+echo -e "$CP Assignment ${assignment} Verification $CW"
+echo -e "$CC ========================================================================="
 
 _dir(){
    _msg "Verify $1 exist"
@@ -157,7 +154,7 @@ else
 fi
 
 
-printf "$CP FINAL GRADE: $CC %.0f $CW" $(echo "(100/$total_questions)*$correct_answers" | bc -l)
+printf "$CP FINAL GRADE: $CC %.0f $CW" $(echo "(100/$tq)*$ca" | bc -l)
 echo ""
 
 # CHALLENGE:

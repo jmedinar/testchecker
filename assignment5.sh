@@ -4,14 +4,11 @@
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
 
-# Black           # Red             # Green         # Yellow
-CB='\e[0;30m';    CR='\e[0;31m';    CG='\e[0;32m';  CY='\e[0;33m';
-# Blue            # Purple          # Cyan          # White
-CL='\e[0;34m';    CP='\e[0;35m';    CC='\e[0;36m';  CW='\e[0;37m'; 
-
-version=5
-correct_answers=0
-total_questions=4
+# Black       Red           Green         Yellow        Blue          Purple        Cyan          White
+CB='\e[0;30m' CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
+assignment=5
+ca=0
+tq=4
 
 _msg() {
    echo -ne "$CY $1"
@@ -26,9 +23,9 @@ _fail() {
    echo -e "$CR FAIL $CG"
 }
 
-echo -e "$CC ===================================================="
-echo -e "$CP Assignment ${version} Verification $CW"
-echo -e "$CC ===================================================="
+echo -e "$CC ========================================================================="
+echo -e "$CP Assignment ${assignment} Verification $CW"
+echo -e "$CC ========================================================================="
 
 base_dir="/sysadm/bin"
 targets=(processFile.sh rabbitJumps.sh testString.sh color.sh)
@@ -68,7 +65,7 @@ do
     fi
 done
 
-printf "$CP FINAL GRADE: $CC %.0f $CW" $(echo "(100/$total_questions)*$correct_answers" | bc -l)
+printf "$CP FINAL GRADE: $CC %.0f $CW" $(echo "(100/$tq)*$ca" | bc -l)
 echo ""
 
 # CHALLENGE:

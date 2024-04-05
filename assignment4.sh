@@ -4,18 +4,15 @@
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
 
-# Black           # Red             # Green         # Yellow
-CB='\e[0;30m';    CR='\e[0;31m';    CG='\e[0;32m';  CY='\e[0;33m';
-# Blue            # Purple          # Cyan          # White
-CL='\e[0;34m';    CP='\e[0;35m';    CC='\e[0;36m';  CW='\e[0;37m'; 
-
-version=4
+# Black       Red           Green         Yellow        Blue          Purple        Cyan          White
+CB='\e[0;30m' CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
+assignment=4
 ca=0
 tq=36  # Total number of user times verified items (9*4=36)
 
-echo -e "$CC ===================================================="
-echo -e "$CP Assignment ${version} Verification $CW"
-echo -e "$CC ===================================================="
+echo -e "$CC ========================================================================="
+echo -e "$CP Assignment ${assignment} Verification $CW"
+echo -e "$CC ========================================================================="
 
 
 _user() {
