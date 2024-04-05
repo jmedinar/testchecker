@@ -4,7 +4,7 @@ title="TEST CHECKER"
 # Author: Professor Juan Medina
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
-version="2.3.8"
+version="2.4.0"
 # Purpose: This script will gatter VM and Student information
 #          and will execute the interactive test verification scripts
 
@@ -83,14 +83,22 @@ echo -e "${CG} DATE: ${CY} ${today} ${CG} STUDENT: ${CY} ${sname} ${CW}"
 _get_student_id
 read -p " Indicate the assignment to check [from 1 to 8]: " choice
 case ${choice} in
-	1) source <(curl -s $(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDEuc2gK" | base64 -d)) ;;
-	2) source <(curl -s $(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDIuc2gK" | base64 -d)) ;;
-	3) source <(curl -s $(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDMuc2gK" | base64 -d)) ;;
-	4) source <(curl -s $(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDQuc2gK" | base64 -d)) ;;
-	5) source <(curl -s $(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDUuc2gK" | base64 -d)) ;;
-	6) source <(curl -s $(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDYuc2gK" | base64 -d)) ;;
-	7) source <(curl -s $(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDcuc2gK" | base64 -d)) ;;
-	8) source <(curl -s $(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDguc2gK" | base64 -d)) ;;
+	1) source <(curl -sk -H 'Cache-Control: no-cache' \
+				$(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDEuc2gK" | base64 -d)) ;;
+	2) source <(curl -sk -H 'Cache-Control: no-cache' \
+				$(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDIuc2gK" | base64 -d)) ;;
+	3) source <(curl -sk -H 'Cache-Control: no-cache' \
+				$(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDMuc2gK" | base64 -d)) ;;
+	4) source <(curl -sk -H 'Cache-Control: no-cache' \
+				$(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDQuc2gK" | base64 -d)) ;;
+	5) source <(curl -sk -H 'Cache-Control: no-cache' \
+				$(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDUuc2gK" | base64 -d)) ;;
+	6) source <(curl -sk -H 'Cache-Control: no-cache' \
+				$(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDYuc2gK" | base64 -d)) ;;
+	7) source <(curl -sk -H 'Cache-Control: no-cache' \
+				$(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDcuc2gK" | base64 -d)) ;;
+	8) source <(curl -sk -H 'Cache-Control: no-cache' \
+				$(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDguc2gK" | base64 -d)) ;;
 	*) echo -e "${CR} Invalid choice. Exiting... ${CW} " && exit ;;
 esac
 echo -e "${CC} ========================================================================="
