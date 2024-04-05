@@ -41,6 +41,21 @@ _internet_connection() {
 	fi
 }
 
+_update(){
+	# Check if running the latest version
+	code="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vdGVzdGNoZWNrZXIuc2gK" 
+	remote_version=$(curl -sk $(echo ${code} | base64 -d) | grep -E '^version' | sed 's/=/ /' | awk '{print $NF}')
+	if [[ $remote_version != $version ]]
+	then
+		echo -e "A new version of the testchecker is available. Upgrading..."
+		wget -q $(echo ${code} | base64 -d) -O /usr/bin/testchecker
+		chmod 700 /usr/bin/testchecker
+		echo -e "Upgrade Done. Please rerun the testchecker."
+	else 
+		echo "Not Upgrading"
+	fi
+}
+
 _get_student_id(){
 	read -p " Introduce your student numeric ID: " sid
 	if [[ $sid != 1* ]]
