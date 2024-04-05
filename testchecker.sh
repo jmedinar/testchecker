@@ -60,7 +60,6 @@ _update(){
 		echo -e "${CG}Upgrade Done. ${CY}Please rerun the testchecker.${CW}"
 		exit 5
 	fi
-	exit 5
 }
 
 _get_student_id(){
