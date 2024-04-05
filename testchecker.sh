@@ -4,7 +4,7 @@ title="TEST CHECKER"
 # Author: Professor Juan Medina
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
-version="2.3.1"
+version="2.3.2"
 # Purpose: This script will gatter VM and Student information
 #          and will execute the interactive test verification scripts
 
@@ -44,7 +44,7 @@ _internet_connection() {
 _update(){
 	# Check if running the latest version
 	code="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vdGVzdGNoZWNrZXIuc2gK" 
-	remote_version=$(curl -sk $(echo ${code} | base64 -d) | grep -E '^version' | sed 's/=/ /' | awk '{print $NF}' | sed 's/"//g')
+	remote_version=$(curl -sk -H 'Cache-Control: no-cache' $(echo ${code} | base64 -d) | grep -E '^version' | sed 's/=/ /' | awk '{print $NF}' | sed 's/"//g')
 	if [[ $remote_version != $version ]]
 	then
 		echo -e "${CR} A new version of the testchecker is available. Upgrading..."
