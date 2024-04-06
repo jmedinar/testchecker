@@ -17,7 +17,7 @@ _user() {
 	if id ${1} &>/dev/null; then exist="true"; ((ca++)); fi
 
    # Primary group verification
-   if [[ "$(id -gn ${1})" 2>/dev/null == "${2}" ]]; then ((ca++)); primary="true"; fi
+   if [[ "$(id -gn ${1} 2>/dev/null)" == "${2}" ]]; then ((ca++)); primary="true"; fi
 
    # gecos field verification
    if grep "${1}@wedbit.com" /etc/passwd &>/dev/null; then ((ca++)); gecos="true"; fi
