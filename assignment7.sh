@@ -4,46 +4,46 @@
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
 
-# Black       Red           Green         Yellow        Blue          Purple        Cyan          White
-CB='\e[0;30m' CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
+# Red           Green         Yellow        Blue          Purple        Cyan          White
+CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
 assignment=7
 ca=0
 tq=0
 
 _msg() {
-   echo -ne "$CY $1"
-   ((total_questions++))
+   echo -ne "${CY} ${1}"
+   ((tq++))
 }
 
 _pass() {
-   echo -e "$CG PASS $CR"
-   ((correct_answers++))
+   echo -e "${CG} PASS ${CR}"
+   ((ca++))
 }
 
 _fail() {
-   echo -e "$CR FAIL $CG"
+   echo -e "${CR} FAIL ${CG}"
 }
 
-echo -e "$CC ========================================================================="
-echo -e "$CP Assignment ${assignment} Verification $CW"
-echo -e "$CC ========================================================================="
+echo -e "${CC} ========================================================================="
+echo -e "${CP} Assignment ${assignment} Verification"
+echo -e "${CC} ========================================================================="
 
 _msg "The cheese application has been successfully uninstalled"
-if [[ $(rpm -qa | grep cheese-[[:digit:]] &>/dev/null; echo $?) -ne 0 ]]; then _pass; else _fail; fi
+if rpm -qa | grep "cheese-[[:digit:]]" &>/dev/null; then _pass; else _fail; fi
 
 _msg "Apache(httpd) must be installed"
-if [[ $(rpm -qa | grep ^httpd-[[:digit:]] &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
+if rpm -qa | grep "^httpd-[[:digit:]]" &>/dev/null; then _pass; else _fail; fi
 
 _msg "Typora must be installed at the /opt directory"
-if [[ $(ls /opt/bin/T*/Typora &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
+if ls /opt/bin/T*/Typora &>/dev/null; then _pass; else _fail; fi
 
 _msg "The TuxPaint application must be installed"
-if [[ $(rpm -qa | grep tuxpaint &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
+if rpm -qa | grep "tuxpaint" &>/dev/null; then _pass; else _fail; fi
 
 _msg "The requested website was created"
-if [[ $(grep -E "Assignment 7|Learning Linux" /var/www/html/index.html &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
+if grep -E "Assignment 7|Learning Linux" /var/www/html/index.html &>/dev/null; then _pass; else _fail; fi
 
-printf "$CP FINAL GRADE: $CC %.0f $CW" $(echo "(100/$tq)*$ca" | bc -l)
+printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" "$(echo "(100/${tq})*${ca}" | bc -l)"
 echo ""
 
 # CHALLENGE:

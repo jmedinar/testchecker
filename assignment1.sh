@@ -25,7 +25,7 @@ _fail() {
 }
 
 echo -e "${CC} ========================================================================="
-echo -e "${CP} Assignment ${assignment} Verification ${CW}"
+echo -e "${CP} Assignment ${assignment} Verification"
 echo -e "${CC} ========================================================================="
 
 _msg "Memory:"

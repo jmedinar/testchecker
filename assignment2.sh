@@ -29,13 +29,13 @@ _eval() {
 }
 
 echo -e "${CC} ========================================================================="
-echo -e "${CP} Assignment ${assignment} Verification ${CW}"
+echo -e "${CP} Assignment ${assignment} Verification"
 echo -e "${CC} ========================================================================="
 
 report="/home/$(who am i | awk '{print $1}')/backup/system-backup.info"
 
 _msg "System report file exist ~/backup/system-backup.info"
-if [[ $(ls -l ${report} &>/dev/null; echo $?) -eq 0 ]]
+if [[ -e ${report} ]]
 then 
     _pass
     _msg "Full Hostname:"

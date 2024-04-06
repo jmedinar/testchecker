@@ -4,8 +4,8 @@
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
 
-# Black       Red           Green         Yellow        Blue          Purple        Cyan          White
-CB='\e[0;30m' CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
+# Red           Green         Yellow        Blue          Purple        Cyan          White
+CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
 assignment=3
 ca=0 # Correct Answers
 tq=0 # Total Questions
@@ -13,56 +13,56 @@ basedir="/opt/enterprise-app"
 realuser=$(who am i | awk '{print $1}')
 
 _eval() {
-    ((tq=$tq+3))
+    ((tq=tq+3))
     exist="false"    owner="false"     mode="false"
     if [[ -e ${1} ]]; then exist="true"; ((ca++)); fi
-    if [[ $(stat -c %U $1 2>/dev/null) == "$2" ]]; then owner="true"; ((ca++)); fi
-    if [[ $(stat -c %a $1 2>/dev/null) == "$3" ]]; then mode="true"; ((ca++)); fi
-    printf "${CY}%-40s%-10s%-10s%-10s${CW}\n" $1 $exist $owner $mode 
+    if [[ $(stat -c %U ${1} 2>/dev/null) == "${2}" ]]; then owner="true"; ((ca++)); fi
+    if [[ $(stat -c %a ${1} 2>/dev/null) == "${3}" ]]; then mode="true"; ((ca++)); fi
+    printf "${CY}%-40s%-10s%-10s%-10s${CW}\n" ${1} ${exist} ${owner} ${mode}
 }
 
 _file_eval() {
-    ((tq=$tq+3))
+    ((tq=tq+3))
     report=/opt/enterprise-app/docs/report.out
     owner="false"     mode="false"     inode="false"
     if [[ -e ${report} ]]
     then
-        if [[ $(grep -sE "OWNER:*.*$(basename $1)*.*" ${report} &>/dev/null; echo $?) -eq 0 ]]; then owner="true"; ((ca++)); fi
-        if [[ $(grep -sE "PERMISSIONS:*.*$(basename $1)*.*" ${report} &>/dev/null; echo $?) -eq 0 ]]; then mode="true"; ((ca++)); fi
-        if [[ $(grep -sE "INODE:*.*$(basename $1)*.*" ${report} &>/dev/null; echo $?) -eq 0 ]]; then inode="true"; ((ca++)); fi
+        if grep -sE "OWNER:*.*$(basename ${1})*.*" ${report} &>/dev/null; then owner="true"; ((ca++)); fi
+        if grep -sE "PERMISSIONS:*.*$(basename ${1})*.*" ${report} &>/dev/null; then mode="true"; ((ca++)); fi
+        if grep -sE "INODE:*.*$(basename ${1})*.*" ${report} &>/dev/null; then inode="true"; ((ca++)); fi
     fi
-    printf "${CY}%-40s%-12s%-15s%-12s${CW}\n" $1 $owner $mode $inode
+    printf "${CY}%-40s%-12s%-15s%-12s${CW}\n" ${1} ${owner} ${mode} ${inode}
 }
 
 echo -e "${CC}========================================================================="
-echo -e "${CP}Assignment ${assignment} Verification ${CW}"
+echo -e "${CP}Assignment ${assignment} Verification"
 echo -e "${CC}========================================================================="
-echo -e "${CC}File Structure Verification ${CW}"
-printf "${CG}%-40s%-10s%-10s%-10s${CW}\n" OBJECT EXIST OWNER MODE
+echo -e "${CC}File Structure Verification"
+printf "${CG}%-40s%-10s%-10s%-10s\n" OBJECT EXIST OWNER MODE
 echo -e "${CL}==========================================================================${CW}"
-_eval ${basedir} root 755
-_eval ${basedir}/bin root 755
-_eval ${basedir}/bin/app.py root 700
-_eval ${basedir}/code ${realuser} 755
-_eval ${basedir}/code/alt_app_access ${realuser} 777
-_eval ${basedir}/flags/ ${realuser} 755
-_eval ${basedir}/flags/pid.info ${realuser} 644
-_eval ${basedir}/libs/ ${realuser} 755
-_eval ${basedir}/logs/ ${realuser} 755
-_eval ${basedir}/logs/stdout.log ${realuser} 644
-_eval ${basedir}/logs/stderr.log ${realuser} 644
-_eval ${basedir}/scripts/ ${realuser} 755
-_eval ${basedir}/scripts/clean.sh ${realuser} 755
-_eval ${basedir}/docs/ ${realuser} 755
-_eval ${basedir}/docs/README.txt ${realuser} 644
-_eval ${basedir}/docs/report.out ${realuser} 644
-echo -e "${CL}==========================================================================${CW}"
-echo -e "${CC}Report Content Verification ${CW}"
+_eval "${basedir}" "root" 755
+_eval "${basedir}/bin" "root" 755
+_eval "${basedir}/bin/app.py" "root" 700
+_eval "${basedir}/code" "${realuser}" 755
+_eval "${basedir}/code/alt_app_access" "${realuser}" 777
+_eval "${basedir}/flags/" "${realuser}" 755
+_eval "${basedir}/flags/pid.info" "${realuser}" 644
+_eval "${basedir}/libs/" "${realuser}" 755
+_eval "${basedir}/logs/" "${realuser}" 755
+_eval "${basedir}/logs/stdout.log" "${realuser}" 644
+_eval "${basedir}/logs/stderr.log" "${realuser}" 644
+_eval "${basedir}/scripts/" "${realuser}" 755
+_eval "${basedir}/scripts/clean.sh" "${realuser}" 755
+_eval "${basedir}/docs/" "${realuser}" 755
+_eval "${basedir}/docs/README.txt" "${realuser}" 644
+_eval "${basedir}/docs/report.out" "${realuser}" 644
+echo -e "${CL}=========================================================================="
+echo -e "${CC}Report Content Verification"
 printf "${CY}%-40s%-12s%-15s%-12s${CW}\n" FILE OWNER PERMISSIONS INODE
-_file_eval ${basedir}/bin/app.py
-_file_eval ${basedir}/scripts/clean.sh
-echo -e "${CL}==========================================================================${CW}"
-printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" $(echo "(100/${tq})*${ca}" | bc -l)
+_file_eval "${basedir}/bin/app.py"
+_file_eval "${basedir}/scripts/clean.sh"
+echo -e "${CL}=========================================================================="
+printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" "$(echo "(100/${tq})*${ca}" | bc -l)"
 echo ""
 
 # CHALLENGE:

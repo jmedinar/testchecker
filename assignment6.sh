@@ -4,17 +4,17 @@
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
 
-# Black       Red           Green         Yellow        Blue          Purple        Cyan          White
-CB='\e[0;30m' CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
+# Red           Green         Yellow        Blue          Purple        Cyan          White
+CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
 assignment=6
 
-echo -e "$CC ========================================================================="
-echo -e "$CP Assignment ${assignment} Verification $CW"
-echo -e "$CC ========================================================================="
+echo -e "${CC} ========================================================================="
+echo -e "${CP} Assignment ${assignment} Verification"
+echo -e "${CC} ========================================================================="
 
-echo -e "$CR Assignment 6 does not have automated verification!. 
-$CY Please submit the $CL SOURCE CODE $CY of your $CW sysmonitor.sh $CY script on Canvas as evidence of your work. 
- Your submission will be graded by the professor based on the functionality, quality, and presentation of your code. $CW"
+echo -e "${CR} Assignment 6 does not have automated verification!.
+${CY} Please submit the ${CL} SOURCE CODE ${CY} of your ${CW} sysmonitor.sh ${CY} script on Canvas as evidence of your work.
+ Your submission will be graded by the professor based on the functionality, quality, and presentation of your code.${CW}"
 
 # _msg "Verifying sysmonitor.sh"
 #     if [[ $(/sysadm/bin/processFile.sh /etc/passwd 2>&1 | grep method | wc -l) -eq 0 ]]; then _pass; else _fail; fi
