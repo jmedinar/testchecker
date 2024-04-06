@@ -52,7 +52,7 @@ do
                     if ${base_dir}/${t} 1 2>/dev/null | grep "Binary or positive integer" &>/dev/null; then _pass; else _fail; fi
                     ;;
                 color.sh) 
-                    if ${base_dir}/${t} 2>/dev/null | grep LOVE &>/dev/null
+                    if ${base_dir}/${t} 2>/dev/null | grep -i LOVE &>/dev/null
                     then
                         if grep "echo -e" ${base_dir}/${t} &>/dev/null \
                             || grep "printf" ${base_dir}/${t} &>/dev/null; then _pass; else _fail; fi
