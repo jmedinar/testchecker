@@ -12,10 +12,10 @@ echo -e "${CC} =================================================================
 echo -e "${CP} Assignment ${assignment} Verification"
 echo -e "${CC} ========================================================================="
 echo -e "${CR} Assignment 6 does not have automated verification!
-
-${CY} Please submit the ${CL} SOURCE CODE ${CY} of your ${CW} sysmonitor.sh ${CY} script 
- on Canvas as evidence of your work. Your submission will be graded by the professor based 
- on the functionality, quality, and presentation of your code.${CW}"
+${CY} 
+ Please submit the ${CL} SOURCE CODE ${CY} of your ${CG} sysmonitor.sh ${CY} script 
+ on Canvas as evidence of your work. Your submission will be graded by the professor 
+ based on the functionality, quality, and presentation of your code.${CW}"
 
 # CHALLENGE:
 # Create a script named sysmonitor.sh and position it in the /sysadm/bin Directory. 
