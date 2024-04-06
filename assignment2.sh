@@ -4,34 +4,33 @@
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
 
-# Black       Red           Green         Yellow        Blue          Purple        Cyan          White
-CB='\e[0;30m' CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
+# Red           Green         Yellow        Blue          Purple        Cyan          White
+CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
 assignment=2 
 ca=0  # Correct Answers
 tq=0  # Total Questions
 
 _msg() {
-   echo -ne "$CY $1"
+   echo -ne "${CY} ${1}"
    ((tq++))
 }
 
 _pass() {
-   echo -e "$CG PASS $CR"
+   echo -e "${CG} PASS ${CR}"
    ((ca++))
 }
 
 _fail() {
-   echo -e "$CR FAIL $CG"
+   echo -e "${CR} FAIL ${CG}"
 }
 
 _eval() {
-    eval $1 &>/dev/null
-    if [[ $? -eq 0 ]]; then _pass; else _fail; fi
+    if eval ${1} &>/dev/null; then _pass; else _fail; fi
 }
 
-echo -e "$CC ========================================================================="
-echo -e "$CP Assignment ${assignment} Verification $CW"
-echo -e "$CC ========================================================================="
+echo -e "${CC} ========================================================================="
+echo -e "${CP} Assignment ${assignment} Verification ${CW}"
+echo -e "${CC} ========================================================================="
 
 report="/home/$(who am i | awk '{print $1}')/backup/system-backup.info"
 
@@ -57,10 +56,10 @@ then
         _eval "grep uname ${report} | grep -v kernel"
 else 
     _fail
-    echo -e "$CR The verification process cannot proceed whithout the presence of the ~/backup/system-backup.info file. $CW"
+    echo -e "${CR} The verification process cannot proceed whithout the presence of the ~/backup/system-backup.info file. ${CW}"
 fi
 
-printf "$CP FINAL GRADE: $CC %.0f $CW" $(echo "(100/$tq)*$ca" | bc -l)
+printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" "$(echo "(100/${tq})*${ca}" | bc -l)"
 echo ""
 
 # CHALLENGE:
