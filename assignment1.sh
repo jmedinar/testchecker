@@ -40,7 +40,7 @@ _msg "CPU:"
 _msg "Internet:"
    if wget -q --spider http://google.com; then _pass; else _fail; fi
 
-printf "${CP} FINALl GRADE: ${CC} %.0f ${CW}" "$(echo "(100/${tq})*${ca}" | bc -l)"
+printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" "$(echo "(100/${tq})*${ca}" | bc -l)"
 echo ""
 
 # CHALLENGE:
