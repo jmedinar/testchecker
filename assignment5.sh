@@ -23,6 +23,11 @@ _fail() {
    echo -e "$CR FAIL $CG"
 }
 
+_eval() {
+    eval $1 &>/dev/null
+    if [[ $? -eq 0 ]]; then _pass; else _fail; fi
+}
+
 echo -e "$CC ========================================================================="
 echo -e "$CP Assignment ${assignment} Verification $CW"
 echo -e "$CC ========================================================================="

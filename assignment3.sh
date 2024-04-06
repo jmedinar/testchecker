@@ -7,154 +7,62 @@
 # Black       Red           Green         Yellow        Blue          Purple        Cyan          White
 CB='\e[0;30m' CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
 assignment=3
-ca=0
-tq=0
-base_dir="/opt/enterprise-app"
+ca=0 # Correct Answers
+tq=0 # Total Questions
+basedir="/opt/enterprise-app"
 realuser=$(who am i | awk '{print $1}')
 
-_msg() {
-   echo -ne "$CY $1"
-   ((tq++))
+_eval() {
+    ((tq=$tq+3))
+    exist="false"    owner="false"     mode="false"
+    if [[ -e ${1} ]]; then exist="true"; ((ca++)); fi
+    if [[ $(stat -c %U $1 2>/dev/null) == "$2" ]]; then owner="true"; ((ca++)); fi
+    if [[ $(stat -c %a $1 2>/dev/null) == "$3" ]]; then mode="true"; ((ca++)); fi
+    printf "${CY}%-40s%-10s%-10s%-10s${CW}\n" $1 $exist $owner $mode 
 }
 
-_pass() {
-   echo -e "$CG PASS $CR"
-   ((ca++))
-}
-
-_fail() {
-   echo -e "$CR FAIL $CG"
-}
-
-_file() {
-    _msg "Verify $1 exist"
-    if [[ $(ls $1 &>/dev/null; echo $?) -eq 0 ]]
-    then 
-        _pass
-        return 0
-    else 
-        _fail
-        return 1
-    fi
-}
-
-_mode() {
-    _msg "Permissions (mode) of $1"
-    if [[ $(stat -c %a $1) -eq $2 ]]; then _pass; else _fail; fi
-}
-
-_own() {
-    _msg "Ownership of $1"
-    if [[ $(stat -c %U $1) == "$2" ]]; then _pass; else _fail; fi
-}
-
-_stat() {
-    report=$base_dir/docs/report.out
-    _msg "Report presents the value $1 for file $2"
-    if [[ $(grep -sE "$1:*.*$2:" ${report} &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-}
-
-echo -e "$CC ========================================================================="
-echo -e "$CP Assignment ${assignment} Verification $CW"
-echo -e "$CC ========================================================================="
-
-_dir(){
-   _msg "Verify $1 exist"
-   if [[ $(ls -d $1 &>/dev/null; echo $?) -eq 0 ]]
-   then 
-       _pass
-       return 0
-   else 
-       _fail
-       return 1
-   fi
-}
-
-_dir $base_dir
-if [[ $? -eq 0 ]]
-then
-    _msg "root owns the $base_dir folder"
-        if [[ $(stat -c %U $base_dir) == "root" ]]; then _pass; else _fail; fi
-
-    echo -e "$CL Verifying $base_dir/bin requirements$CW"
-    _dir $base_dir/bin
-    if [[ $? -eq 0 ]]
+_file_eval() {
+    ((tq=$tq+3))
+    report=/opt/enterprise-app/docs/report.out
+    owner="false"     mode="false"     inode="false"
+    if [[ -e ${report} ]]
     then
-        _own $base_dir/bin root
-        _file $base_dir/bin/app.py
-        _mode $base_dir/bin/app.py 700
+        if [[ $(grep -sE "OWNER:*.*$(basename $1)*.*" ${report} &>/dev/null; echo $?) -eq 0 ]]; then owner="true"; ((ca++)); fi
+        if [[ $(grep -sE "PERMISSIONS:*.*$(basename $1)*.*" ${report} &>/dev/null; echo $?) -eq 0 ]]; then mode="true"; ((ca++)); fi
+        if [[ $(grep -sE "INODE:*.*$(basename $1)*.*" ${report} &>/dev/null; echo $?) -eq 0 ]]; then inode="true"; ((ca++)); fi
     fi
+    printf "${CY}%-40s%-12s%-15s%-12s${CW}\n" $1 $owner $mode $inode
+}
 
-    echo -e "$CL Verifying $base_dir/code requirements$CW"
-    _dir $base_dir/code
-    if [[ $? -eq 0 ]]
-    then
-        _own $base_dir/code $realuser
-        _file $base_dir/code/alt_app_access
-        _msg "Correctness of symbolic link"
-        if [[ $(stat -c %N $base_dir/code/alt_app_access &>/dev/null; echo $?) -eq 0 ]]; then _pass; else _fail; fi
-    fi
-
-    echo -e "$CL Verifying $base_dir/flags requirements$CW"
-    _dir $base_dir/flags
-    if [[ $? -eq 0 ]]
-    then 
-        _own $base_dir/flags $realuser
-        _file $base_dir/flags/pid.info
-    fi
-
-    echo -e "$CL Verifying $base_dir/libs requirements$CW"
-    _dir $base_dir/libs
-    _own $base_dir/libs $realuser
-
-    echo -e "$CL Verifying $base_dir/logs requirements$CW"
-    _dir $base_dir/logs
-    if [[ $? -eq 0 ]]
-    then
-        _own  $base_dir/logs $realuser
-        _file $base_dir/logs/stdout.log
-        _mode $base_dir/logs/stdout.log 644
-        _own  $base_dir/logs/stdout.log $realuser
-        _file $base_dir/logs/stderr.log
-        _mode $base_dir/logs/stderr.log 644
-        _own  $base_dir/logs/stderr.log $realuser
-    fi
-
-    echo -e "$CL Verifying $base_dir/scripts requirements$CW"
-    _dir $base_dir/scripts
-    if [[ $? -eq 0 ]]
-    then
-        _own  $base_dir/scripts $realuser
-        _file $base_dir/scripts/clean.sh
-        _mode $base_dir/scripts/clean.sh 755
-    fi
-
-    echo -e "$CL Verifying $base_dir/docs requirements$CW"
-    _dir $base_dir/docs
-    if [[ $? -eq 0 ]]
-    then
-        _own  $base_dir/docs $realuser
-        _file $base_dir/docs/README.txt
-        _file $base_dir/docs/report.out
-        if [[ $? -eq 0 ]]
-        then
-            _stat OWNER bin/app.py
-            _stat OWNER scripts/clean.sh
-            _stat PERMISSIONS bin/app.py
-            _stat PERMISSIONS scripts/clean.sh
-            _stat INODE bin/app.py
-            _stat INODE scripts/clean.sh
-        else
-            echo -e "$CR The verification process cannot proceed without the presence of the $base_dir/docs/report.out file"
-        fi
-    fi
-else
-    echo -e "$CR The verification process cannot proceed without the presence of the $base_dir directory"
-    exit 1
-fi
-
-
-printf "$CP FINAL GRADE: $CC %.0f $CW" $(echo "(100/$tq)*$ca" | bc -l)
+echo -e "${CC}========================================================================="
+echo -e "${CP}Assignment ${assignment} Verification ${CW}"
+echo -e "${CC}========================================================================="
+echo -e "${CC}File Structure Verification ${CW}"
+printf "${CG}%-40s%-10s%-10s%-10s${CW}\n" OBJECT EXIST OWNER MODE
+echo -e "${CL}==========================================================================${CW}"
+_eval ${basedir} root 755
+_eval ${basedir}/bin root 755
+_eval ${basedir}/bin/app.py root 700
+_eval ${basedir}/code ${realuser} 755
+_eval ${basedir}/code/alt_app_access ${realuser} 777
+_eval ${basedir}/flags/ ${realuser} 755
+_eval ${basedir}/flags/pid.info ${realuser} 644
+_eval ${basedir}/libs/ ${realuser} 755
+_eval ${basedir}/logs/ ${realuser} 755
+_eval ${basedir}/logs/stdout.log ${realuser} 644
+_eval ${basedir}/logs/stderr.log ${realuser} 644
+_eval ${basedir}/scripts/ ${realuser} 755
+_eval ${basedir}/scripts/clean.sh ${realuser} 755
+_eval ${basedir}/docs/ ${realuser} 755
+_eval ${basedir}/docs/README.txt ${realuser} 644
+_eval ${basedir}/docs/report.out ${realuser} 644
+echo -e "${CL}==========================================================================${CW}"
+echo -e "${CC}Report Content Verification ${CW}"
+printf "${CY}%-40s%-12s%-15s%-12s${CW}\n" FILE OWNER PERMISSIONS INODE
+_file_eval ${basedir}/bin/app.py
+_file_eval ${basedir}/scripts/clean.sh
+echo -e "${CL}==========================================================================${CW}"
+printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" $(echo "(100/${tq})*${ca}" | bc -l)
 echo ""
 
 # CHALLENGE:
