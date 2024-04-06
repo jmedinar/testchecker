@@ -1,0 +1,23 @@
+{
+    "cSpell.enableFiletypes": [
+        "ansible",
+        "ansible-jinja",
+        "config",
+        "dockercompose",
+        "dockerfile",
+        "github-actions-workflow",
+        "groovy",
+        "helm",
+        "ini",
+        "jinja",
+        "jinja-yaml",
+        "log",
+        "lua",
+        "makefile",
+        "perl",
+        "shellscript",
+        "ssh_config",
+        "toml",
+        "xml"
+    ]
+}
