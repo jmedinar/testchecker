@@ -46,13 +46,13 @@ do
                     if ${base_dir}/${t} /etc/passwd 2>/dev/null | grep "Method" &>/dev/null; then _pass; else _fail; fi
                     ;;
                 rabbitJumps.sh) 
-                    if ${base_dir}/${t} | grep "SUCCESS!" &>/dev/null; then _pass; else _fail; fi
+                    if ${base_dir}/${t} 2>/dev/null | grep "SUCCESS!" &>/dev/null; then _pass; else _fail; fi
                     ;;
                 testString.sh) 
-                    if ${base_dir}/${t} 1 | grep "Binary or positive integer" &>/dev/null; then _pass; else _fail; fi
+                    if ${base_dir}/${t} 1 2>/dev/null | grep "Binary or positive integer" &>/dev/null; then _pass; else _fail; fi
                     ;;
                 color.sh) 
-                    if ${base_dir}/${t} | grep LOVE &>/dev/null
+                    if ${base_dir}/${t} 2>/dev/null | grep LOVE &>/dev/null
                     then
                         if grep "echo -e" ${base_dir}/${t} &>/dev/null \
                             || grep "printf" ${base_dir}/${t} &>/dev/null; then _pass; else _fail; fi
