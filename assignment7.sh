@@ -19,7 +19,7 @@ _print_line
 echo -e "${CP} Assignment ${assignment} Verification"
 _print_line
 
-printf "${CY}%-10s%-10s%-10s%-10s%-10s\n" Cheese Apache Typora TuxPaint Website
+printf "${CG}%-10s%-10s%-10s%-10s%-10s\n" Cheese Apache Typora TuxPaint Website
 cheese="false" apache="false" typora="false" tuxpaint="false" website="false"
 if rpm -qa | grep "cheese-[[:digit:]]" &>/dev/null; then cheese="true"; ((ca++)); fi
 if rpm -qa | grep "^httpd-[[:digit:]]" &>/dev/null; then apache="true"; ((ca++)); fi
