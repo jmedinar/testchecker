@@ -10,6 +10,11 @@ assignment=4
 ca=0
 tq=36 # Total number of user times verified items (9*4=36)
 
+_print_line() {
+    printf "${CC}%0.s=" {1..80}
+    printf "${CW}\n"
+}
+
 _user() {
 	exist="false" 	primary="false" 	auxiliar="false" 	gecos="false"
 
@@ -51,11 +56,11 @@ _user() {
 	printf "${CY}%-10s%-8s%-15s%-18s%-10s${CW}\n" ${1} ${exist} ${primary} ${auxiliar} ${gecos}
 }
 
-echo -e "${CC}===================================================================="
+_print_line
 echo -e "${CP} Assignment ${assignment} Verification"
-echo -e "${CC}===================================================================="
+_print_line
 printf "${CG}%-10s%-8s%-15s%-18s%-10s${CW}\n" USER EXIST PRIMARY_GROUP AUXILIARY_GROUP GECOS_COMMENT
-echo -e "${CL}====================================================================${CW}"
+_print_line
 _user cyen accounting
 _user mpearl accounting
 _user jgreen directionboard
@@ -65,7 +70,7 @@ _user poto technology
 _user mkhan technology
 _user llopez directionboard
 _user jramirez humanresources
-echo -e "${CL}====================================================================${CW}"
+_print_line
 
 printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" "$(echo "( 100 / ${tq} ) * ${ca}" | bc -l)"
 echo ""

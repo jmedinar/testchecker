@@ -34,12 +34,17 @@ _file_eval() {
     printf "${CY}%-40s%-12s%-15s%-12s${CW}\n" ${1} ${owner} ${mode} ${inode}
 }
 
-echo -e "${CC}========================================================================="
+_print_line() {
+    printf "${CC}%0.s=" {1..80}
+    printf "${CW}\n"
+}
+
+_print_line
 echo -e "${CP}Assignment ${assignment} Verification"
-echo -e "${CC}========================================================================="
+_print_line
 echo -e "${CC}File Structure Verification"
 printf "${CG}%-40s%-10s%-10s%-10s\n" OBJECT EXIST OWNER MODE
-echo -e "${CL}==========================================================================${CW}"
+_print_line
 _eval "${basedir}" "root" 755
 _eval "${basedir}/bin" "root" 755
 _eval "${basedir}/bin/app.py" "root" 700
@@ -56,12 +61,12 @@ _eval "${basedir}/scripts/clean.sh" "${realuser}" 755
 _eval "${basedir}/docs/" "${realuser}" 755
 _eval "${basedir}/docs/README.txt" "${realuser}" 644
 _eval "${basedir}/docs/report.out" "${realuser}" 644
-echo -e "${CL}=========================================================================="
+_print_line
 echo -e "${CC}Report Content Verification"
 printf "${CY}%-40s%-12s%-15s%-12s${CW}\n" FILE OWNER PERMISSIONS INODE
 _file_eval "${basedir}/bin/app.py"
 _file_eval "${basedir}/scripts/clean.sh"
-echo -e "${CL}=========================================================================="
+_print_line
 printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" "$(echo "(100/${tq})*${ca}" | bc -l)"
 echo ""
 

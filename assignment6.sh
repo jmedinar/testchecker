@@ -8,9 +8,14 @@
 CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
 assignment=6
 
-echo -e "${CC} ========================================================================="
+_print_line() {
+    printf "${CC}%0.s=" {1..80}
+    printf "${CW}\n"
+}
+
+_print_line
 echo -e "${CP} Assignment ${assignment} Verification"
-echo -e "${CC} ========================================================================="
+_print_line
 echo -e "${CR} Assignment 6 does not have automated verification!
 ${CY} 
  Please submit the ${CL} SOURCE CODE ${CY} of your ${CG} sysmonitor.sh ${CY} script 

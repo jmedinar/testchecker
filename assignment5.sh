@@ -15,21 +15,26 @@ _msg() {
 }
 
 _pass() {
-   echo -e "${CG} PASS ${CR}"
+   echo -e "${CG} true ${CR}"
    ((ca++))
 }
 
 _fail() {
-   echo -e "${CR} FAIL ${CG}"
+   echo -e "${CR} false ${CG}"
 }
 
 _eval() {
     if eval ${1} &>/dev/null; then _pass; else _fail; fi
 }
 
-echo -e "${CC} ========================================================================="
+_print_line() {
+    printf "${CC}%0.s=" {1..80}
+    printf "${CW}\n"
+}
+
+_print_line
 echo -e "${CP} Assignment ${assignment} Verification"
-echo -e "${CC} ========================================================================="
+_print_line
 
 base_dir="/sysadm/bin"
 targets=(processFile.sh rabbitJumps.sh testString.sh color.sh)

@@ -16,21 +16,26 @@ _msg() {
 }
 
 _pass() {
-   echo -e "${CG} PASS ${CR}"
+   echo -e "${CG} true ${CR}"
    ((ca++))
 }
 
 _fail() {
-   echo -e "${CR} FAIL ${CG}"
+   echo -e "${CR} false ${CG}"
 }
 
 _eval() {
     if eval ${1} &>/dev/null; then _pass; else _fail; fi
 }
 
-echo -e "${CC} ========================================================================="
+_print_line() {
+    printf "${CC}%0.s=" {1..80}
+    printf "${CW}\n"
+}
+
+_print_line
 echo -e "${CP} Assignment ${assignment} Verification"
-echo -e "${CC} ========================================================================="
+_print_line
 
 report="/home/$(who am i | awk '{print $1}')/backup/system-backup.info"
 
@@ -44,7 +49,7 @@ then
         _eval "grep -E 'CDT|$(date +%Y)' ${report}"
     _msg "Uptime Information:"
         _eval "grep 'load average' ${report}"
-    _msg "Lastname in the Proper Format:"
+    _msg "Last Name in the Proper Format:"
         _eval "grep 'LASTNAME' ${report}"
     _msg "Content of the /etc/resolv.conf File"
         _eval "grep 'nameserver' ${report}"
@@ -56,7 +61,7 @@ then
         _eval "grep uname ${report} | grep -v kernel"
 else 
     _fail
-    echo -e "${CR} The verification process cannot proceed whithout the presence of the ~/backup/system-backup.info file. ${CW}"
+    echo -e "${CR} The verification process cannot proceed without the presence of the ~/backup/system-backup.info file. ${CW}"
 fi
 
 printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" "$(echo "(100/${tq})*${ca}" | bc -l)"

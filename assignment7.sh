@@ -8,41 +8,25 @@
 CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
 assignment=7
 ca=0
-tq=0
+tq=5
 
-_msg() {
-   echo -ne "${CY} ${1}"
-   ((tq++))
+_print_line() {
+    printf "${CC}%0.s=" {1..80}
+    printf "${CW}\n"
 }
 
-_pass() {
-   echo -e "${CG} PASS ${CR}"
-   ((ca++))
-}
-
-_fail() {
-   echo -e "${CR} FAIL ${CG}"
-}
-
-echo -e "${CC} ========================================================================="
+_print_line
 echo -e "${CP} Assignment ${assignment} Verification"
-echo -e "${CC} ========================================================================="
+_print_line
 
-_msg "The cheese application has been successfully uninstalled"
-if rpm -qa | grep "cheese-[[:digit:]]" &>/dev/null; then _pass; else _fail; fi
-
-_msg "Apache(httpd) must be installed"
-if rpm -qa | grep "^httpd-[[:digit:]]" &>/dev/null; then _pass; else _fail; fi
-
-_msg "Typora must be installed at the /opt directory"
-if ls /opt/bin/T*/Typora &>/dev/null; then _pass; else _fail; fi
-
-_msg "The TuxPaint application must be installed"
-if rpm -qa | grep "tuxpaint" &>/dev/null; then _pass; else _fail; fi
-
-_msg "The requested website was created"
-if grep -E "Assignment 7|Learning Linux" /var/www/html/index.html &>/dev/null; then _pass; else _fail; fi
-
+printf "${CY}%-10s%-10s%-10s%-10s%-10s\n" Cheese Apache Typora TuxPaint Website
+cheese="false" apache="false" typora="false" tuxpaint="false" website="false"
+if rpm -qa | grep "cheese-[[:digit:]]" &>/dev/null; then cheese="true"; ((ca++)); fi
+if rpm -qa | grep "^httpd-[[:digit:]]" &>/dev/null; then apache="true"; ((ca++)); fi
+if ls /opt/bin/T*/Typora &>/dev/null; then typora="true"; ((ca++)); fi
+if rpm -qa | grep "tuxpaint" &>/dev/null; then tuxpaint="true"; ((ca++)); fi
+if grep -E "Assignment 7|Learning Linux" /var/www/html/index.html &>/dev/null; then website="true"; ((ca++)); fi
+printf "${CY}%-10s%-10s%-10s%-10s%-10s\n" ${cheese} ${apache} ${typora} ${tuxpaint} ${website}
 printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" "$(echo "(100/${tq})*${ca}" | bc -l)"
 echo ""
 
