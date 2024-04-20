@@ -51,11 +51,12 @@ wget --no-check-certificate --no-cache --no-cookies  -q $(echo ${code} | base64 
 chmod 700 /usr/bin/testchecker
 
 echo -e "${CY} Setting up the prompt..."
+if ! grep -qxF 'rc=' /etc/bashrc
+then
 echo '
 rc="\[\e[31m\]"
 gc="\[\e[32m\]"
 rs="\[\e[0m\]"
-
 if [ $EUID -eq 0 ]
 then
 	export PS1="${rc}\u@\h \w${rs}# "
@@ -63,6 +64,10 @@ else
 	export PS1="${gc}\u@\h \w${rs}\$ "
 fi
 ' >> /etc/bashrc
+fi
+
+
+
 
 echo -e "${CY} Setting up the hostname..."
 hostnamectl set-hostname fedora
