@@ -51,7 +51,8 @@ wget --no-check-certificate --no-cache --no-cookies  -q $(echo ${code} | base64 
 chmod 700 /usr/bin/testchecker
 
 echo -e "${CY} Setting up the prompt..."
-if ! grep -qxF 'rc=' /etc/bashrc
+grep -qxF 'rc=' /etc/bashrc
+if [[ $? -ne 0 ]]
 then
 echo '
 rc="\[\e[31m\]"
