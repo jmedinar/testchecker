@@ -1,3 +1,4 @@
+# trunk-ignore-all(shfmt)
 #!/urs/bin/env bash
 # Script: init.sh
 # Author: Professor Juan Medina
@@ -65,7 +66,7 @@ else
 fi
 ' >> /etc/bashrc
 else
-    echo "prompt is already set"
+    echo "  prompt is already set"
 fi
 
 echo -e "${CY} Setting up the hostname..."
