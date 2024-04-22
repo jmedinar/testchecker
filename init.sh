@@ -51,7 +51,7 @@ wget --no-check-certificate --no-cache --no-cookies  -q $(echo ${code} | base64 
 chmod 700 /usr/bin/testchecker
 
 echo -e "${CY} Setting up the prompt..."
-if grep -qxF 'rc=' /etc/bashrc
+if [[ $(grep -qF 'export PS1' /etc/bashrc; echo $?) -ne 0 ]]
 then
 echo '
 rc="\[\e[31m\]"
@@ -65,7 +65,7 @@ else
 fi
 ' >> /etc/bashrc
 else
-echo "prompt already set"
+    echo "prompt is already set"
 fi
 
 echo -e "${CY} Setting up the hostname..."
