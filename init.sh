@@ -51,8 +51,7 @@ wget --no-check-certificate --no-cache --no-cookies  -q $(echo ${code} | base64 
 chmod 700 /usr/bin/testchecker
 
 echo -e "${CY} Setting up the prompt..."
-grep -q 'rc=' /etc/bashrc
-if [[ $? -ne 0 ]]
+[[grep -qxF 'rc=' /etc/bashrc]]
 then
 echo '
 rc="\[\e[31m\]"
@@ -65,10 +64,9 @@ else
 	export PS1="${gc}\u@\h \w${rs}\$ "
 fi
 ' >> /etc/bashrc
+else
+echo "prompt already set"
 fi
-
-
-
 
 echo -e "${CY} Setting up the hostname..."
 hostnamectl set-hostname fedora
