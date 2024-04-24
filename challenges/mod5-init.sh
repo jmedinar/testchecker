@@ -12,5 +12,5 @@ for l in ${labs}; do wget --no-check-certificate --no-cache --no-cookies -q $(ec
 b="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vY2hhbGxlbmdlcy9"
 labs="ob21lQ2hlY2tlci5zaAo= wYXNzd29yZEdlbmVyYXRvci5zaAo= wcm9jZXNzRmlsZS5zaAo= yYWJiaXRKdW1wcy5zaAo= 0ZXN0U3RyaW5nLnNoCg== 1c2VyVmFsaWRhdG9yLnNoCg=="
 for l in ${labs}; do wget --no-check-certificate --no-cache --no-cookies -q $(echo ${b}${l} | base64 -d); ((count++)); done
-chown -R ${realuser}:${realuser} /sysadm; chmod u+x /sysadm/bin/challenge*.sh
+chown -R ${realuser}:${realuser} /sysadm; chmod u+x /sysadm/bin/*.sh
 echo Done!; exit 0
