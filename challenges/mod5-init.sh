@@ -4,12 +4,10 @@
 # Description: Setup challenge scripts for module five
 
 realuser=$(who am i | awk '{ print $1}')
-if [[ ${UID} -ne 0 ]] && echo "Execute this script with sudo"; exit 2; fi
-if wget -q --spider http://google.com; then echo "not connected to the internet!"; exit 3; fi
+if [[ ${UID} -ne 0 ]]; then echo "Execute this script with sudo"; exit 1; fi
+if [[ $(wget -q --spider http://google.com; echo $?) -ne 0 ]]; then echo "Internet connnection required"; exit 2; fi
 mkdir -p /sysadm/bin
-cd /sysadm/bin || exit
-bu="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vY2hhbGxlbmdlcy8K"
-ch="Y2hhbGxlbmdlMS5zaAo= Y2hhbGxlbmdlMi5zaAo= Y2hhbGxlbmdlMy5zaAo= Y2hhbGxlbmdlNC5zaAo= Y2hhbGxlbmdlNS5zaAo= Y2hhbGxlbmdlNi5zaAo= Y2hhbGxlbmdlNy5zaAo= Y2hhbGxlbmdlOC5zaAo= Y2hhbGxlbmdlOS5zaAo="
-for j in ${ch}; do curl -skH 'Cache-Control: no-cache' $(echo "${bu}${j}" | base64 -d); done
-chown -R ${realuser}:${realuser}: /sysadm
-echo Done!
+b="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vY2hhbGxlbmdlcy9jaGFsbGVuZ2U" labs="x y z 0 1 2 3 4 5" c="LnNoCg==" count=1
+for l in ${labs}; do wget --no-check-certificate --no-cache --no-cookies -q $(echo ${b}${l}${c} | base64 -d) -O /sysadm/bin/challenge${count}.sh; ((count++)); done
+chown -R ${realuser}:${realuser} /sysadm; chmod u+x /sysadm/bin/challenge*.sh
+echo Done!; exit 0
