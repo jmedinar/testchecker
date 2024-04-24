@@ -1,17 +1,17 @@
 #!/bin/bash
 #
-# Challenge 3:
+# Challenge name:        challenge3.sh
+# Description:           Using what you have learned about using quotes in shell scripts,
+#                        identify and fix any issues in the provided script to
+#                        ensure that it produces the expected results.
+# Script Purpose:        This script should generate two messages making use of variables
 #
-# Using what you have learned about using quotes in shell scripts, 
-# identify and fix any issues in the provided script 
-# to ensure that it produces the expected results.
+# Expected Output:       Hello, Alice
+#                        to Wonderland!
 #
-# Expected Output:
-# Hello, Alice
-# to Wonderland!
+# Testing:               After making the required modifications, execute the script
+#                        and verify that it behaves as expected.
 #
-# After making the required modifications, execute the script 
-# and verify that it behaves as expected.
 
 GREETING=`Hello,`
 NAME="Alice"

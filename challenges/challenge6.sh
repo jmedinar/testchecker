@@ -1,19 +1,19 @@
 #!/bin/bash
 #
-# Challenge 6:
+# Challenge name:        challenge6.sh
+# Description:           Using what you have learned about math in shell scripts,
+#                        identify and fix any issues in the provided script to
+#                        ensure that it produces the expected results.
+# Script Purpose:        This script applies simple math calculations in different formats
 #
-# Using what you have learned about math in shell scripts, 
-# identify and fix any issues in the provided script 
-# to ensure that it produces the expected results.
+# Expected Output:       Addition: 15
+#                        Subraction: 5
+#                        Division: 2
+#                        Multiplication: 50
 #
-# Expected Output:
-# Addition: 15
-# Subraction: 5
-# Division: 2
-# Multiplication: 50
+# Testing:               After making the required modifications, execute the script
+#                        and verify that it behaves as expected.
 # 
-# After making the required modifications, execute the script 
-# and verify that it behaves as expected.
 
 NUM1=10
 NUM2=5

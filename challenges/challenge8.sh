@@ -1,16 +1,17 @@
 #!/bin/bash
 #
-# Challenge 8:
+# Challenge name:        challenge8.sh
+# Description:           Using what you have learned about File Test Operators,
+#                        identify and fix any issues in the provided script to
+#                        ensure that it produces the expected results.
+# Script Purpose:        This script will test the existence of the file /etc/passwd
+#                        and print a message depending on the test result.
 #
-# Using what you have learned about File Test Operators, 
-# identify and fix any issues in the provided script 
-# to ensure that it produces the expected results.
+# Expected Output:       /etc/passwd exists!
 #
-# Expected Output:
-# /etc/passwd exists!
-# 
-# After making the required modifications, execute the script 
-# and verify that it behaves as expected.
+# Testing:               After making the required modifications, execute the script
+#                        and verify that it behaves as expected.
+#
 
 FILE="/etc/passwd"
 if [[ -b $FILE ]]

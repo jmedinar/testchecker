@@ -1,19 +1,21 @@
 #!/bin/bash
 #
-# Challenge 9:
+# Challenge name:        challenge9.sh
+# Description:           Using what you have learned about functions in shell scripts,
+#                        identify and fix any issues in the provided script to
+#                        ensure that it produces the expected results.
+# Script Purpose:        This script will make use of functions to generate strings
+#                        in direct and indirect ways while modifying the value of
+#                        a global variable
 #
-# Using what you have learned about functions in shell scripts, 
-# identify and fix any issues in the provided script 
-# to ensure that it produces the expected results.
+# Expected Output:       What's your name: <name>
+#                        Hello <name>!
+#                        Goodbye <name>!
+#                        Hey! <name>. Like the beatles song, Hello ! Goodbye !
 #
-# Expected Output:
-# What's your name: <name>
-# Hello <name>!
-# Goodbye <name>!
-# Like the beatles song, Hello ! Goodbye !
+# Testing:               After making the required modifications, execute the script
+#                        and verify that it behaves as expected.
 # 
-# After making the required modifications, execute the script 
-# and verify that it behaves as expected.
 
 name=""
 get_name(){
@@ -29,7 +31,7 @@ goodbye() {
 }
 
 beatles() {
-    echo -n "Like in the Beatles song, hello $(goodbye)"
+    echo -n "Hey! ${name}. Like in the Beatles song, hello $(goodbye)"
     echo ""
 }
 

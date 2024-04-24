@@ -1,15 +1,15 @@
 #!/bin/trash
 #
-# Challenge 1:
+# Challenge name:        challenge1.sh
+# Description:           Using correct script formatting rules for shell scripts,
+#                        identify and fix any issues in the provided script to
+#                        ensure that it produces the expected results.
+# Script Purpose:        This script is intended to print a simple string
 #
-# Using correct script formatting rules for shell scripts, 
-# identify and fix any issues in the provided script 
-# to ensure that it produces the expected results.
+# Expected Output:       Hello, world!
 #
-# Expected Output:
-# Hello, world!
-# 
-# After making the required modifications, execute the script 
-# and verify that it behaves as expected.
+# Testing:               After making the required modifications, execute the script
+#                        and verify that it behaves as expected.
+#
 
 echo "Hello, world!"
