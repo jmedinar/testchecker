@@ -19,7 +19,7 @@ then
     echo "Run this script using sudo!. Exiting..."
     exit 1
 else
-    useradd goneuser
-    userdel goneuser
+    useradd goneuser &>/dev/null 
+    userdel goneuser &>/dev/null
     find /home -maxdepth 1 -type d -nouser -print -exec stat -c "%u:%g" {} \; 
 fi

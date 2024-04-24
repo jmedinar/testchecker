@@ -7,12 +7,33 @@
 # Script Purpose:        To simulate a rabbit jumping 10 times with a pattern of moving two steps 
 #                        forward and one step backward each time.
 #
-# Expected Output:       Hello, world!
+# Expected Output:       START --0--1--2--3--4--5--6--7--8--9--10-- FINISH
+#                        START --X--1--2--3--4--5--6--7--8--9--10-- FINISH
+#                        START --0--1--X--3--4--5--6--7--8--9--10-- FINISH
+#                        START --0--X--2--3--4--5--6--7--8--9--10-- FINISH
+#                        START --0--1--2--X--4--5--6--7--8--9--10-- FINISH
+#                        START --0--1--X--3--4--5--6--7--8--9--10-- FINISH
+#                        START --0--1--2--3--X--5--6--7--8--9--10-- FINISH
+#                        START --0--1--2--X--4--5--6--7--8--9--10-- FINISH
+#                        START --0--1--2--3--4--X--6--7--8--9--10-- FINISH
+#                        START --0--1--2--3--X--5--6--7--8--9--10-- FINISH
+#                        START --0--1--2--3--4--5--X--7--8--9--10-- FINISH
+#                        START --0--1--2--3--4--X--6--7--8--9--10-- FINISH
+#                        START --0--1--2--3--4--5--6--X--8--9--10-- FINISH
+#                        START --0--1--2--3--4--5--X--7--8--9--10-- FINISH
+#                        START --0--1--2--3--4--5--6--7--X--9--10-- FINISH
+#                        START --0--1--2--3--4--5--6--X--8--9--10-- FINISH
+#                        START --0--1--2--3--4--5--6--7--8--X--10-- FINISH
+#                        START --0--1--2--3--4--5--6--7--X--9--10-- FINISH
+#                        START --0--1--2--3--4--5--6--7--8--9--X-- FINISH
+#                        START --0--1--2--3--4--5--6--7--8--X--10-- FINISH
+#                        START --0--1--2--3--4--5--6--7--8--9--10-- FINISH
+#                        The Rabbit made it!
 #
 # Testing:               After making the required modifications, execute the script
 #                        and verify that it behaves as expected.
 #
-start=0 finish=10 pos=0
+finish=10 pos=0
 field="START --0--1--2--3--4--5--6--7--8--9--10-- FINISH"
 
 function _jump_forward(){
@@ -24,7 +45,7 @@ _jump_backwards(){
 }
 
 echo ${field}
-while ${start} < ${finish}
+while [[ ${pos} -ne ${finish} ]]
 do
     echo "${field}" | sed -e "s/--$pos--/--X--/g"
     _jump_forward
