@@ -11,6 +11,7 @@
 # Testing:               After making the required modifications, execute the script
 #                        and verify that it behaves as expected.
 #
-if command -v openssl || sudo dnf install -yqq openssl &>/dev/null
-read -p "Enter the password lenght: " PASS_LENGTH
+if command -v openssl &>/dev/null || sudo dnf install -yqq openssl &>/dev/null
+#read -p "Enter the password lenght: " PASS_LENGTH
+PASS_LENGTH=12
 openssl rand -base64 48 | cut -c1-PASS_LENGTH

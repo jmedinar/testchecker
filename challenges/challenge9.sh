@@ -9,9 +9,9 @@
 #                        a global variable
 #
 # Expected Output:       What's your name: <name>
-#                        Hello <name>!
+#                        Hello <name>.!
 #                        Goodbye <name>!
-#                        Hey! <name>. Like the beatles song, Hello ! Goodbye !
+#                        Hey! <name>. Like the beatles song, Hello, Goodbye!
 #
 # Testing:               After making the required modifications, execute the script
 #                        and verify that it behaves as expected.

@@ -18,4 +18,4 @@ white='\e[0;37m'
 parameter1=$1
 class "Linux"
 
-echo -e "${message} ${parameter1} to the red$class$white} class!"
+echo -e "${message} ${parameter1}to the red$class$white} class!"

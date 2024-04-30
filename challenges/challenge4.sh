@@ -7,10 +7,10 @@
 # Script Purpose:        This script will use a loop to verify the existence of four files
 #                        using the exit code of the ls command.
 #
-# Expected Output:       File /path/to/nonexistent/file does not exist
-#                        File /etc/passwd exists
-#                        File /etc/fedora-release exists
-#                        File /etc/linux_version does not exist
+# Expected Output:       File /path/to/nonexistent/file not found
+#                        File /etc/passwd found
+#                        File /etc/fedora-release found
+#                        File /etc/linux_version not found
 #
 # Testing:               After making the required modifications, execute the script
 #                        and verify that it behaves as expected.
@@ -22,8 +22,8 @@ do
     ls ${file} 2>/dev/null
     if [[ $? -eq 1 ]]
     then
-        echo "File $file exists"
+        echo "File $file found"
     else
-        echo "File $file does not exist"
+        echo "File $file not found"
     fi 
 done

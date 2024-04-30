@@ -6,8 +6,7 @@
 #                        ensure that it produces the expected results.
 # Script Purpose:        This script should generate two messages making use of variables
 #
-# Expected Output:       Hello, Alice
-#                        to Wonderland!
+# Expected Output:       Hello Alice, Welcome to Wonderland!
 #
 # Testing:               After making the required modifications, execute the script
 #                        and verify that it behaves as expected.
@@ -16,5 +15,5 @@
 GREETING=`Hello,`
 NAME="Alice"
 LOCATION='Wonderland'
-echo "$GREETING $NAME" 
-echo 'to $LOCATION!'
+echo "$GREETING $NAME Welcome 'to $LOCATION!'
+
