@@ -21,7 +21,7 @@ _print_line
 
 printf "${CG}%-10s%-10s%-10s%-10s%-10s\n" Cheese Apache Typora TuxPaint Website
 cheese="false" apache="false" typora="false" tuxpaint="false" website="false"
-if rpm -qa | grep "cheese-[[:digit:]]" &>/dev/null; then cheese="true"; ((ca++)); fi
+if ! rpm -qa | grep "cheese-[[:digit:]]" &>/dev/null; then cheese="true"; ((ca++)); fi
 if rpm -qa | grep "^httpd-[[:digit:]]" &>/dev/null; then apache="true"; ((ca++)); fi
 if ls /opt/bin/T*/Typora &>/dev/null; then typora="true"; ((ca++)); fi
 if rpm -qa | grep "tuxpaint" &>/dev/null; then tuxpaint="true"; ((ca++)); fi

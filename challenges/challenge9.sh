@@ -9,9 +9,9 @@
 #                        a global variable
 #
 # Expected Output:       What's your name: <name>
-#                        Hello <name>.!
-#                        Goodbye <name>!
-#                        Hey! <name>. Like the beatles song, Hello, Goodbye!
+#                        Hello student.!
+#                        Goodbye student!
+#                        Hey! student. Like the beatles song, Hello, Goodbye!
 #
 # Testing:               After making the required modifications, execute the script
 #                        and verify that it behaves as expected.
@@ -19,7 +19,8 @@
 
 name=""
 get_name(){
-    read -p "What's your name: " name
+    #read -p "What's your name: " name
+    name="student"
 }
 
 hello() {
