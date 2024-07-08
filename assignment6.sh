@@ -95,11 +95,7 @@ do
     echo "      [${pos}] ${q}"
     ((pos+=1))
 done
-_selection=a
-while echo "${_selection}" | grep -qE '^[0-9]'
-do
-    read -p "       Choose a number: " _selection
-done
+read -p "       Choose a number: " _selection
 ((tq++))
 if [[ "${quotes[${_selection}]}" == "${funny}" ]]
 then
