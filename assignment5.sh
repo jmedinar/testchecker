@@ -85,7 +85,7 @@ do
                                 "Binary or positive integer" ;;
 
         userValidator) _eval    "${t}" "" \
-                                "root is UNLOCKED" ;;
+                                "root is ALTERNATE" ;;
 
         *) echo "Unknown" ;;
     esac
