@@ -1,5 +1,4 @@
-# trunk-ignore-all(shfmt)
-#!/urs/bin/env bash
+#!/usr/bin/bash
 # Script: init.sh
 # Author: Professor Juan Medina
 # Email: jmedina@collin.edu
