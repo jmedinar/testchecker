@@ -45,16 +45,8 @@ _msg "CPU:"
 _msg "Internet:"
    if wget -q --spider http://google.com; then _pass; else _fail; fi
 
-printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" "$(echo "(100/${tq})*${ca}" | bc -l)"
+grade="$(echo "(100/${tq})*${ca}" | bc -l)"
+printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" ${grade}
+uuid=$(dmidecode -s system-uuid)
+echo -e "${CY} $(echo "${uuid},${grade}" | base64 -w 0)${CW}"
 echo ""
-
-# CHALLENGE:
-# Install Virtualization Software (VirtualBox, VMWare, Qemu, or HyperV) 
-# on your computer (VirtualBox is recommended for its user-friendly interface). 
-# Once installed, create a Virtual Machine and install a Linux server using the latest 
-# Fedora Workstation Image from The Fedora Project
-# Ensure your virtual machine meets the following minimal requirements:
-#    At least 2 GB of Memory
-#    One Virtual Disk of at least 20 GB in size (Fixed size)
-#    At least 1 CPU
-#    Ensure the Virtual Machine can reach the Internet
