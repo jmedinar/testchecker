@@ -47,6 +47,7 @@ _msg "Internet:"
 
 grade="$(echo "(100/${tq})*${ca}" | bc -l)"
 printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" ${grade}
+echo ""
 uuid=$(dmidecode -s system-uuid)
 echo -e "${CY} $(echo "${uuid},${grade}" | base64 -w 0)${CW}"
 echo ""
