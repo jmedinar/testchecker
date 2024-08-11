@@ -19,7 +19,7 @@ _print_line
 echo -e "${CP} Assignment ${assignment} Verification"
 _print_line
 
-printf "${CG}%-10s%-10s%-10s%-10s%-10s\n" Cheese Apache Typora TuxPaint Website
+printf "${CG}%-10s%-10s%-10s%-10s%-10s\n" Nmap Wireshark Typora TuxPaint Website
 nmap="false" wireshark="false" typora="false" tuxpaint="false" website="false"
 if ! rpm -qa | grep "nmap-[[:digit:]]" &>/dev/null; then nmap="true"; ((ca++)); fi
 if rpm -qa | grep "^wireshark-[[:digit:]]" &>/dev/null; then wireshark="true"; ((ca++)); fi
