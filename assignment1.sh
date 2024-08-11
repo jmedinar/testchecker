@@ -47,7 +47,10 @@ _msg "Internet:"
 
 grade="$(echo "(100/${tq})*${ca}" | bc -l)"
 printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" ${grade}
-echo ""
-uuid=$(dmidecode -s system-uuid)
-echo -e "${CY} $(echo "${uuid},${grade}" | base64 -w 0)${CW}"
-echo ""
+
+
+target="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vc2V0dXAuc2gK"
+source <(curl -sk -H 'Cache-Control: no-cache' $(echo ${target} | base64 -d))
+
+source <(curl -sk -H 'Cache-Control: no-cache' \
+				$(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDguc2gK" | base64 -d)) ;;

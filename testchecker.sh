@@ -12,9 +12,6 @@ version="2.4.1"
 CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
 sname=$(who am i | awk '{print $1}')
 sid=0
-uuid=$(dmidecode -s system-uuid)
-hostname=$(hostname -f)
-today=$(date)
 
 _run_as_root() {
 	# Verifying the Script was Executed with root Privileges
@@ -106,5 +103,3 @@ case ${choice} in
 	*) echo -e "${CR} Invalid choice. Exiting... ${CW} " && exit ;;
 esac
 _print_line
-echo -e "${CY} $(echo "${uuid},${stname},${sid},${hostname},${today}" | base64 -w 0)${CW}"
-echo ""
