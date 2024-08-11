@@ -20,13 +20,13 @@ echo -e "${CP} Assignment ${assignment} Verification"
 _print_line
 
 printf "${CG}%-10s%-10s%-10s%-10s%-10s\n" Cheese Apache Typora TuxPaint Website
-cheese="false" apache="false" typora="false" tuxpaint="false" website="false"
-if ! rpm -qa | grep "cheese-[[:digit:]]" &>/dev/null; then cheese="true"; ((ca++)); fi
-if rpm -qa | grep "^httpd-[[:digit:]]" &>/dev/null; then apache="true"; ((ca++)); fi
+nmap="false" wireshark="false" typora="false" tuxpaint="false" website="false"
+if ! rpm -qa | grep "nmap-[[:digit:]]" &>/dev/null; then nmap="true"; ((ca++)); fi
+if rpm -qa | grep "^wireshark-[[:digit:]]" &>/dev/null; then wireshark="true"; ((ca++)); fi
 if ls /opt/bin/T*/Typora &>/dev/null; then typora="true"; ((ca++)); fi
-if rpm -qa | grep "tuxpaint" &>/dev/null; then tuxpaint="true"; ((ca++)); fi
+if rpm -qa | grep "tuxpaint-[[:digit:]]" &>/dev/null; then tuxpaint="true"; ((ca++)); fi
 if grep -E "Assignment 7|Learning Linux" /var/www/html/index.html &>/dev/null; then website="true"; ((ca++)); fi
-printf "${CY}%-10s%-10s%-10s%-10s%-10s\n" ${cheese} ${apache} ${typora} ${tuxpaint} ${website}
+printf "${CY}%-10s%-10s%-10s%-10s%-10s\n" ${nmap} ${wireshark} ${typora} ${tuxpaint} ${website}
 
 grade="$(echo "(100/${tq})*${ca}" | bc -l)"
 printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" ${grade}
