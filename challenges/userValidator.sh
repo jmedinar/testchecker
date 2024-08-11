@@ -19,16 +19,19 @@ then
 	echo 'Script must be executed with root authority'
 	exit 1
 fi
+passwd -l sync &>/dev/null
 for user in $(cat /etc/passwd | grep -vE 'nologin' | sed 's/:/ /g' | awk '{print $1}')
 do
-	status = $(passwd -S $user)
+	status = $(userdbctl user ${user} | grep "Password OK" 2>/dev/null)
 	if [[ ${status} =~ 'locked' ]]
 	then
 		echo "${user} is LOCKED"
 	elif [[ ${status} =~ 'set' ]]
 	then
-		echo "${user} is UNLOCKED"
-	else
-		echo "${user} is ALTERNATE"
+		echo "${user} password is NOT SET"
+	elif [[ ${status} =~ 'yes' ]]
+	then
+		echo "${user} password is SET"
 	fi
 done
+passwd -u sync &>/dev/null

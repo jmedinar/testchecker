@@ -85,7 +85,7 @@ do
                                 "Binary or positive integer" ;;
 
         userValidator) _eval    "${t}" "" \
-                                "root is ALTERNATE" ;;
+                                "sync password is NOT SET" ;;
 
         *) echo "Unknown" ;;
     esac
