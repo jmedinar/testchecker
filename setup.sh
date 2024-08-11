@@ -19,40 +19,19 @@ echo "Date: $(date +%D)
 echo "Step 1: Verifying you are no longer running the installer"
 if [[ ${USER} == "liveuser" ]]
 then
-    echo -e "${CR}
-    Notice that your shell indicates your current user is 'liveuser' 
-    which suggests that you are still running under the ${CY} LIVE ISO Linux Installer ${CR}
-    and still need to complete the Linux Installation process!
-    ${CY}
-    Please remove the ISO from the Virtual Machine and reboot it to remediate this.${CW}"
+    echo -e "Your system is running as the ${CR} liveuser ${CW}
+    which indicates you are running under the ${CY} LIVE ISO Linux Installer ${CW}
+    remove the ISO from your Virtual Machine and reboot.${CW}"
+    echo "Exiting..."
     exit 1
 fi
 
-# Verifying the Script was Executed with root Privileges
-if [[ ${UID} -ne 0 ]]; then
-    echo -e "${CR}
-    This script must be executed with sudo to acquire administrator (root) privileges!
-    Example: ${CY} sudo bash ~/Downloads/init.sh ${CW}"
-    exit 2
-fi
-
-# Verifying Internet Connection
-if [[ $( wget -q --spider http://google.com; echo $?) -ne 0 ]]; then
-    echo -e "${CR} Your Virtual Machine is currently not connected to the internet!
-    ${CY}
-    Connect it by clicking on the icons at the top right corner of Linux 
-    and ensuring the Wi-Fi is enabled. 
-    ${CL}
-    Once corrected, rerun this script. ${CW}"
-    exit 3
-fi
-
-echo -e "${CY} Setting up the testchecker tool..."
+echo "Step 2: Setting up the testchecker tool"
 code="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vdGVzdGNoZWNrZXIuc2gK"
 wget --no-check-certificate --no-cache --no-cookies  -q $(echo ${code} | base64 -d) -O /usr/bin/testchecker
 chmod 700 /usr/bin/testchecker
 
-echo -e "${CY} Setting up the prompt..."
+echo -e "Step 3: Modifying your prompt"
 if [[ $(grep -qF 'export PS1' /etc/bashrc; echo $?) -ne 0 ]]
 then
 echo '
@@ -70,23 +49,8 @@ else
     echo "  prompt is already set"
 fi
 
-echo -e "${CY} Setting up the hostname..."
+echo -e "Step 4: Setting up the hostname"
 hostnamectl set-hostname fedora
 
-echo -e "${CG} Your environment has been set up successfully! ${CW}
-
-1. You now have the ${CY} testchecker tool ${CW} installed in your system.
-
-The testchecker tool helps you verify your assignments. 
-
-   To run it, execute the following command: 
-
-       ${CY} sudo testchecker ${CW}
-
-2. The hostname has been set as fedora.
-
-3. You will notice that the prompt in all future terminals will be colored,
-${CG} green ${CW} when working as a regular user account and in ${CR} red ${CW} when 
-running as the administrator (root) account. 
-
-${CY} To continue, please close this terminal window and open a new one.${CW}"
+echo -e "${CG} Environment setup completed successfully!${CW}"
+echo -e "${CY} Important: Reboot your Linux machine now!${CW}"
