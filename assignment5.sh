@@ -55,7 +55,7 @@ do
                                 "Hello Alice, Welcome to Wonderland!" ;;
 
         challenge4)  _eval      "${t}" "" \
-                                "File /etc/linux_version not found" ;;
+                                "File /etc/passwd found" ;;
 
         challenge5)  _eval      "${t}" "Learning Linux challenging it also fun very rewarding" \
                                 "Learning Linux is challenging but it is also fun and very rewarding" ;;
