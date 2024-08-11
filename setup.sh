@@ -53,4 +53,5 @@ echo -e "Step 4: Setting up the hostname"
 hostnamectl set-hostname fedora
 
 echo -e "${CG} Environment setup completed successfully!${CW}"
-echo -e "${CY} Important: Reboot your Linux machine now!${CW}"
+echo -e "${CY} Rebooting now!${CW}"
+reboot
