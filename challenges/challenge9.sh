@@ -11,7 +11,7 @@
 # Expected Output:       What's your name: <name>
 #                        Hello student.!
 #                        Goodbye student!
-#                        Hey! student. Like the beatles song, Hello, Goodbye!
+#                        Hey! student. Like the Beatles song, Hello, Goodbye!
 #
 # Testing:               After making the required modifications, execute the script
 #                        and verify that it behaves as expected.
