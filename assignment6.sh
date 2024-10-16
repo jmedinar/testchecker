@@ -40,7 +40,7 @@ funny=$(journalctl --since="3 hours ago" --priority=err --user -n 1 | awk -F ':'
 
 echo "From the process causing performance issues:"
 
-read -p "   1. Identify the PID: " _pid
+read -p "   1. Identify the PPID: " _pid
 ((tq++))
 if [[ "${_pid}" == "${process}" ]]
 then
