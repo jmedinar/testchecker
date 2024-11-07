@@ -4,7 +4,7 @@ title="TEST CHECKER"
 # Author: Professor Juan Medina
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
-version="2.4.1"
+version="2.4.2"
 # Purpose: This script will gatter VM and Student information
 #          and will execute the interactive test verification scripts
 
@@ -80,7 +80,7 @@ _print_line
 echo -e "${CY}                        C O L L I N   C O L L E G E "
 echo -e "${CY}                        ${title} Version: ${version} "
 _print_line
-echo -e "${CG} DATE: ${CY} ${today} ${CG} STUDENT: ${CY} ${sname} ${CW}"
+echo -e "${CG} DATE: ${CY} $(date) ${CG} STUDENT: ${CY} ${sname} ${CW}"
 _get_student_id
 read -p " Indicate the assignment to check [from 1 to 8]: " choice
 case ${choice} in
