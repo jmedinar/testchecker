@@ -5,7 +5,7 @@ title="TEST CHECKER"
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
 version="2.4.2"
-# Purpose: This script will gatter VM and Student information
+# Purpose: This script will gater VM and Student information
 #          and will execute the interactive test verification scripts
 
 # Red         Green         Yellow        Blue  		Purple        Cyan          White
