@@ -48,7 +48,7 @@ function test_string () {
 # Main
 
 # Check for exactly one command-line argument
-if (( $# != 1 ))
+if (( $# ! = 1 ))
 then
     echo "Error: at least one string to be tested must be given"
     echo "Examples: ./test_string.sh Hello"
@@ -66,4 +66,4 @@ GLOBAL_STRING=${1}
 
 test_string $GLOBAL_STRING
 
-# EOF
+End Of File

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/environment bash/korn
 #
 # Challenge name:        processFile.sh
 # Description:           Using correct script formatting rules for shell scripts,

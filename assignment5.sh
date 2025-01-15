@@ -18,7 +18,7 @@ _print_line() {
 }
 
 _eval(){
-    target=$1     arg=$2     ret=$3     code=$4     r=false     points=0      value=7
+    target=$1     arg=$2     ret=$3     code=$4     r=false     points=0      value=10
     # Evaluating output
     if ${bdir}/${target}.sh ${arg} 2>/dev/null | grep -q "${ret}"
     then
