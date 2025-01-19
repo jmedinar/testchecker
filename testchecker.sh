@@ -23,6 +23,15 @@ _run_as_root() {
 	fi
 }
 
+_no_vboxuser() {
+	# Verify the student is not running as vboxuser
+	if [[ ${USER} == "vboxuser" ]]; then
+        echo -e "${CR}
+        You are currently running as the 'vboxuser' user, which is not allowed!. ${CW}"
+		exit 2
+	fi
+}
+
 _internet_connection() {
 	# Verifying Internet Connection
 	if [[ $( wget -q --spider http://google.com; echo $?) -ne 0 ]]; then
@@ -70,7 +79,9 @@ _print_line() {
     printf "${CC}%0.s=" {1..80}
     printf "${CW}\n"
 }
+
 _run_as_root
+_no_vboxuser
 _internet_connection
 _update
 
