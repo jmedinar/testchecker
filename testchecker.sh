@@ -4,7 +4,7 @@ title="TestChecker"
 # Author: Professor Juan Medina
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
-version="3.0.0"
+version="3.0.1"
 # Purpose: This script will gater VM and Student information
 #          and will execute the interactive test verification scripts
 
@@ -66,15 +66,6 @@ _update(){
 	fi
 }
 
-_get_student_id(){
-	read -p " Introduce your student numeric ID: " sid
-	if [[ $sid != 1* ]]
-	then
-		echo -e "${CR} Student id must be numerical. Starts with 1"
-		exit 4
-	fi
-}
-
 _print_line() {
     printf "${CC}%0.s=" {1..80}
     printf "${CW}\n"
@@ -92,7 +83,7 @@ echo -e "${CY}                        C O L L I N   C O L L E G E "
 echo -e "${CY}                        ${title} Version: ${version} "
 _print_line
 echo -e "${CG} DATE: ${CY} $(date) ${CG} STUDENT: ${CY} ${sname} ${CW}"
-_get_student_id
+read -p " Introduce your student numeric ID: " sid
 read -p " Indicate the assignment to check [from 1 to 8]: " choice
 case ${choice} in
 	1) source <(curl -sk -H 'Cache-Control: no-cache' \
