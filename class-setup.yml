@@ -293,8 +293,6 @@
             state: absent
             line: root
 
-    #TODO: 
-
     - name: Configure Look & Feel
       tags: looks
       block:
@@ -320,7 +318,7 @@
             cmd: |
               gsettings set org.gnome.desktop.background picture-uri file:///~/.wallpapers/yellow-black-linux-penguin-logo-oow6y6sgknpmcdrz.jpg
             environment:
-              DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_user_id }}/bus"  # Required for gsettings to work
+              DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_user_id }}/bus"
 
     - name: Final Touches
       become: true
