@@ -23,6 +23,4 @@ figlet "Linux Setup" | lolcat
 curl -o /tmp/class-setup.yml https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/class-setup.yml
 ansible-playbook /tmp/class-setup.yml -e username=$(echo $USER)
 rm -rf /tmp/class-setup.yml
-figlet "Rebooting..." | lolcat 
-sleep 10
-reboot
+figlet "Done. Reboot your system!" | lolcat 
