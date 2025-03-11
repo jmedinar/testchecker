@@ -346,27 +346,29 @@
         - name: Set TUX Wallpaper, Panel Applications, and Keybindings
           become: true
           become_user: "{{ username }}"
-          ansible.builtin.shell: > 
+          ansible.builtin.shell: >
             gsettings set org.gnome.desktop.background picture-uri file:///home/{{ username }}/.wallpapers/yellow-black.jpg
-            
+
             gsettings set org.gnome.shell \
-              favorite-apps "['org.mozilla.firefox.desktop','org.gnome.Nautilus.desktop','org.gnome.Software.desktop','Zoom.desktop','geany.desktop','terminator.desktop','code.desktop','ranger.desktop']"
-            
+              favorite-apps \
+              "['org.mozilla.firefox.desktop','org.gnome.Nautilus.desktop','org.gnome.Software.desktop',\
+              'Zoom.desktop','geany.desktop','terminator.desktop','code.desktop','ranger.desktop']"
+
             gsettings set org.gnome.settings-daemon.plugins.media-keys \
               custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
-            
+
             gsettings set \
               org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ \
               name 'Terminator'
-            
+
             gsettings set \
               org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ \
               command 'terminator'
-            
+
             gsettings set \
               org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ \
               binding '<Super>t'
-            
+
             gsettings set org.gnome.settings-daemon.plugins.media-keys home "[<Super>e]"
             gsettings set org.gnome.settings-daemon.plugins.media-keys www "[<Super>w]"
             gsettings set org.gnome.settings-daemon.plugins.media-keys control-center "[<Super>s]"
