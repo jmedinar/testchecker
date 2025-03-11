@@ -6,7 +6,7 @@
   become: false
 
   vars:
-    - username: "{{ username }}"
+    username: "{{ username }}"
 
   tasks:
 
@@ -31,7 +31,7 @@
             state: present
 
         - name: Enabling Google Chrome Repository
-          ansible.builtin.yum_repository: 
+          ansible.builtin.yum_repository:
             name: google-chrome
             description: Google Chrome Repository
             baseurl: https://dl.google.com/linux/chrome/rpm/stable/$basearch
@@ -78,6 +78,7 @@
           ansible.builtin.get_url:
             url: "{{ item }}"
             dest: /tmp/
+            mode: '0744'
           loop:
             - https://zoom.us/client/latest/zoom_x86_64.rpm
 
@@ -102,7 +103,7 @@
           tags: workstation_pkgs
           ansible.builtin.dnf:
             state: present
-            name: 
+            name:
               - geany
               - geany-plugins-*
               - geany-themes.noarch
@@ -124,7 +125,7 @@
           tags: development_pkgs
           ansible.builtin.dnf:
             state: present
-            name: 
+            name:
               - git
               - ranger
               - yq
@@ -163,7 +164,7 @@
             exclude:
               - gstreamer1-plugins-bad-free-devel
               - lame-devel
-            name: 
+            name:
               - gparted
               - python3-xlib
               - "@multimedia"
@@ -176,7 +177,7 @@
     - name: Setting up Configurations
       tags: configurations
       block:
-    
+ 
         - name: Get vimrc Copy
           ansible.builtin.get_url:
             url: https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/vimrc
@@ -204,12 +205,13 @@
             mode: '0755'
             owner: root
             group: root
-            
+
         - name: Setup Alias for Testchecker Tool
           ansible.builtin.lineinfile:
             path: "{{ ansible_user_dir }}/.bashrc"
             line: 'alias testchecker="sudo testchecker"'
-            create: yes
+            mode: '0640'
+            create: true
 
         - name: Setup Module5 Requirements
           become: true
@@ -218,7 +220,7 @@
             state: directory
             mode: '755'
             owner: "{{ ansible_user }}"
-            growp: "{{ ansible_user }}"
+            group: "{{ ansible_user }}"
 
         - name: Download Challenges
           ansible.builtin.get_url:
@@ -256,11 +258,14 @@
       tags: security
       block:
 
-        - name: Ensure {{ username }} can sudo without a password
+        - name: Configure sudo without a password for user {{ username }}
           become: true
           ansible.builtin.copy:
             dest: /etc/sudoers.d/{{ username }}
             content: "{{ username }} ALL=(ALL) NOPASSWD: ALL"
+            mode: '0440'
+            owner: root
+            group: root
 
         - name: Ensure .ssh directory exists
           ansible.builtin.file:
@@ -269,6 +274,28 @@
             owner: "{{ username }}"
             group: "{{ username }}"
             mode: '0700'
+          
+        - name: Append custom Bash prompt configuration to /etc/bashrc
+          ansible.builtin.blockinfile:
+            path: /etc/bashrc
+            block: |
+              rc="\[\e[31m\]"
+              gc="\[\e[32m\]"
+              rs="\[\e[0m\]"
+              if [ $EUID -eq 0 ]
+              then
+                  export PS1="${rc}\u@\h \w${rs}# "
+              else
+                  export PS1="${gc}\u@\h \w${rs}\$ "
+              fi
+            marker: "# {mark} ANSIBLE MANAGED BLOCK - BASH PROMPT"
+            owner: root
+            group: root
+            mode: '0644'
+
+        - name: Set the hostname on Fedora
+          ansible.builtin.hostname:
+            name: "fedora"
 
     - name: Configure Services
       become: true
@@ -298,7 +325,7 @@
       block:
 
         - name: Prepare look & feel folders
-          ansible.builtin.file: 
+          ansible.builtin.file:
             path: "{{ item }}"
             state: directory
             mode: '0755'
@@ -314,20 +341,20 @@
             mode: '0660'
 
         - name: Set TUX Wallpaper
-          ansible.builtin.command: 
+          ansible.builtin.command:
             cmd: |
               gsettings set org.gnome.desktop.background picture-uri file:///~/.wallpapers/yellow-black-linux-penguin-logo-oow6y6sgknpmcdrz.jpg
-            environment:
-              DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_user_id }}/bus"
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_user_id }}/bus"
+          changed_when: false
 
     - name: Final Touches
       become: true
       tags: final
       block:
 
-        - name: Upgrade all packages
+        - name: Upgrade System
           ansible.builtin.dnf:
-            name: "*"
+            name: '*'
             state: latest
-            update_cache: yes
-
+            update_cache: true
