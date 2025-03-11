@@ -177,7 +177,7 @@
       tags: configurations
       block:
     
-        - name: Get vimrc copy
+        - name: Get vimrc Copy
           ansible.builtin.get_url:
             src: https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/vimrc
             dest: /tmp/vimrc
