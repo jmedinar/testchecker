@@ -377,10 +377,10 @@
           become: true
           become_user: "{{ username }}"
           ansible.builtin.shell: |
-            gsettings set org.gnome.settings-daemon.plugins.media-keys home "<Super>e"
-            gsettings set org.gnome.settings-daemon.plugins.media-keys www "<Super>w"
-            gsettings set org.gnome.settings-daemon.plugins.media-keys control-center "<Super>s"
-            gsettings set org.gnome.settings-daemon.plugins.media-keys search "<Super>f"
+            gsettings set org.gnome.settings-daemon.plugins.media-keys home '<Super>e'
+            gsettings set org.gnome.settings-daemon.plugins.media-keys www '<Super>w'
+            gsettings set org.gnome.settings-daemon.plugins.media-keys control-center '<Super>s'
+            gsettings set org.gnome.settings-daemon.plugins.media-keys search '<Super>f'
           environment:
             DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
           changed_when: false
