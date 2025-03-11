@@ -178,10 +178,10 @@
       block:
     
         - name: Get vimrc copy
-          ansible.builtin.get_url
-          src: https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/vimrc
-          dest: /tmp/vimrc
-          mode: '0644'
+          ansible.builtin.get_url:
+            src: https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/vimrc
+            dest: /tmp/vimrc
+            mode: '0644'
 
         - name: Configure vim for Regular User
           ansible.builtin.copy:
