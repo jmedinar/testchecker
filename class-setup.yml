@@ -179,7 +179,7 @@
     
         - name: Get vimrc Copy
           ansible.builtin.get_url:
-            src: https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/vimrc
+            url: https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/vimrc
             dest: /tmp/vimrc
             mode: '0644'
 
@@ -199,7 +199,7 @@
         - name: Setup Testchecker Tool
           become: true
           ansible.builtin.get_url:
-            src: https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/testchecker.sh
+            url: https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/testchecker.sh
             dest: /usr/bin/testchecker
             mode: '0755'
             owner: root
@@ -222,7 +222,7 @@
 
         - name: Download Challenges
           ansible.builtin.get_url:
-            src: "{{ item }}"
+            url: "{{ item }}"
             dest: /sysadm/bin/
             mode: '0755'
             owner: "{{ ansible_user }}"
@@ -246,7 +246,7 @@
 
         - name: Setup Module6 Performance Init Installation
           ansible.builtin.get_url:
-            src: https://github.com/jmedinar/testchecker/blob/main/performance/mod6-init.sh
+            url: https://github.com/jmedinar/testchecker/blob/main/performance/mod6-init.sh
             dest: /usr/bin/mod6-init
             mode: '0755'
             owner: root
@@ -309,7 +309,7 @@
 
         - name: Download Wallpaper
           ansible.builtin.get_url:
-            scr: https://wallpapers.com/images/hd/yellow-black-linux-penguin-logo-oow6y6sgknpmcdrz.jpg
+            url: https://wallpapers.com/images/hd/yellow-black-linux-penguin-logo-oow6y6sgknpmcdrz.jpg
             dest: '~/.wallpapers'
             mode: '0660'
 
