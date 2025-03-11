@@ -16,9 +16,9 @@ if ! grep -q '^ID=fedora$' /etc/os-release || [ ! -f /etc/fedora-release ] || ! 
 fi
 if [[ $(wget -q --spider http://google.com; echo $?) -ne 0 ]]; then echo "Internet connection required"; exit 2; fi
 
+dnf install -y ansible git figlet lolcat
 clear
 figlet "Linux Setup" | lolcat
-dnf install -y ansible git figlet lolcat
 curl -o /tmp/class-setup.yml https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/class-setup.yml
 ansible-playbook /tmp/class-setup.yml -e username=$(echo $USER)
 rm -rf /tmp/class-setup.yml
