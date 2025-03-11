@@ -156,8 +156,8 @@
               - bash-completion
               - libguestfs-bash-completion
 
-        - name: Design Packages
-          tags: design_pkgs
+        - name: Multimedia Packages
+          tags: multimedia_pkgs
           ansible.builtin.dnf:
             state: present
             exclude:
@@ -209,11 +209,60 @@
             group: "{{ username }}"
 
         - name: Setup Testchecker Tool
-          ansible.builtin.get_url
+          become: true
+          ansible.builtin.get_url:
+            src: https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/testchecker.sh
+            dest: /usr/bin/testchecker
+            mode: '0755'
+            owner: root
+            group: root
             
         - name: Setup Alias for Testchecker Tool
-        - name: Setup Module5 Scripting Requirements
-        - name: Setup Module6 Performance Requirements
+          ansible.builtin.lineinfile:
+            path: "{{ ansible_user_dir }}/.bashrc"
+            line: 'alias testchecker="sudo testchecker"'
+            create: yes
+
+        - name: Setup Module5 Requirements
+          become: true
+          ansible.builtin.file:
+            path: /sysadm/bin
+            state: directory
+            mode: '755'
+            owner: "{{ ansible_user }}"
+            growp: "{{ ansible_user }}"
+
+        - name: Download Challenges
+          ansible.builtin.get_url:
+            src: "{{ item }}"
+            dest: /sysadm/bin/
+            mode: '0755'
+            owner: "{{ ansible_user }}"
+            group: "{{ ansible_user }}"
+          loop:
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge1.sh
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge2.sh
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge3.sh
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge4.sh
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge5.sh
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge6.sh
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge7.sh
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge8.sh
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge9.sh
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/homeChecker.sh
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/passwordGenerator.sh
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/processFile.sh
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/rabbitJumps.sh
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/testString.sh
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/userValidator.sh
+
+        - name: Setup Module6 Performance Init Installation
+          ansible.builtin.get_url:
+            src: https://github.com/jmedinar/testchecker/blob/main/performance/mod6-init.sh
+            dest: /usr/bin/mod6-init
+            mode: '0755'
+            owner: root
+            group: root
 
     - name: Configure Security
       tags: security
@@ -232,29 +281,6 @@
             owner: "{{ username }}"
             group: "{{ username }}"
             mode: '0700'
-
-        - name: Generate an SSH key pair without a passphrase
-          community.crypto.openssh_keypair:
-            path: /home/{{ username }}/.ssh/id_rsa
-            type: rsa
-            size: 4096
-            force: no
-            owner: "{{ username }}"
-            group: "{{ username }}"
-            mode: '0600'
-
-        - name: Activate X11Forwarding
-          become: true
-          ansible.builtin.lineinfile:
-            path: "/etc/ssh/sshd_config"
-            line: "{{ item }}"
-            state: present
-          loop:
-            - "X11Forwarding yes"
-            - "PermitRootLogin yes"
-            - "PasswordAuthentication yes"
-          notify:
-            - Restart sshd
 
     - name: Configure Services
       become: true
@@ -285,32 +311,28 @@
       tags: looks
       block:
 
-        - name: Change Background
-        - name: Setup ICONS
-        - name: Setup Shortcuts
-
-    - name: Configure GitHub Repositories
-      tags: github
-      block:
-
-        - name: Ensure the repos folder exist
-          ansible.builtin.file:
-            path: ~/repos
+        - name: Prepare look & feel folders
+          ansible.builtin.file: 
+            path: "{{ item }}"
             state: directory
-            owner: "{{ username }}"
-            group: "{{ username }}"
-            mode: "0700"
+            mode: '0755'
+          loop:
+            - '~/.icons'
+            - '~/.themes'
+            - '~/.wallpapers'
 
-        - name: Clone a list of GitHub repositories
-          ansible.builtin.git:
-            repo: git@github.com:jmedinar/{{ item }}.git
-            dest: ~/repo/{{ item }}
-            version: main
-          loop: 
-            - testchecker
-            - linux
-            - microservices
-            - machinesetup
+        - name: Download Wallpaper
+          ansible.builtin.get_url:
+            scr: https://wallpapers.com/images/hd/yellow-black-linux-penguin-logo-oow6y6sgknpmcdrz.jpg
+            dest: '~/.wallpapers'
+            mode: '0660'
+
+        - name: Set TUX Wallpaper
+          ansible.builtin.command: 
+            cmd: |
+              gsettings set org.gnome.desktop.background picture-uri file:///~/.wallpapers/yellow-black-linux-penguin-logo-oow6y6sgknpmcdrz.jpg
+            environment:
+              DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_user_id }}/bus"  # Required for gsettings to work
 
     - name: Final Touches
       become: true
@@ -322,12 +344,4 @@
             name: "*"
             state: latest
             update_cache: yes
-
-  handlers:
-
-    - name: Restart sshd
-      become: true
-      ansible.builtin.service:
-        name: sshd
-        state: reloaded
 

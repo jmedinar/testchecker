@@ -1,7 +1,7 @@
 #!/bin/bash
 # Author: Juan Medina
-# Date: Aug 2024
-# Description: Setup Linux class requirements
+# Date: Mar 2025
+# Description: Setup Linux Class System
 
 if [[ ${UID} -ne 0 ]]; then echo "Execute this script with sudo"; exit 1; fi
 if id "liveuser" &>/dev/null || [ -f /etc/live-release ] || [[ "$(findmnt -n -o FSTYPE /)" =~ (squashfs|overlay) ]]; then
@@ -15,7 +15,8 @@ if ! grep -q '^ID=fedora$' /etc/os-release || [ ! -f /etc/fedora-release ] || ! 
     exit 1
 fi
 if [[ $(wget -q --spider http://google.com; echo $?) -ne 0 ]]; then echo "Internet connection required"; exit 2; fi
-target="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vc2V0dXAuc2gK"
-source <(curl -sk -H 'Cache-Control: no-cache' $(echo ${target} | base64 -d))
-echo Done!; exit 0
+
+dnf install -y ansible git
+curl -o /tmp/class-setup.yml https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/class-setup.yml
+ansible-playbook -K /tmp/class-setup.yml -e username=$(echo $USER)
 
