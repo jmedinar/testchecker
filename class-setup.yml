@@ -179,7 +179,7 @@
 
         - name: Configure vim for Regular User
           ansible.builtin.copy:
-            dest: ~/.vimrc
+            dest: "~/.vimrc"
             mode: '0644'
             content: |
               syntax on
@@ -188,7 +188,7 @@
         - name: Configure vim for the Administrator User
           become: true
           ansible.builtin.copy:
-            dest: ~/.vimrc
+            dest: "~/.vimrc"
             mode: '0644'
             content: |
               syntax on
@@ -196,7 +196,7 @@
 
         - name: Creating Terminator Config Folder
           ansible.builtin.file:
-            path: ~/.config/terminator/
+            path: "~/.config/terminator/"
             state: directory
             mode: '0744'
             owner: "{{ username }}"
