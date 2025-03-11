@@ -1,0 +1,333 @@
+---
+
+- name: Configure Personal Workstation
+  hosts: localhost
+  gather_facts: true
+  become: false
+
+  vars:
+    - username: "{{ username }}"
+
+  tasks:
+
+    - name: Enabling extra repositories
+      become: true
+      tags: repos
+      block:
+
+        - name: Configure Visual Studio Code
+          ansible.builtin.yum_repository:
+            name: Code
+            description: Visual Studio Code
+            baseurl: https://packages.microsoft.com/yumrepos/vscode
+            file: vscode
+            enabled: true
+            gpgcheck: true
+            gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+
+        - name: Installing third party repositories
+          ansible.builtin.dnf:
+            name: fedora-workstation-repositories
+            state: present
+
+        - name: Enabling Google Chrome Repository
+          ansible.builtin.yum_repository: 
+            name: google-chrome
+            description: Google Chrome Repository
+            baseurl: https://dl.google.com/linux/chrome/rpm/stable/$basearch
+            enabled: true
+            gpgcheck: true
+            gpgkey: https://dl.google.com/linux/linux_signing_key.pub
+
+        - name: Import RPM Fusion free repository GPG key
+          ansible.builtin.rpm_key:
+            key: https://download1.rpmfusion.org/free/fedora/RPM-GPG-KEY-rpmfusion-free-fedora-2020
+            state: present
+
+        - name: Import RPM Fusion non-free repository GPG key
+          ansible.builtin.rpm_key:
+            key: https://download1.rpmfusion.org/nonfree/fedora/RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020
+            state: present
+
+        - name: Installing RPM Fusion Free repos
+          ansible.builtin.dnf:
+            name: https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm
+            state: present
+
+        - name: Installing RPM Fusion Non-Free repos
+          ansible.builtin.dnf:
+            name: https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm
+            state: present
+
+        - name: Add Vivaldi repository
+          ansible.builtin.yum_repository:
+            name: vivaldi
+            description: Vivaldi browser repository
+            baseurl: https://repo.vivaldi.com/archive/rpm/x86_64/
+            gpgkey: https://repo.vivaldi.com/archive/linux_signing_key.pub
+            gpgcheck: true
+            enabled: true
+
+    - name: Installing Extra Packages
+      become: true
+      tags: packages
+      block:
+
+        - name: Download Packages to Install
+          tags: special_pkgs
+          ansible.builtin.get_url:
+            url: "{{ item }}"
+            dest: /tmp/
+          loop:
+            - https://zoom.us/client/latest/zoom_x86_64.rpm
+
+        - name: Install Downloaded Packages
+          tags: special_pkgs
+          ansible.builtin.dnf:
+            name: "/tmp/{{ item }}"
+            state: present
+            disable_gpg_check: true
+          loop:
+            - zoom_x86_64.rpm
+
+        - name: Remove Downloaded Packages
+          tags: special_pkgs
+          ansible.builtin.file:
+            path: "/tmp/{{ item }}"
+            state: absent
+          loop:
+            - zoom_x86_64.rpm
+
+        - name: Workstation Packages
+          tags: workstation_pkgs
+          ansible.builtin.dnf:
+            state: present
+            name: 
+              - geany
+              - geany-plugins-*
+              - geany-themes.noarch
+              - gtkd-geany-tags.noarch
+              - firefox
+              - google-chrome
+              - flatpak
+              - gnome-tweaks
+              - gnome-extensions
+              - vim
+              - wget
+              - fuse-sshfs
+              - cockpit-*
+              - vivaldi-stable
+              - terminator
+              - xorg-x11-xauth
+
+        - name: Development Packages
+          tags: development_pkgs
+          ansible.builtin.dnf:
+            state: present
+            name: 
+              - git
+              - ranger
+              - yq
+              - jq
+              - pip
+              - ansible
+              - ansible-builder
+              - vim-ansible
+              - vim-syntastic-ansible
+              - powerline-fonts
+              - fzf
+              - podman
+              - code
+              - ansible-collection-containers-podman
+              - pcp-pmda-podman
+              - podman-compose
+              - podman-tests
+              - podman-tui
+              - containers-common-extra
+              - wireshark
+              - nmap
+              - kernel-devel
+              - ncurses-devel
+              - ncurses-libs
+              - ncurses-static
+              - ncurses
+              - java-latest-openjdk.x86_64
+              - screen
+              - bash-completion
+              - libguestfs-bash-completion
+
+        - name: Design Packages
+          tags: design_pkgs
+          ansible.builtin.dnf:
+            state: present
+            exclude:
+              - gstreamer1-plugins-bad-free-devel
+              - lame-devel
+            name: 
+              - gparted
+              - python3-xlib
+              - "@multimedia"
+              - lame
+              - gstreamer1-plugin-openh264
+              - gstreamer1-plugins-base-*
+              - gstreamer1-plugins-good-*
+              - gstreamer1-plugins-bad-*
+
+    - name: Setting up Configurations
+      tags: configurations
+      block:
+
+        - name: Configure vim for Regular User
+          ansible.builtin.copy:
+            src: vimrc
+            dest: ~/.vimrc
+            backup: true
+            mode: '0640'
+
+        - name: Configure vim for the Administrator User
+          become: true
+          ansible.builtin.copy:
+            src: vimrc
+            dest: ~/.vimrc
+            backup: true
+            mode: '0640'
+
+        - name: Creating Terminator Config Folder
+          ansible.builtin.file:
+            path: ~/.config/terminator/
+            state: directory
+            mode: '0744'
+            owner: "{{ username }}"
+            group: "{{ username }}"
+
+        - name: Copying Terminator Configuration
+          ansible.builtin.copy:
+            src: terminator_config
+            dest: ~/.config/terminator/config
+            mode: '0644'
+            owner: "{{ username }}"
+            group: "{{ username }}"
+
+        - name: Setup Testchecker Tool
+          ansible.builtin.get_url
+            
+        - name: Setup Alias for Testchecker Tool
+        - name: Setup Module5 Scripting Requirements
+        - name: Setup Module6 Performance Requirements
+
+    - name: Configure Security
+      tags: security
+      block:
+
+        - name: Ensure {{ username }} can sudo without a password
+          become: true
+          ansible.builtin.copy:
+            dest: /etc/sudoers.d/{{ username }}
+            content: "{{ username }} ALL=(ALL) NOPASSWD: ALL"
+
+        - name: Ensure .ssh directory exists
+          ansible.builtin.file:
+            path: /home/{{ username }}/.ssh
+            state: directory
+            owner: "{{ username }}"
+            group: "{{ username }}"
+            mode: '0700'
+
+        - name: Generate an SSH key pair without a passphrase
+          community.crypto.openssh_keypair:
+            path: /home/{{ username }}/.ssh/id_rsa
+            type: rsa
+            size: 4096
+            force: no
+            owner: "{{ username }}"
+            group: "{{ username }}"
+            mode: '0600'
+
+        - name: Activate X11Forwarding
+          become: true
+          ansible.builtin.lineinfile:
+            path: "/etc/ssh/sshd_config"
+            line: "{{ item }}"
+            state: present
+          loop:
+            - "X11Forwarding yes"
+            - "PermitRootLogin yes"
+            - "PasswordAuthentication yes"
+          notify:
+            - Restart sshd
+
+    - name: Configure Services
+      become: true
+      tags: services
+      block:
+
+        - name: Enable Cockpit
+          ansible.builtin.service:
+            name: cockpit
+            state: started
+            enabled: true
+
+        - name: Open firewall for cockpit
+          ansible.posix.firewalld:
+            permanent: true
+            port: 9090/tcp
+            state: enabled
+
+        - name: Remove root from disalowed users list
+          ansible.builtin.lineinfile:
+            path: /etc/cockpit/disallowed-users
+            state: absent
+            line: root
+
+    #TODO: 
+
+    - name: Configure Look & Feel
+      tags: looks
+      block:
+
+        - name: Change Background
+        - name: Setup ICONS
+        - name: Setup Shortcuts
+
+    - name: Configure GitHub Repositories
+      tags: github
+      block:
+
+        - name: Ensure the repos folder exist
+          ansible.builtin.file:
+            path: ~/repos
+            state: directory
+            owner: "{{ username }}"
+            group: "{{ username }}"
+            mode: "0700"
+
+        - name: Clone a list of GitHub repositories
+          ansible.builtin.git:
+            repo: git@github.com:jmedinar/{{ item }}.git
+            dest: ~/repo/{{ item }}
+            version: main
+          loop: 
+            - testchecker
+            - linux
+            - microservices
+            - machinesetup
+
+    - name: Final Touches
+      become: true
+      tags: final
+      block:
+
+        - name: Upgrade all packages
+          ansible.builtin.dnf:
+            name: "*"
+            state: latest
+            update_cache: yes
+
+  handlers:
+
+    - name: Restart sshd
+      become: true
+      ansible.builtin.service:
+        name: sshd
+        state: reloaded
+

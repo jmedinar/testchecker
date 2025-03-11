@@ -16,15 +16,8 @@ echo "Setting up your Linux system for the class..."
 echo "Version" ${version}"
 echo "Date: $(date +%D)
 
-echo "Step 1: Verifying you are no longer running the installer"
-if [[ ${USER} == "liveuser" ]]
-then
-    echo -e "Your system is running as the ${CR} liveuser ${CW}
-    which indicates you are running under the ${CY} LIVE ISO Linux Installer ${CW}
-    remove the ISO from your Virtual Machine and reboot.${CW}"
-    echo "Exiting..."
-    exit 1
-fi
+dnf install -yq ansible git
+ansible-playbook -K class-setup.yml -e username=$(echo $USER)
 
 echo "Step 2: Setting up the testchecker tool"
 code="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vdGVzdGNoZWNrZXIuc2gK"
