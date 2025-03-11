@@ -18,10 +18,11 @@ if [[ $(wget -q --spider http://google.com; echo $?) -ne 0 ]]; then echo "Intern
 
 dnf install -y ansible git figlet lolcat
 clear
+sleep 10
 figlet "Linux Setup" | lolcat
 curl -o /tmp/class-setup.yml https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/class-setup.yml
 ansible-playbook /tmp/class-setup.yml -e username=$(echo $USER)
 rm -rf /tmp/class-setup.yml
-figlet "Done!" | lolcat 
 figlet "Rebooting..." | lolcat 
+sleep 10
 reboot
