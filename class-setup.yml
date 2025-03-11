@@ -179,18 +179,20 @@
 
         - name: Configure vim for Regular User
           ansible.builtin.copy:
-            src: vimrc
             dest: ~/.vimrc
-            backup: true
-            mode: '0640'
+            mode: '0644'
+            content: |
+              syntax on
+              set nocompatible ai ar et ic nu cul cuc ts=3 sw=3 paste
 
         - name: Configure vim for the Administrator User
           become: true
           ansible.builtin.copy:
-            src: vimrc
             dest: ~/.vimrc
-            backup: true
-            mode: '0640'
+            mode: '0644'
+            content: |
+              syntax on
+              set nocompatible ai ar et ic nu cul cuc ts=3 sw=3 paste
 
         - name: Creating Terminator Config Folder
           ansible.builtin.file:
