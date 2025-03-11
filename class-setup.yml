@@ -176,39 +176,25 @@
     - name: Setting up Configurations
       tags: configurations
       block:
+    
+        - name: Get vimrc copy
+          ansible.builtin.get_url
+          src: https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/vimrc
+          dest: /tmp/vimrc
+          mode: '0644'
 
         - name: Configure vim for Regular User
           ansible.builtin.copy:
-            dest: "~/.vimrc"
+            src: /tmp/vimrc
+            dest: ~/.vimrc
             mode: '0644'
-            content: |
-              syntax on
-              set nocompatible ai ar et ic nu cul cuc ts=3 sw=3 paste
 
         - name: Configure vim for the Administrator User
           become: true
           ansible.builtin.copy:
-            dest: "~/.vimrc"
+            scr: /tmp/vimrc
+            dest: ~/.vimrc
             mode: '0644'
-            content: |
-              syntax on
-              set nocompatible ai ar et ic nu cul cuc ts=3 sw=3 paste
-
-        - name: Creating Terminator Config Folder
-          ansible.builtin.file:
-            path: "~/.config/terminator/"
-            state: directory
-            mode: '0744'
-            owner: "{{ username }}"
-            group: "{{ username }}"
-
-        - name: Copying Terminator Configuration
-          ansible.builtin.copy:
-            src: terminator_config
-            dest: ~/.config/terminator/config
-            mode: '0644'
-            owner: "{{ username }}"
-            group: "{{ username }}"
 
         - name: Setup Testchecker Tool
           become: true
