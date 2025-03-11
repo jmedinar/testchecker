@@ -228,6 +228,7 @@
             mode: '0755'
             owner: "{{ username }}"
             group: "{{ username }}"
+          no_log: true
           loop:
             - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge1.sh
             - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge2.sh
