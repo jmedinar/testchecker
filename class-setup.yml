@@ -373,17 +373,16 @@
           become: true
           become_user: "{{ username }}"
           vars:
-            favorite_apps:
-              - org.mozilla.firefox.desktop
-              - terminator.desktop
-              - ranger.desktop
-              - geany.desktop
-              - code.desktop
-              - org.gnome.Nautilus.desktop
-              - Zoom.desktop
-              - org.gnome.Software.desktop
+            a1: org.mozilla.firefox.desktop
+            a2: terminator.desktop
+            a3: ranger.desktop
+            a4: geany.desktop
+            a5: code.desktop
+            a6: org.gnome.Nautilus.desktop
+            a7: Zoom.desktop
+            a8: org.gnome.Software.desktop
           ansible.builtin.shell: |
-            gsettings set org.gnome.shell favorite-apps "{{ favorite_apps | to_json }}"
+            gsettings set org.gnome.shell favorite-apps "['{{ a1 }}','{{ a2 }}','{{ a3 }}','{{ a4 }}','{{ a5 }}','{{ a6 }}','{{ a7 }}','{{ a8 }}']"
           environment:
             DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
           changed_when: false
