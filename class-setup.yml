@@ -369,12 +369,21 @@
             owner: "{{ username }}"
             group: "{{ username }}"
 
-
         - name: Set Launcher Icons
           become: true
           become_user: "{{ username }}"
+          vars:
+            favorite_apps:
+              - org.mozilla.firefox.desktop
+              - terminator.desktop
+              - ranger.desktop
+              - geany.desktop
+              - code.desktop
+              - org.gnome.Nautilus.desktop
+              - Zoom.desktop
+              - org.gnome.Software.desktop
           ansible.builtin.shell: |
-            gsettings set org.gnome.shell favorite-apps "['org.mozilla.firefox.desktop','org.gnome.Nautilus.desktop','org.gnome.Software.desktop','Zoom.desktop','geany.desktop','terminator.desktop','code.desktop','ranger.desktop']"
+            gsettings set org.gnome.shell favorite-apps "{{ favorite_apps | to_json }}"
           environment:
             DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
           changed_when: false
@@ -382,11 +391,13 @@
         - name: Set Terminator custom-keybindings
           become: true
           become_user: "{{ username }}"
+          vars:
+            custom0: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/
           ansible.builtin.shell: |
-            gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
-            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ name 'Terminator'
-            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ command 'terminator'
-            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ binding '<Super>t'
+            gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['{{ custom0 }}']"
+            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{{ custom0 }} name 'Terminator'
+            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{{ custom0 }} command 'terminator'
+            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{{ custom0 }} binding '<Super>t'
           environment:
             DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
           changed_when: false
@@ -408,6 +419,15 @@
           become_user: "{{ username }}"
           ansible.builtin.shell: |
             gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close'
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+          changed_when: false
+
+        - name: Set Idle Delay Preferences
+          become: true
+          become_user: "{{ username }}"
+          ansible.builtin.shell: |
+            gsettings set org.gnome.desktop.session idle-delay 0
           environment:
             DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
           changed_when: false
