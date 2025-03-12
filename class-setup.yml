@@ -1,6 +1,6 @@
 ---
 
-- name: Configure Personal Workstation
+- name: Preparing Student Workstation
   hosts: localhost
   gather_facts: true
   become: false
