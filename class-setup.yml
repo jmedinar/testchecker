@@ -386,6 +386,15 @@
             DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
           changed_when: false
 
+        - name: Set Window Icons Preferences
+          become: true
+          become_user: "{{ username }}"
+          ansible.builtin.shell: |
+            gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close'
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+          changed_when: false
+
     - name: Final Touches
       become: true
       tags: final
