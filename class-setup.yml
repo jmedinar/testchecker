@@ -360,15 +360,15 @@
             mode: "0744"
             owner: "{{ username }}"
             group: "{{ username }}"
-          
+
         - name: Download Terminator Configuration
           ansible.builtin.get_url:
-            url: 
+            url: https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/config
             dest: '/home/{{ username }}/.config/terminator/config'
             mode: '0644'
             owner: "{{ username }}"
             group: "{{ username }}"
-          
+
 
         - name: Set Launcher Icons
           become: true
