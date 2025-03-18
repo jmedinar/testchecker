@@ -25,11 +25,13 @@
     - name: Make the script executable
       ansible.builtin.file:
         path: /tmp/final
-        mode: '0700'
+        mode: '0755'
         group: root
         owner: root
 
     - name: Executing script
+      become: true
+      become_user: "{{ username }}"
       ansible.builtin.shell: /tmp/final {{ version }} {{ student_id }} {{ username }}
       args:
         executable: /bin/bash
