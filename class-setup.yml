@@ -221,7 +221,7 @@
           ansible.builtin.get_url:
             url: "{{ item }}"
             dest: /usr/bin/
-            mode: "0700"
+            mode: "0755"
             owner: root
             group: root
           no_log: true
@@ -229,7 +229,7 @@
             - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/finals/launcher
             - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/finals/final
             - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/finals/check-final.sh
-            - https://github.com/jmedinar/testchecker/blob/main/finals/testlauncher.yml
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/finals/testlauncher.yml
 
         - name: Setup Module5 Requirements
           become: true
@@ -380,21 +380,19 @@
 
         - name: Set terminator configuration folder
           ansible.builtin.file:
-            # path: /home/{{ username }}/.config/terminator
             path: /etc/xdg/terminator
             state: directory
             mode: "0755"
-            # owner: "{{ username }}"
-            # group: "{{ username }}"
+            owner: root
+            group: root
 
         - name: Download Terminator Configuration
           ansible.builtin.get_url:
             url: https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/config
-            # dest: '/home/{{ username }}/.config/terminator/config'
-            dest: /etc/xdg/terminator/config
-            mode: '0644'
-            # owner: "{{ username }}"
-            # group: "{{ username }}"
+            dest: "/etc/xdg/terminator/config"
+            mode: '0666'
+            owner: root
+            group: root
 
         - name: Set Launcher Icons
           become: true

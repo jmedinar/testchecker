@@ -50,13 +50,12 @@
       order = 0 
       profile = default
       directory = ~
-      command = nano -v --zero /tmp/exam
+      command = nano -v --zero /tmp/exam.yml
     [[[terminal3]]]
       type = Terminal
       parent = child1
       order = 1 
       profile = default
       directory = ~
-      # command = "real=$(sudo who am i | awk '{print $1}'); sudo -u ${real} /usr/bin/bash"
-      command = "sudo su - $(sudo who am i | awk '{print $1}')"
+      command = /usr/bin/bash
 [plugins]
