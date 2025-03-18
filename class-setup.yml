@@ -213,6 +213,20 @@
             mode: '0640'
             create: true
 
+        - name: Get final scripts
+          become: true
+          ansible.builtin.get_url:
+            url: "{{ item }}"
+            dest: /usr/bin/
+            mode: "0700"
+            owner: root
+            group: root
+          loop:
+            https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/finals/launcher
+            https://github.com/jmedinar/testchecker/blob/main/finals/final
+            https://github.com/jmedinar/testchecker/blob/main/finals/check-final.sh
+            https://github.com/jmedinar/testchecker/blob/main/finals/testlauncher.yml
+
         - name: Setup Module5 Requirements
           become: true
           ansible.builtin.file:
