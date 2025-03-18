@@ -73,31 +73,34 @@
       tags: packages
       block:
 
-        - name: Download Packages to Install
+        - name: Check if Zoom is already installed
+          ansible.builtin.command: rpm -q zoom
+          register: zoom_installed
+          ignore_errors: true
+          changed_when: false
+
+        - name: Download Zoom if not installed
           tags: special_pkgs
           ansible.builtin.get_url:
-            url: "{{ item }}"
+            url: https://zoom.us/client/latest/zoom_x86_64.rpm
             dest: /tmp/
             mode: '0744'
-          loop:
-            - https://zoom.us/client/latest/zoom_x86_64.rpm
+          when: zoom_installed.rc != 0
 
-        - name: Install Downloaded Packages
+        - name: Install Zoom if not installed
           tags: special_pkgs
           ansible.builtin.dnf:
-            name: "/tmp/{{ item }}"
+            name: "/tmp/zoom_x86_64.rpm"
             state: present
             disable_gpg_check: true
-          loop:
-            - zoom_x86_64.rpm
+          when: zoom_installed.rc != 0
 
-        - name: Remove Downloaded Packages
+        - name: Remove Zoom Package if downloaded
           tags: special_pkgs
           ansible.builtin.file:
-            path: "/tmp/{{ item }}"
+            path: "/tmp/zoom_x86_64.rpm"
             state: absent
-          loop:
-            - zoom_x86_64.rpm
+          when: zoom_installed.rc != 0
 
         - name: Workstation Packages
           tags: workstation_pkgs
@@ -222,10 +225,10 @@
             owner: root
             group: root
           loop:
-            https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/finals/launcher
-            https://github.com/jmedinar/testchecker/blob/main/finals/final
-            https://github.com/jmedinar/testchecker/blob/main/finals/check-final.sh
-            https://github.com/jmedinar/testchecker/blob/main/finals/testlauncher.yml
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/finals/launcher
+            - https://github.com/jmedinar/testchecker/blob/main/finals/final
+            - https://github.com/jmedinar/testchecker/blob/main/finals/check-final.sh
+            - https://github.com/jmedinar/testchecker/blob/main/finals/testlauncher.yml
 
         - name: Setup Module5 Requirements
           become: true
