@@ -226,8 +226,8 @@
             group: root
           loop:
             - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/finals/launcher
-            - https://github.com/jmedinar/testchecker/blob/main/finals/final
-            - https://github.com/jmedinar/testchecker/blob/main/finals/check-final.sh
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/finals/final
+            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/finals/check-final.sh
             - https://github.com/jmedinar/testchecker/blob/main/finals/testlauncher.yml
 
         - name: Setup Module5 Requirements
