@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Script: Test Launcher
+# Author: Prof. Juan Medina
+# Email: jmedina@collin.edu
+# Date: Mar 2025
+# Description: Mid-Term and Final Test Launcher
+
+# Check if the first parameter is provided
+if [ -z "$1" ]; then
+  echo "Error: No parameter provided."
+  echo "Usage: $0 <midterm|final>"
+  exit 1
+fi
+
+# Check if the parameter is either "midterm" or "final"
+if [ "$1" = "midterm" ] || [ "$1" = "final" ]; then
+  ansible-playbook --inventory "localhost," --ask-become-pass /usr/bin/testlauncher.yml --extra-vars version=$1 --extra-vars username=$(id -un)
+else
+  echo "Error: Invalid parameter '$1'."
+  echo "Usage: $0 <midterm|final>"
+  exit 1
+fi

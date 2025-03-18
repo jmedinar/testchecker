@@ -1,0 +1,41 @@
+---
+
+- name: Collin College Final Test Launcher
+  hosts: all
+  connection: local
+  gather_facts: false
+  become: true
+  vars:
+    script: /usr/bin/finals
+
+  vars_prompt:
+    - name: student_id
+      prompt: "Introduce your numeric student ID"
+      private: false
+
+  tasks:
+
+    - name: Decrypt the script
+      ansible.builtin.shell: |
+        ansible-vault decrypt --output /tmp/final /usr/bin/{{ version }}
+      args:
+        executable: /bin/bash
+      changed_when: false
+
+    - name: Make the script executable
+      ansible.builtin.file:
+        path: /tmp/final
+        mode: '0700'
+        group: root
+        owner: root
+
+    - name: Executing script
+      ansible.builtin.shell: /tmp/final {{ version }} {{ student_id }} {{ username }}
+      args:
+        executable: /bin/bash
+      changed_when: false
+
+    - name: Remove script
+      ansible.builtin.file:
+        path: /tmp/final
+        state: absent

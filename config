@@ -6,7 +6,7 @@
 [profiles]
   [[default]]
     background_color = "#282828"
-    font = Source Code Pro Bold 16
+    font = Source Code Pro Bold 12
     foreground_color = "#ebdbb2"
     show_titlebar = False
     scrollbar_position = hidden
@@ -27,5 +27,35 @@
     [[[child1]]]
       type = Terminal
       parent = window0
+  [[exam]]
+    [[[child0]]]
+      type = Window
+      parent = ""
+      order = 0 
+      position = 0:0 
+      maximised = True
+      fullscreen = True
+      size = 1920, 1080
+      title = Linux Exam
+      last_active_window = True
+    [[[child1]]]
+      type = HPaned
+      parent = child0
+      order = 0 
+      position = 809 
+      ratio = 0.42245430809399476
+    [[[terminal2]]]
+      type = Terminal
+      parent = child1
+      order = 0 
+      profile = default
+      directory = ~
+      command = nano -v --zero /tmp/exam
+    [[[terminal3]]]
+      type = Terminal
+      parent = child1
+      order = 1 
+      profile = default
+      directory = ~
+      command = /usr/bin/bash
 [plugins]
-

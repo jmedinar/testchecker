@@ -153,6 +153,7 @@
               - screen
               - bash-completion
               - libguestfs-bash-completion
+              - stress-ng
 
         - name: Multimedia Packages
           tags: multimedia_pkgs
