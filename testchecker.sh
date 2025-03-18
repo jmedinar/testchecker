@@ -11,7 +11,7 @@ version="4.0.1"
 # Red         Green         Yellow        Blue  		Purple        Cyan          White
 CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
 username=$(who am i | awk '{print $1}')
-version=$1
+testtype=$1
 sid=0
 
 if [[ ${UID} -ne 0 ]]; then echo "Execute this script with sudo"; exit 1; fi
@@ -68,7 +68,7 @@ echo -e "${CY}                        ${title} Version: ${version} "
 _print_line
 echo -e "${CG} DATE: ${CY} $(date) ${CG} STUDENT: ${CY} ${username} ${CW}"
 read -p " Introduce your student numeric ID: " sid
-if [[ -z $version ]]
+if [[ -z ${testtype} ]]
 then
 	read -p " Indicate the assignment to check [from 1 to 8]: " choice
 	case ${choice} in
