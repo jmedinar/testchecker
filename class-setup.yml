@@ -356,7 +356,7 @@
             - '/home/{{ username }}/.wallpapers'
 
         - name: Verify if wallpaper already exists
-          ansible.buildin.stat:
+          ansible.builtin.stat:
             path: /home/{{ username }}/.wallpapers/yellow-black.jpg
           register: file_stat
 
