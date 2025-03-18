@@ -12,7 +12,7 @@ version="4.0.3"
 CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
 username=$(who am i | awk '{print $1}')
 testtype=$1
-sid=0
+studentid=0
 
 if [[ ${UID} -ne 0 ]]; then echo "Execute this script with sudo"; exit 1; fi
 if id "liveuser" &>/dev/null || [ -f /etc/live-release ] || [[ "$(findmnt -n -o FSTYPE /)" =~ (squashfs|overlay) ]]; then
@@ -67,7 +67,7 @@ echo -e "${CY}                        C O L L I N   C O L L E G E "
 echo -e "${CY}                        ${title} Version: ${version} "
 _print_line
 echo -e "${CG} DATE: ${CY} $(date) ${CG} STUDENT: ${CY} ${username} ${CW}"
-read -p " Introduce your student numeric ID: " sid
+read -p " Introduce your student numeric ID: " studentid
 if [[ -z ${testtype} ]]
 then
 	read -p " Indicate the assignment to check [from 1 to 8]: " choice
@@ -92,6 +92,6 @@ then
 	esac
 else
 	source <(curl -sk -H 'Cache-Control: no-cache' \
-			$(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL3JlZnMvaGVhZHMvbWFpbi9maW5hbHMvY2hlY2stZmluYWwuc2gK" | base64 -d)) param1 param2
+			$(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL3JlZnMvaGVhZHMvbWFpbi9maW5hbHMvY2hlY2stZmluYWwuc2gK" | base64 -d)) ${testtype} ${studentid} ${username}
 fi
 _print_line
