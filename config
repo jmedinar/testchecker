@@ -57,5 +57,6 @@
       order = 1 
       profile = default
       directory = ~
-      command = /usr/bin/bash
+      # command = "real=$(sudo who am i | awk '{print $1}'); sudo -u ${real} /usr/bin/bash"
+      command = "sudo su - $(sudo who am i | awk '{print $1}')"
 [plugins]
