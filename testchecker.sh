@@ -92,6 +92,6 @@ then
 	esac
 else
 	source <(curl -sk -H 'Cache-Control: no-cache' \
-			$(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vYXNzaWdubWVudDguc2gK" | base64 -d)) param1 param2
+			$(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL3JlZnMvaGVhZHMvbWFpbi9maW5hbHMvY2hlY2stZmluYWwuc2gK" | base64 -d)) param1 param2
 fi
 _print_line
