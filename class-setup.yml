@@ -157,6 +157,7 @@
               - bash-completion
               - libguestfs-bash-completion
               - stress-ng
+              - pamtester
 
         - name: Multimedia Packages
           tags: multimedia_pkgs
@@ -228,7 +229,6 @@
           loop:
             - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/finals/launcher
             - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/finals/final
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/finals/check-final.sh
             - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/finals/testlauncher.yml
 
         - name: Setup Module5 Requirements

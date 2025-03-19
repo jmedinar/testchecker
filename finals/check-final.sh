@@ -19,7 +19,7 @@ _print_line() {
 _midterm() {
     if id midterm_${username} &>/dev/null; then ((ca++)); echo "Task 1: PASS"; else echo "Task 1: FAIL"; fi
     if [[ "$(userdbctl user midterm_${username} | grep Aux)" == *"wheel"* ]]; then ((ca++)); echo "Task 2: PASS"; else echo "Task 2: FAIL"; fi
-    if echo 'password123!' | su - midterm_${username} &>/dev/null; then ((ca++)); echo "Task 3: PASS"; else echo "Task 3: FAIL"; fi
+    if echo 'password123!' | pamtester login "midterm_${username}" authenticate &>/dev/null; then ((ca++)); echo "Task 3: PASS"; else echo "Task 3: FAIL"; fi
     if [[ -d /tuxquack-reports-${studentid}/ ]]; then ((ca++)); echo "Task 4: PASS"; else echo "Task 4: FAIL"; fi
 
     months='Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'    r5=0
@@ -38,7 +38,7 @@ _midterm() {
             "NO_LOGIN_USERS") exp=$(grep -wE 'nologin' /etc/passwd | wc -l) ;; 
             "WHEEL_USERS") exp=$(groupmems -g wheel -l | wc -w) ;;
         esac
-        if [[ "${exp}" != "$(grep ${l} /tuxquack-reports-${studentid}/$(date +'%b')/system-report-${username}.ini | awk '{print $NF}')" ]]; then r7=1; fi
+        if [[ "${exp}" != "$(grep -w ^${l} /tuxquack-reports-${studentid}/$(date +'%b')/system-report-${username}.ini | awk '{print $NF}')" ]]; then r7=1; fi
     done
     if [[ $r7 -eq 0 ]]; then ((ca++)); echo "Task 7: PASS"; else echo "Task 7: FAIL"; fi
 
@@ -46,7 +46,7 @@ _midterm() {
 
     r9=$(userdbctl user security-${username} | grep -E "Real|GID")
     if [[ "$(echo $r9)" == *"security auditor"* ]] && [[ "$(echo $r9)" == *"auditors"* ]]; then ((ca++)); echo "Task 9: PASS"; else echo "Task 9: FAIL"; fi
-    if echo 'P4ssw0rd!' | su - security-${username} &>/dev/null; then ((ca++)); echo "Task 10: PASS"; else echo "Task 10: FAIL"; fi
+    if echo 'P4ssw0rd!' | pamtester login "security-${username}" authenticate &>/dev/null; then ((ca++)); echo "Task 10: PASS"; else echo "Task 10: FAIL"; fi
     if grep "security-${username}*.*NOPASSWD*.*" /etc/sudoers.d/security-${username} &>/dev/null; then ((ca++)); echo "Task 11: PASS"; else echo "Task 11: FAIL"; fi
     tq=12
 }
