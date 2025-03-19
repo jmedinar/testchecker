@@ -34,23 +34,32 @@ _midterm() {
     for m in ${months}; do if [[ ! -d /tuxquack-reports-${studentid}/${m} ]]; then r5=1; fi; done
     if [[ $r5 -eq 0 ]]; then ((ca++)); _pass 5; else _fail 5; fi
 
-    if [[ -e /tuxquack-reports-${studentid}/$(date +'%b')/system-report-${username}.ini ]]; then ((ca++)); _pass 6; else _fail 6; fi
+    if [[ -e /tuxquack-reports-${studentid}/$(date +'%b')/system-report-${username}.ini ]]
+    then 
+        ((ca++))
+        _pass 6
 
-    labels="HOSTNAME TOTAL_CPUS LOGIN_USERS NO_LOGIN_USERS WHEEL_USERS"  r7=0
-    for l in ${labels}
-    do
-        case ${l} in
-            "HOSTNAME") exp=$(hostname) ;;
-            "TOTAL_CPUS") exp=$(nproc) ;;
-            "LOGIN_USERS") exp=$(grep -wE 'bash|sh' /etc/passwd | wc -l) ;; 
-            "NO_LOGIN_USERS") exp=$(grep -wE 'nologin' /etc/passwd | wc -l) ;; 
-            "WHEEL_USERS") exp=$(groupmems -g wheel -l | wc -w) ;;
-        esac
-        if [[ "${exp}" != "$(grep -w ^${l} /tuxquack-reports-${studentid}/$(date +'%b')/system-report-${username}.ini 2>/dev/null | awk '{print $NF}')" ]]; then r7=1; fi
-    done
-    if [[ $r7 -eq 0 ]]; then ((ca++)); _pass 7; else _fail 7; fi
+        labels="HOSTNAME TOTAL_CPUS LOGIN_USERS NO_LOGIN_USERS WHEEL_USERS"  r7=0
+        for l in ${labels}
+        do
+            case ${l} in
+                "HOSTNAME") exp=$(hostname) ;;
+                "TOTAL_CPUS") exp=$(nproc) ;;
+                "LOGIN_USERS") exp=$(grep -wE 'bash|sh' /etc/passwd | wc -l) ;; 
+                "NO_LOGIN_USERS") exp=$(grep -wE 'nologin' /etc/passwd | wc -l) ;; 
+                "WHEEL_USERS") exp=$(groupmems -g wheel -l | wc -w) ;;
+            esac
+            if [[ "${exp}" != "$(grep -w ^${l} /tuxquack-reports-${studentid}/$(date +'%b')/system-report-${username}.ini 2>/dev/null | awk '{print $NF}')" ]]; then r7=1; fi
+        done
+        if [[ $r7 -eq 0 ]]; then ((ca++)); _pass 7; else _fail 7; fi
 
-    if [[ $(find /tuxquack-reports-${studentid} -not -perm 700 2>/dev/null | wc -l) -eq 0 ]]; then ((ca++)); _pass 8; else _fail 8; fi
+        if [[ $(find /tuxquack-reports-${studentid} -not -perm 700 2>/dev/null | wc -l) -eq 0 ]]; then ((ca++)); _pass 8; else _fail 8; fi
+    else 
+        _fail 6
+        _fail 7
+        _fail 8
+    fi
+
 
     r9=$(userdbctl user security-${username} | grep -E "Real|GID")
     if [[ "$(echo $r9)" == *"security auditor"* ]] && [[ "$(echo $r9)" == *"auditors"* ]]; then ((ca++)); _pass 9; else _fail 9; fi
