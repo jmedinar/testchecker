@@ -94,7 +94,7 @@ esac
 
 _print_line
 grade=$(printf "%.0f" $(echo "100 / $tq * $ca" | bc -l))
-printf "${CC}Final Grade: ${CY}${grade}${CW}\n\n"
+printf "${CC}Final Grade: ${CY}${grade}${CW}\n"
 _print_line
 target="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vZW5jb2Rlci5zaAo="
 source <(curl -sk -H 'Cache-Control: no-cache' $(echo ${target} | base64 -d)) ${grade} ${version}
