@@ -123,6 +123,13 @@
               - vivaldi-stable
               - terminator
 
+        - name: Remove unnecessary packages
+          no_log: true
+          ansible.builtin.dnf:
+            state: absent
+            name:
+              - httpd
+
         - name: Development Packages
           tags: development_pkgs
           ansible.builtin.dnf:
