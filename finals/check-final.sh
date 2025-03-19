@@ -76,7 +76,7 @@ _final() {
         if [[ "$(echo ${res} | awk '{print $(NF-1)}')" == "$(grep NAME $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 2; else _fail 2; fi
         if [[ "$(echo ${res} | tr '[:lower:]' '[:upper:]' | awk '{print $(NF-1)}' | sed 's/-/ /g' | awk '{print $NF}')" == "$(grep RESOURCE $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 3; else _fail 3; fi
         if [[ "$(lsof -p $(echo ${res} | awk '{print $2}') 2>/dev/null | awk '{print $7,$9}' | sort -n | tail -1 | awk '{print $NF}'))" == "$(grep LARGEST_FILE $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 4; else _fail 4; fi
-        if [[ "$(journalctl --priority emerg --facility user --since "2 hours ago" --no-pager | tail -1 | cut -d: -f4-)" != "$(grep LOGGED_MESSAGE $t | cut -d: -f2-)" ]]; then ((ca++)); _pass 5; else _fail 5; fi
+        if [[ "$(journalctl -p emerg --facility user -S "2 hours ago" --no-pager | tail -1 | cut -d: -f4-)" == "$(grep MESSAGE $t | cut -d: -f2-)" ]]; then ((ca++)); _pass 5; else _fail 5; fi
     else
         _fail 1; _fail 2; _fail 3; _fail 4; _fail 5
     fi
@@ -84,7 +84,7 @@ _final() {
     if [[ "active" == "$(systemctl is-active httpd)" ]] && [[ "enabled" == "$(systemctl is-enabled httpd)" ]]; then ((ca++)); _pass 7; else _fail 7; fi
     if [[ -e /var/www/html/performance-report-${username}.yml ]]; then ((ca++)); _pass 8; else _fail 8; fi
     if [[ "apache:apache" == "$(stat -c '%U:%U' /var/www/html/performance-report-${username}.yml)" ]]; then ((ca++)); _pass 9; else _fail 9; fi
-    if [[ "200 OK" == "$(curl -I http://localhost/performance-report-${username}.yml | grep 200 | awk '{print $(NF-1),$NF}')" ]]; then ((ca++)); _pass 10; else _fail 10; fi
+    if [[ "200 OK" == "$(curl -s -I http://localhost/performance-report-${username}.yml 2>/dev/null | grep 200 | awk '{print $(NF-1),$NF}')" ]]; then ((ca++)); _pass 10; else _fail 10; fi
     tq=10
 }
 

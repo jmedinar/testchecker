@@ -20,7 +20,7 @@ dnf install -y ansible git figlet lolcat
 clear
 figlet "Linux Setup" | lolcat
 sleep 10
-curl -o /tmp/class-setup.yml https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/class-setup.yml
+curl -s -o /tmp/class-setup.yml https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/class-setup.yml 
 ansible-playbook /tmp/class-setup.yml -e username=$(who am i | awk '{print $1}')
 rm -rf /tmp/class-setup.yml
 figlet "Done. Rebooting..." | lolcat 
