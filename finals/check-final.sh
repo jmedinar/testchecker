@@ -16,9 +16,17 @@ _print_line() {
     printf "${CW}\n"
 }
 
+_pass(){
+    printf "${CY}Task ${1}: ${CG}PASS${CW}\n"
+}
+
+_fail(){
+    printf "${CY}Task ${1}: ${CR}PASS${CW}\n"
+}
+
 _midterm() {
-    if id midterm_${username} &>/dev/null; then ((ca++)); echo "Task 1: PASS"; else echo "Task 1: FAIL"; fi
-    if [[ "$(userdbctl user midterm_${username} | grep Aux)" == *"wheel"* ]]; then ((ca++)); echo "Task 2: PASS"; else echo "Task 2: FAIL"; fi
+    if id midterm_${username} &>/dev/null; then ((ca++)); _pass 1 ; else _fail 1; fi
+    if [[ "$(userdbctl user midterm_${username} 2>/dev/null | grep Aux)" == *"wheel"* ]]; then ((ca++)); echo "Task 2: PASS"; else echo "Task 2: FAIL"; fi
     if echo 'password123!' | pamtester login "midterm_${username}" authenticate &>/dev/null; then ((ca++)); echo "Task 3: PASS"; else echo "Task 3: FAIL"; fi
     if [[ -d /tuxquack-reports-${studentid}/ ]]; then ((ca++)); echo "Task 4: PASS"; else echo "Task 4: FAIL"; fi
 
