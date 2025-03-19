@@ -72,11 +72,16 @@ _final() {
     if [[ -e $t ]]
     then
         res=$(ps -ef | grep  stress-ng | grep run)
-        if [[ "$(echo ${res} | awk '{print $2}')" == "$(grep PID $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 1; else _fail 1; fi
-        if [[ "$(echo ${res} | awk '{print $(NF-1)}')" == "$(grep NAME $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 2; else _fail 2; fi
-        if [[ "$(echo ${res} | tr '[:lower:]' '[:upper:]' | awk '{print $(NF-1)}' | sed 's/-/ /g' | awk '{print $NF}')" == "$(grep RESOURCE $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 3; else _fail 3; fi
-        if [[ "/usr/bin/stress-ng" == "$(grep LARGEST_FILE $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 4; else _fail 4; fi
-        if [[ "$(journalctl -p emerg --facility user -S "2 hours ago" --no-pager | tail -1 | cut -d: -f4-)" == "$(grep MESSAGE $t | cut -d: -f2-)" ]]; then ((ca++)); _pass 5; else _fail 5; fi
+        if [[ ! -z ${res} ]]
+        then
+            if [[ "$(echo ${res} | awk '{print $2}')" == "$(grep PID $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 1; else _fail 1; fi
+            if [[ "$(echo ${res} | awk '{print $(NF-1)}')" == "$(grep NAME $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 2; else _fail 2; fi
+            if [[ "$(echo ${res} | tr '[:lower:]' '[:upper:]' | awk '{print $(NF-1)}' | sed 's/-/ /g' | awk '{print $NF}')" == "$(grep RESOURCE $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 3; else _fail 3; fi
+            if [[ "/usr/bin/stress-ng" == "$(grep LARGEST_FILE $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 4; else _fail 4; fi
+        else
+            _fail 1; _fail 2; _fail 3; _fail 4;
+        fi
+        if [[ "$(journalctl -p emerg --facility user -S "3 hours ago" --no-pager | tail -1 | cut -d: -f4-)" == "$(grep MESSAGE $t | cut -d: -f2-)" ]]; then ((ca++)); _pass 5; else _fail 5; fi
     else
         _fail 1; _fail 2; _fail 3; _fail 4; _fail 5
     fi
