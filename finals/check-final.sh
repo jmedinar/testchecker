@@ -48,7 +48,7 @@ _midterm() {
     if [[ "$(echo $r9)" == *"security auditor"* ]] && [[ "$(echo $r9)" == *"auditors"* ]]; then ((ca++)); echo "Task 9: PASS"; else echo "Task 9: FAIL"; fi
     if echo 'P4ssw0rd!' | pamtester login "security-${username}" authenticate &>/dev/null; then ((ca++)); echo "Task 10: PASS"; else echo "Task 10: FAIL"; fi
     if grep "security-${username}*.*NOPASSWD*.*" /etc/sudoers.d/security-${username} &>/dev/null; then ((ca++)); echo "Task 11: PASS"; else echo "Task 11: FAIL"; fi
-    tq=12
+    tq=11
 }
 
 _final() {
@@ -82,5 +82,5 @@ case ${version} in
 esac
 
 ((grade = 100 / tq * ca )) &>/dev/null
-figlet "${version} Grade: ${grade}" | lolcat
+figlet "Grade: ${grade}" | lolcat
 echo ""
