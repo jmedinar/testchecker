@@ -11,7 +11,7 @@ today=$(date)
 
 if [[ ${2} == "midterm" ]] || [[ ${2} == "final" ]]
 then
-    echo -e "${CY} $(echo "${uuid},${sname},${1},${2},${hostname},${today}" | base64 -w 0)${CW}"
+    echo -e "${CY}$(echo "${uuid},${sname},${1},${2},${hostname},${today}" | base64 -w 0)${CW}"
 else
-    echo -e "${CY} $(echo "${uuid},${sname},${1},assignment${2},${hostname},${today}" | base64 -w 0)${CW}"
+    echo -e "${CY}$(echo "${uuid},${sname},${1},assignment${2},${hostname},${today}" | base64 -w 0)${CW}"
 fi
