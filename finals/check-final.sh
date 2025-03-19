@@ -74,14 +74,13 @@ _final() {
 
 clear
 _print_line
-figlet "Linux ${version} Exam" | lolcat
+figlet "${version} Exam" | lolcat
 
 case ${version} in
     "midterm") _midterm ;;
     "final") _final ;;
 esac
 
-_print_line
 ((grade = 100 / tq * ca )) &>/dev/null
-figlet "Final Grade: ${grade}" | lolcat
+figlet "${version} Grade: ${grade}" | lolcat
 echo ""
