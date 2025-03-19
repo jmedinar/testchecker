@@ -63,8 +63,8 @@ _update
 clear
 echo ""
 _print_line
-echo -e "${CY}                        C O L L I N   C O L L E G E "
-echo -e "${CY}                        ${title} Version: ${version} "
+echo -e "${CL}                        C O L L I N   C O L L E G E "
+echo -e "${CP}                        ${title} Version: ${version} "
 _print_line
 echo -e "${CG} DATE: ${CY} $(date) ${CG} STUDENT: ${CY} ${username} ${CW}"
 read -p " Introduce your student numeric ID: " studentid
