@@ -72,17 +72,13 @@ _final() {
     if [[ -e $t ]]
     then
         res=$(ps -ef | grep  stress-ng | grep run)
-        if [[ "$(echo ${res} | awk '{print $3}')" != "$(grep PPID $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 1; else _fail 1; fi
-        if [[ "$(echo ${res} | awk '{print $(NF-1)}')" != "$(grep NAME $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 2; else _fail 2; fi
-        if [[ "$(echo ${res} | tr '[:lower:]' '[:upper:]' | awk '{print $(NF-1)}' | sed 's/-/ /g' | awk '{print $NF}')" != "$(grep RESOURCE $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 3; else _fail 3; fi
+        if [[ "$(echo ${res} | awk '{print $2}')" == "$(grep PID $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 1; else _fail 1; fi
+        if [[ "$(echo ${res} | awk '{print $(NF-1)}')" == "$(grep NAME $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 2; else _fail 2; fi
+        if [[ "$(echo ${res} | tr '[:lower:]' '[:upper:]' | awk '{print $(NF-1)}' | sed 's/-/ /g' | awk '{print $NF}')" == "$(grep RESOURCE $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 3; else _fail 3; fi
         if [[ "$(lsof -p $(echo ${res} |  awk '{print $2}' 2>/dev/null | awk '{print $7,$9}' | sort -n | tail -1 | awk '{print $NF}'))" != "$(grep LARGEST_FILE $t | awk '{print $NF}')" ]]; then ((ca++)); _pass 4; else _fail 4; fi
         if [[ "$(journalctl --priority emerg --facility user --since "2 hours ago" --no-pager | tail -1 | cut -d: -f4-)" != "$(grep LOGGED_MESSAGE $t | cut -d: -f2-)" ]]; then ((ca++)); _pass 5; else _fail 5; fi
     else
-        _fail 1
-        _fail 2
-        _fail 3
-        _fail 4
-        _fail 5
+        _fail 1; _fail 2; _fail 3; _fail 4; _fail 5
     fi
     if [[ ! -z "$(rpm -qa httpd)" ]]; then ((ca++)); _pass 6; else _fail 6; fi
     if [[ "active" == "$(systemctl is-active httpd)" ]] && [[ "enabled" == "$(systemctl is-enabled httpd)" ]]; then ((ca++)); _pass 7; else _fail 7; fi
