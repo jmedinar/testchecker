@@ -90,5 +90,5 @@ case ${version} in
 esac
 
 grade=$(printf "%.0f" $(echo "100 / $tq * $ca" | bc -l))
-figlet "Grade: ${grade}" | lolcat
-echo ""
+# figlet "Grade: ${grade}" | lolcat
+printf "%sFinal Grade: %s%s%s/n/n" "${CC}" "${CY}" "${grade}" "${CW}"
