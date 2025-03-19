@@ -21,7 +21,7 @@ _pass(){
 }
 
 _fail(){
-    printf "${CY}Task ${1}: ${CR}PASS${CW}\n"
+    printf "${CY}Task ${1}: ${CR}FAIL${CW}\n"
 }
 
 _midterm() {
@@ -80,9 +80,9 @@ _final() {
     tq=10
 }
 
-clear
+# clear
 _print_line
-figlet "${version} Exam" | lolcat
+# figlet "${version} Exam" | lolcat
 
 case ${version} in
     "midterm") _midterm ;;
@@ -91,4 +91,4 @@ esac
 
 grade=$(printf "%.0f" $(echo "100 / $tq * $ca" | bc -l))
 # figlet "Grade: ${grade}" | lolcat
-printf "%sFinal Grade: %s%s%s/n/n" "${CC}" "${CY}" "${grade}" "${CW}"
+printf "${CC}Final Grade: ${CY}${grade}${CW}\n\n"
