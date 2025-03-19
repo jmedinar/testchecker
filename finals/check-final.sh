@@ -17,11 +17,11 @@ _print_line() {
 }
 
 _pass(){
-    printf "${CY}Task ${1}: ${CG}PASS${CW}\n"
+    printf "\t${CY}Task ${1}:\t${CG}PASS${CW}\n"
 }
 
 _fail(){
-    printf "${CY}Task ${1}: ${CR}FAIL${CW}\n"
+    printf "\t${CY}Task ${1}:\t${CR}FAIL${CW}\n"
 }
 
 _midterm() {
@@ -46,11 +46,11 @@ _midterm() {
             "NO_LOGIN_USERS") exp=$(grep -wE 'nologin' /etc/passwd | wc -l) ;; 
             "WHEEL_USERS") exp=$(groupmems -g wheel -l | wc -w) ;;
         esac
-        if [[ "${exp}" != "$(grep -w ^${l} /tuxquack-reports-${studentid}/$(date +'%b')/system-report-${username}.ini | awk '{print $NF}')" ]]; then r7=1; fi
+        if [[ "${exp}" != "$(grep -w ^${l} /tuxquack-reports-${studentid}/$(date +'%b')/system-report-${username}.ini 2>/dev/null | awk '{print $NF}')" ]]; then r7=1; fi
     done
     if [[ $r7 -eq 0 ]]; then ((ca++)); _pass 7; else _fail 7; fi
 
-    if [[ $(find /tuxquack-reports-${studentid} -not -perm 700 | wc -l) -eq 0 ]]; then ((ca++)); _pass 8; else _fail 8; fi
+    if [[ $(find /tuxquack-reports-${studentid} -not -perm 700 2>/dev/null | wc -l) -eq 0 ]]; then ((ca++)); _pass 8; else _fail 8; fi
 
     r9=$(userdbctl user security-${username} | grep -E "Real|GID")
     if [[ "$(echo $r9)" == *"security auditor"* ]] && [[ "$(echo $r9)" == *"auditors"* ]]; then ((ca++)); _pass 9; else _fail 9; fi
