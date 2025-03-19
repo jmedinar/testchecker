@@ -81,6 +81,6 @@ case ${version} in
     "final") _final ;;
 esac
 
-grade=$(printf "%.0f" $(echo "100 / $tq * $ca" | bc -l)
+grade=$(printf "%.0f" $(echo "100 / $tq * $ca" | bc -l))
 figlet "Grade: ${grade}" | lolcat
 echo ""
