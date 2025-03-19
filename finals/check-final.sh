@@ -87,8 +87,8 @@ _final() {
     fi
     if [[ ! -z "$(rpm -qa httpd)" ]]; then ((ca++)); _pass 6; else _fail 6; fi
     if [[ "active" == "$(systemctl is-active httpd)" ]] && [[ "enabled" == "$(systemctl is-enabled httpd)" ]]; then ((ca++)); _pass 7; else _fail 7; fi
-    if [[ -e /var/www/html/performance-report-${username}.yml 2>/dev/null ]]; then ((ca++)); _pass 8; else _fail 8; fi
-    if [[ "apache:apache" == "$(stat -c '%U:%U' /var/www/html/performance-report-${username}.yml)" ]]; then ((ca++)); _pass 9; else _fail 9; fi
+    if [[ -e /var/www/html/performance-report-${username}.yml ]]; then ((ca++)); _pass 8; else _fail 8; fi
+    if [[ "apache:apache" == "$(stat -c '%U:%U' /var/www/html/performance-report-${username}.yml 2>/dev/null)" ]]; then ((ca++)); _pass 9; else _fail 9; fi
     if curl -s -I http://localhost/performance-report-${username}.yml | grep -q 200; then ((ca++)); _pass 10; else _fail 10; fi
     tq=10
 }
