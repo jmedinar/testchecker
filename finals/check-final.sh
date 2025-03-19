@@ -60,8 +60,7 @@ _midterm() {
         _fail 8
     fi
 
-
-    r9=$(userdbctl user security-${username} | grep -E "Real|GID")
+    r9=$(userdbctl user security-${username} 2>/dev/null | grep -E "Real|GID")
     if [[ "$(echo $r9)" == *"security auditor"* ]] && [[ "$(echo $r9)" == *"auditors"* ]]; then ((ca++)); _pass 9; else _fail 9; fi
     if echo 'P4ssw0rd!' | pamtester login "security-${username}" authenticate &>/dev/null; then ((ca++)); _pass 10; else _fail 10; fi
     if grep "security-${username}*.*NOPASSWD*.*" /etc/sudoers.d/security-${username} &>/dev/null; then ((ca++)); _pass 11; else _fail 11; fi
