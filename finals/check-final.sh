@@ -81,7 +81,6 @@ case ${version} in
     "final") _final ;;
 esac
 
-# ((grade = 100 / tq * ca )) &>/dev/null
-grade=$(awk 'BEGIN {print int(100 / $tq * $ca + 0.5)}')
+grade=$(printf "%.0f" $(echo "100 / $tq * $ca" | bc -l)
 figlet "Grade: ${grade}" | lolcat
 echo ""
