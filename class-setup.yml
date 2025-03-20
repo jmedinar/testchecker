@@ -266,8 +266,9 @@
             - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/userValidator.sh
 
         - name: Setup Module6 Performance Init Installation
+          no_log: true
           ansible.builtin.get_url:
-            url: https://github.com/jmedinar/testchecker/blob/main/performance/mod6-init.sh
+            url: https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/performance/mod6-init.sh
             dest: /usr/bin/mod6-init
             mode: '0755'
             owner: root
