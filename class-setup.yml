@@ -124,11 +124,9 @@
               - terminator
 
         - name: Remove unnecessary packages
-          no_log: true
           ansible.builtin.dnf:
+            name: httpd
             state: removed
-            name:
-              - httpd
 
         - name: Development Packages
           tags: development_pkgs
