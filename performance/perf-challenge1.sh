@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Ensure stress-ng is present
 if ! command -v stress-ng -V &>/dev/null; then sudo dnf install -yqq stress-ng &>/dev/null; fi
 
 quotes=( 
@@ -20,28 +19,22 @@ quotes=(
     "He-Man - I have the power!"
 )
 
-_log(){
-    logger "${1} is now impacting your ${2} : ${quotes[$((RANDOM % ${#quotes[@]}))]}" -p local3.error
-}
-    
-# If the process is running in the background don't start it again.
-if ps -ef | grep stress-ng | grep -v grep &>/dev/null
+if ps -ef | grep stress-ng | grep run &>/dev/null
 then
-    echo "The process is already running until the completion of three hours. Skipping..."
+    echo "The process is already running and will continue for a max of three hours. Skipping..."
     exit 1
 else
     procs=(cpu mem io)
     case ${procs[$((RANDOM % ${#procs[@]}))]} in
-        cpu) _log "stress-ng-cpu" "CPU";   (stress-ng --quiet --timeout 3600 --cpu 1 &) ;;
-        mem) _log "stress-ng-vm" "MEMORY"; (stress-ng --quiet --timeout 3600 --vm 1 --vm-bytes 512M &) ;;
-         io) _log "stress-ng-aiol" "IO";  (stress-ng --quiet --timeout 3600 --aiol 1 &) ;;
+        cpu) /usr/bin/logger "stress-ng-cpu is now impacting your CPU - ${quotes[$((RANDOM % ${#quotes[@]}))]}" -p local3.error
+             /usr/bin/stress-ng -q --timeout 3600 -c 1 --oom-avoid &>/dev/null & disown
+             ;;
+        mem) /usr/bin/logger "stress-ng-vm is now impacting your MEMORY - ${quotes[$((RANDOM % ${#quotes[@]}))]}" -p local3.error
+             /usr/bin/stress-ng -q --timeout 3600 -m 1 --vm-bytes 32M &>/dev/null & disown
+             ;;
+         io) /usr/bin/logger "stress-ng-io is now impacting your IO - ${quotes[$((RANDOM % ${#quotes[@]}))]}" -p local3.error
+             /usr/bin/stress-ng -q --timeout 3600 -i 1 &>/dev/null & disown
+             ;;
          *) echo "unknown" ;;
     esac
 fi
-
-##TODO: Verifications
-# 1. Identify the PID of the process causing performance issues
-# 2. Which is the largest file of the process causing performance issues
-# 3. Find the funny message in logs
-# 4. Find the name of the process causing performance issues
-# 5. What is being impacted by the process causing performance issues

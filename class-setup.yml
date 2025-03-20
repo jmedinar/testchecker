@@ -338,6 +338,12 @@
             path: /etc/cockpit/disallowed-users
             state: absent
             line: root
+        
+        - name: Enable SSH
+          ansible.builtin.service:
+            name: sshd
+            state: started
+            enabled: true
 
     - name: Configure Look & Feel
       tags: looks
