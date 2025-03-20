@@ -145,8 +145,6 @@
               - pcp-pmda-podman
               - podman-compose
               - containers-common-extra
-              - wireshark
-              - nmap
               - kernel-devel
               - ncurses-devel
               - ncurses-libs
