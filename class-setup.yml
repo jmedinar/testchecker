@@ -126,7 +126,7 @@
         - name: Remove unnecessary packages
           no_log: true
           ansible.builtin.dnf:
-            state: absent
+            state: removed
             name:
               - httpd
 
