@@ -74,34 +74,34 @@
       tags: packages
       block:
 
-        - name: Check if Zoom is already installed
-          ansible.builtin.command: dnf info --installed zoom
-          register: zoom_installed
-          ignore_errors: true
-          changed_when: false
+ #       - name: Check if Zoom is already installed
+ #         ansible.builtin.command: dnf info --installed zoom
+ #         register: zoom_installed
+ #         ignore_errors: true
+ #         changed_when: false
 
-        - name: Download Zoom if not installed
-          tags: special_pkgs
-          ansible.builtin.get_url:
-            url: https://zoom.us/client/latest/zoom_x86_64.rpm
-            dest: /tmp/
-            mode: '0744'
-          when: zoom_installed.rc != 0
+ #       - name: Download Zoom if not installed
+ #         tags: special_pkgs
+ #         ansible.builtin.get_url:
+ #           url: https://zoom.us/client/latest/zoom_x86_64.rpm
+ #           dest: /tmp/
+ #           mode: '0744'
+ #         when: zoom_installed.rc != 0
 
-        - name: Install Zoom if not installed
-          tags: special_pkgs
-          ansible.builtin.dnf:
-            name: "/tmp/zoom_x86_64.rpm"
-            state: present
-            disable_gpg_check: true
-          when: zoom_installed.rc != 0
+ #       - name: Install Zoom if not installed
+ #         tags: special_pkgs
+ #         ansible.builtin.dnf:
+ #           name: "/tmp/zoom_x86_64.rpm"
+ #           state: present
+ #           disable_gpg_check: true
+ #         when: zoom_installed.rc != 0
 
-        - name: Remove Zoom Package if downloaded
-          tags: special_pkgs
-          ansible.builtin.file:
-            path: "/tmp/zoom_x86_64.rpm"
-            state: absent
-          when: zoom_installed.rc != 0
+ #       - name: Remove Zoom Package if downloaded
+ #         tags: special_pkgs
+ #         ansible.builtin.file:
+ #           path: "/tmp/zoom_x86_64.rpm"
+ #           state: absent
+ #         when: zoom_installed.rc != 0
 
         - name: Workstation Packages
           tags: workstation_pkgs
@@ -116,11 +116,9 @@
               - google-chrome
               - flatpak
               - gnome-tweaks
-              - gnome-extensions
               - vim
               - wget
               - fuse-sshfs
-              - cockpit-*
               - vivaldi-stable
               - terminator
 
@@ -157,23 +155,24 @@
               - libguestfs-bash-completion
               - stress-ng
               - pamtester
-
-        - name: Multimedia Packages
-          tags: multimedia_pkgs
-          ansible.builtin.dnf:
-            state: present
-            exclude:
-              - gstreamer1-plugins-bad-free-devel
-              - lame-devel
-            name:
               - gparted
-              - python3-xlib
-              - "@multimedia"
-              - lame
-              - gstreamer1-plugin-openh264
-              - gstreamer1-plugins-base-*
-              - gstreamer1-plugins-good-*
-              - gstreamer1-plugins-bad-*
+
+#        - name: Multimedia Packages
+#          tags: multimedia_pkgs
+#          ansible.builtin.dnf:
+#            state: present
+#            exclude:
+#              - gstreamer1-plugins-bad-free-devel
+#              - lame-devel
+#            name:
+#              - gparted
+#              - python3-xlib
+#              - "@multimedia"
+#              - lame
+#              - gstreamer1-plugin-openh264
+#              - gstreamer1-plugins-base-*
+#              - gstreamer1-plugins-good-*
+#              - gstreamer1-plugins-bad-*
 
     - name: Setting up Configurations
       tags: configurations
@@ -321,23 +320,23 @@
       tags: services
       block:
 
-        - name: Enable Cockpit
-          ansible.builtin.service:
-            name: cockpit
-            state: started
-            enabled: true
+#        - name: Enable Cockpit
+#          ansible.builtin.service:
+#            name: cockpit
+#            state: started
+#            enabled: true
 
-        - name: Open firewall for cockpit
-          ansible.posix.firewalld:
-            permanent: true
-            port: 9090/tcp
-            state: enabled
+#        - name: Open firewall for cockpit
+#          ansible.posix.firewalld:
+#            permanent: true
+#            port: 9090/tcp
+#            state: enabled
 
-        - name: Remove root from disalowed users list
-          ansible.builtin.lineinfile:
-            path: /etc/cockpit/disallowed-users
-            state: absent
-            line: root
+#        - name: Remove root from disalowed users list
+#          ansible.builtin.lineinfile:
+#            path: /etc/cockpit/disallowed-users
+#            state: absent
+#            line: root
         
         - name: Enable SSH
           ansible.builtin.service:
@@ -410,10 +409,10 @@
             a4: geany.desktop
             a5: code.desktop
             a6: org.gnome.Nautilus.desktop
-            a7: Zoom.desktop
+#            a7: Zoom.desktop
             a8: org.gnome.Software.desktop
           ansible.builtin.shell: |
-            gsettings set org.gnome.shell favorite-apps "['{{ a1 }}','{{ a2 }}','{{ a3 }}','{{ a4 }}','{{ a5 }}','{{ a6 }}','{{ a7 }}','{{ a8 }}']"
+            gsettings set org.gnome.shell favorite-apps "['{{ a1 }}','{{ a2 }}','{{ a3 }}','{{ a4 }}','{{ a5 }}','{{ a6 }}','{{ a8 }}']"
           environment:
             DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
           changed_when: false
