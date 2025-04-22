@@ -21,9 +21,8 @@ clear
 figlet "Linux Setup" | lolcat
 sleep 10
 curl -s -o /tmp/class-setup.yml https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/class-setup.yml 
-ansible-playbook /tmp/class-setup.yml -e username=$(who am i | awk '{print $1}')
+ansible-playbook /tmp/class-setup.yml -t "repos,extra_packages,configurations,security,cockpit,looks,background,linux_looks,final"
 rm -rf /tmp/class-setup.yml
 figlet "Done. Rebooting..." | lolcat 
 sleep 30
 reboot
-

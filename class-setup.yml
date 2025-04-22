@@ -1,22 +1,29 @@
 ---
-
 - name: Preparing Student Workstation
   hosts: localhost
   connection: local
   gather_facts: true
-  become: false
+  become: true
 
   vars:
-    username: "{{ username }}"
+    username: "{{ lookup('env', 'SUDO_USER') }}"
+    rpmfusion: "https://download1.rpmfusion.org"
+    repo_path: "https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/"
+    wallpapers_linux:
+      - linux-8k-ultra-hd-art_bWVnaGmUmZqaraWkpJRmZWdpZa1qbGtm.jpg
+      - linux-os-bw_Z2hraG6UmZqaraWkpJRma2VlrWZnZWU.jpg
+    wallpapers_containers:
+      - onboarding-selkies-3ddb7cb6ee2cf9abed002b01f63b1822.png
+      - renovations-21ad5798164b1bb1beceb19646b2a762.png
+      - Microservices-Dockerization-1-2.png
 
   tasks:
 
     - name: Enabling extra repositories
-      become: true
       tags: repos
       block:
 
-        - name: Configure Visual Studio Code
+        - name: Visual Studio Code
           ansible.builtin.yum_repository:
             name: Code
             description: Visual Studio Code
@@ -26,12 +33,12 @@
             gpgcheck: true
             gpgkey: https://packages.microsoft.com/keys/microsoft.asc
 
-        - name: Installing third party repositories
+        - name: Third party
           ansible.builtin.dnf:
             name: fedora-workstation-repositories
             state: present
 
-        - name: Enabling Google Chrome Repository
+        - name: Google Chrome
           ansible.builtin.yum_repository:
             name: google-chrome
             description: Google Chrome Repository
@@ -40,27 +47,27 @@
             gpgcheck: true
             gpgkey: https://dl.google.com/linux/linux_signing_key.pub
 
-        - name: Import RPM Fusion free repository GPG key
+        - name: RPM Fusion free GPG key
           ansible.builtin.rpm_key:
-            key: https://download1.rpmfusion.org/free/fedora/RPM-GPG-KEY-rpmfusion-free-fedora-2020
+            key: "{{ rpmfusion }}/free/fedora/RPM-GPG-KEY-rpmfusion-free-fedora-2020"
             state: present
 
-        - name: Import RPM Fusion non-free repository GPG key
+        - name: RPM Fusion Free
+          ansible.builtin.dnf:
+            name: "{{ rpmfusion }}/free/fedora/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+            state: present
+
+        - name: RPM Fusion non-free GPG key
           ansible.builtin.rpm_key:
-            key: https://download1.rpmfusion.org/nonfree/fedora/RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020
+            key: "{{ rpmfusion }}/nonfree/fedora/RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020"
             state: present
 
-        - name: Installing RPM Fusion Free repos
+        - name: RPM Fusion Non-Free
           ansible.builtin.dnf:
-            name: https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm
+            name: "{{ rpmfusion }}/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
             state: present
 
-        - name: Installing RPM Fusion Non-Free repos
-          ansible.builtin.dnf:
-            name: https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm
-            state: present
-
-        - name: Add Vivaldi repository
+        - name: Vivaldi
           ansible.builtin.yum_repository:
             name: vivaldi
             description: Vivaldi browser repository
@@ -69,96 +76,158 @@
             gpgcheck: true
             enabled: true
 
-    - name: Installing Extra Packages
-      become: true
-      tags: packages
+    - name: Installing packages for complete desktop
+      tags: desktop_packages
       block:
 
-        - name: Workstation Packages
-          tags: workstation_pkgs
-          ansible.builtin.dnf:
-            state: present
-            skip_broken: true
-            name:
-              - geany
-              - geany-plugins-*
-              - geany-themes.noarch
-              - gtkd-geany-tags.noarch
-              - firefox
-              - google-chrome
-              - flatpak
-              - gnome-tweaks
-              - vim
-              - wget
-              - fuse-sshfs
-              - vivaldi-stable
-              - terminator
+        - name: Check if Zoom is already installed
+          ansible.builtin.command: dnf info --installed zoom
+          register: zoom_installed
+          ignore_errors: true
+          changed_when: false
 
-        - name: Development Packages
-          tags: development_pkgs
+        - name: Download Zoom if not installed
+          ansible.builtin.get_url:
+            url: https://zoom.us/client/latest/zoom_x86_64.rpm
+            dest: /tmp/
+            mode: '0744'
+          when: zoom_installed.rc != 0
+
+        - name: Install Zoom if not installed
+          ansible.builtin.dnf:
+            name: "/tmp/zoom_x86_64.rpm"
+            state: present
+            disable_gpg_check: true
+          when: zoom_installed.rc != 0
+
+        - name: Remove Zoom Package if downloadeda
+          ansible.builtin.file:
+            path: "/tmp/zoom_x86_64.rpm"
+            state: absent
+          when: zoom_installed.rc != 0
+
+        - name: Multimedia Packages
           ansible.builtin.dnf:
             state: present
             skip_broken: true
+            exclude:
+              - gstreamer1-plugins-bad-free-devel
+              - lame-devel
             name:
-              - git
-              - ranger
-              - yq
-              - jq
-              - pip
-              - ansible
-              - ansible-builder
-              - vim-ansible
-              - vim-syntastic-ansible
-              - powerline-fonts
-              - fzf
-              - podman
-              - code
-              - ansible-collection-containers-podman
-              - pcp-pmda-podman
-              - podman-compose
-              - containers-common-extra
-              - kernel-devel
-              - ncurses-devel
-              - ncurses-libs
-              - ncurses-static
-              - ncurses
-              - java-latest-openjdk.x86_64
-              - screen
-              - bash-completion
-              - libguestfs-bash-completion
-              - stress-ng
-              - pamtester
               - gparted
+              - python3-xlib
+              - "@multimedia"
+              - lame
+              - gstreamer1-plugin-openh264
+              - gstreamer1-plugins-base-*
+              - gstreamer1-plugins-good-*
+              - gstreamer1-plugins-bad-*
 
-<<<<<<< HEAD
-=======
-#        - name: Multimedia Packages
-#          tags: multimedia_pkgs
-#          ansible.builtin.dnf:
-#            state: present
-#            skip_broken: true
-#            exclude:
-#              - gstreamer1-plugins-bad-free-devel
-#              - lame-devel
-#            name:
-#              - gparted
-#              - python3-xlib
-#              - "@multimedia"
-#              - lame
-#              - gstreamer1-plugin-openh264
-#              - gstreamer1-plugins-base-*
-#              - gstreamer1-plugins-good-*
-#              - gstreamer1-plugins-bad-*
+    - name: Installing packages for containers
+      tags: container_packages
+      ansible.builtin.dnf:
+        state: present
+        skip_broken: true
+        name:
+          - yq
+          - jq
+          - pip
+          - ansible
+          - ansible-builder
+          - vim-ansible
+          - vim-syntastic-ansible
+          - fzf
+          - podman
+          - ansible-collection-containers-podman
+          - pcp-pmda-podman
+          - podman-compose
+          - containers-common-extra
 
->>>>>>> 4c54436 (fixes)
+    - name: Installing Extra Packages
+      tags: extra_packages
+      ansible.builtin.dnf:
+        state: present
+        skip_broken: true
+        name:
+          - geany
+          - geany-plugins-*
+          - geany-themes.noarch
+          - gtkd-geany-tags.noarch
+          - firefox
+          - google-chrome
+          - flatpak
+          - gnome-tweaks
+          - vim
+          - wget
+          - fuse-sshfs
+          - vivaldi-stable
+          - terminator
+          - git
+          - ranger
+          - powerline-fonts
+          - fzf
+          - code
+          - kernel-devel
+          - ncurses-devel
+          - ncurses-libs
+          - ncurses-static
+          - ncurses
+          - java-latest-openjdk.x86_64
+          - screen
+          - bash-completion
+          - libguestfs-bash-completion
+          - stress-ng
+          - pamtester
+          - gparted
+
     - name: Setting up Configurations
       tags: configurations
       block:
 
+        - name: Configure vimrc
+          ansible.builtin.copy:
+            dest: /etc/vimrc.local
+            mode: "0644"
+            owner: "root"
+            group: "root"
+            content: |
+              syntax on
+              set nocompatible
+              set autoindent
+              set smartindent
+              set nowrap
+              set expandtab
+              set tabstop=3
+              set softtabstop=3
+              set shiftwidth=3
+              set number
+              set cursorline
+              set cursorcolumn
+              set showmatch
+              set scrolloff=5
+              set sidescrolloff=5
+              set wildmenu
+              set wildmode=longest:full
+              set clipboard=unnamedplus
+              set mouse=a
+              set background=dark
+              set laststatus=2
+              set showcmd
+              set title
+              set paste
+              set ignorecase
+              set smartcase
+              set incsearch
+              set hlsearch
+              set lazyredraw
+              set ttyfast
+              filetype plugin indent on
+              let mapleader = ","
+            force: false
+
         - name: Setup Testchecker Tool
-          become: true
           ansible.builtin.get_url:
-            url: https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/testchecker.sh
+            url: "{{ repo_path }}/testchecker.sh"
             dest: /usr/bin/testchecker
             mode: '0755'
             owner: root
@@ -172,21 +241,19 @@
             create: true
 
         - name: Get final scripts
-          become: true
           ansible.builtin.get_url:
-            url: "{{ item }}"
+            url: "{{ repo_path }}/{{ item }}"
             dest: /usr/bin/
             mode: "0755"
             owner: root
             group: root
           no_log: true
           loop:
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/finals/launcher
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/finals/final
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/finals/testlauncher.yml
+            - finals/launcher
+            - finals/final
+            - finals/testlauncher.yml
 
         - name: Setup Module5 Requirements
-          become: true
           ansible.builtin.file:
             path: /sysadm/bin
             state: directory
@@ -196,33 +263,33 @@
 
         - name: Download Challenges
           ansible.builtin.get_url:
-            url: "{{ item }}"
+            url: "{{ repo_path }}/{{ item }}"
             dest: /sysadm/bin/
             mode: '0755'
             owner: "{{ username }}"
             group: "{{ username }}"
           no_log: true
           loop:
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge1.sh
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge2.sh
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge3.sh
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge4.sh
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge5.sh
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge6.sh
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge7.sh
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge8.sh
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/challenge9.sh
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/homeChecker.sh
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/passwordGenerator.sh
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/processFile.sh
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/rabbitJumps.sh
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/testString.sh
-            - https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/challenges/userValidator.sh
+            - challenges/challenge1.sh
+            - challenges/challenge2.sh
+            - challenges/challenge3.sh
+            - challenges/challenge4.sh
+            - challenges/challenge5.sh
+            - challenges/challenge6.sh
+            - challenges/challenge7.sh
+            - challenges/challenge8.sh
+            - challenges/challenge9.sh
+            - challenges/homeChecker.sh
+            - challenges/passwordGenerator.sh
+            - challenges/processFile.sh
+            - challenges/rabbitJumps.sh
+            - challenges/testString.sh
+            - challenges/userValidator.sh
 
         - name: Setup Module6 Performance Init Installation
           no_log: true
           ansible.builtin.get_url:
-            url: https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/performance/mod6-init.sh
+            url: "{{ repo_path }}/performance/mod6-init.sh"
             dest: /usr/bin/mod6-init
             mode: '0755'
             owner: root
@@ -233,21 +300,12 @@
       block:
 
         - name: Configure sudo without a password for user {{ username }}
-          become: true
           ansible.builtin.copy:
             dest: /etc/sudoers.d/{{ username }}
             content: "{{ username }} ALL=(ALL) NOPASSWD: ALL"
             mode: '0440'
             owner: root
             group: root
-
-        - name: Ensure .ssh directory exists
-          ansible.builtin.file:
-            path: /home/{{ username }}/.ssh
-            state: directory
-            owner: "{{ username }}"
-            group: "{{ username }}"
-            mode: '0700'
 
         - name: Append custom Bash prompt configuration to /etc/bashrc
           ansible.builtin.blockinfile:
@@ -271,34 +329,40 @@
           ansible.builtin.hostname:
             name: "fedora"
 
-    - name: Configure Services
-      become: true
-      tags: services
-      block:
-
-#        - name: Enable Cockpit
-#          ansible.builtin.service:
-#            name: cockpit
-#            state: started
-#            enabled: true
-
-#        - name: Open firewall for cockpit
-#          ansible.posix.firewalld:
-#            permanent: true
-#            port: 9090/tcp
-#            state: enabled
-
-#        - name: Remove root from disalowed users list
-#          ansible.builtin.lineinfile:
-#            path: /etc/cockpit/disallowed-users
-#            state: absent
-#            line: root
-        
-        - name: Enable SSH
+        - name: Enable SSH Service
           ansible.builtin.service:
             name: sshd
             state: started
             enabled: true
+
+    - name: Configure Cockpit
+      become: true
+      tags: cockpit
+      block:
+
+        - name: Install Cockpit
+          ansible.builtin.dnf:
+            name: cockpit*
+            state: present
+            skip_broken: true
+
+        - name: Enable Cockpit
+          ansible.builtin.service:
+            name: cockpit
+            state: started
+            enabled: true
+
+        - name: Open firewall for cockpit
+          ansible.posix.firewalld:
+            permanent: true
+            port: 9090/tcp
+            state: enabled
+
+        - name: Remove root from disalowed users list
+          ansible.builtin.lineinfile:
+            path: /etc/cockpit/disallowed-users
+            state: absent
+            line: root
 
     - name: Configure Look & Feel
       tags: looks
@@ -316,29 +380,6 @@
             - '/home/{{ username }}/.themes'
             - '/home/{{ username }}/.wallpapers'
 
-        - name: Verify if wallpaper already exists
-          ansible.builtin.stat:
-            path: /home/{{ username }}/.wallpapers/yellow-black.jpg
-          register: file_stat
-
-        - name: Download Wallpaper
-          ansible.builtin.get_url:
-            url: https://wallpapers.com/images/hd/yellow-black-linux-penguin-logo-oow6y6sgknpmcdrz.jpg
-            dest: '/home/{{ username }}/.wallpapers/yellow-black.jpg'
-            mode: '0660'
-            owner: "{{ username }}"
-            group: "{{ username }}"
-          when: not file_stat.stat.exists
-
-        - name: Set TUX Wallpaper
-          become: true
-          become_user: "{{ username }}"
-          ansible.builtin.shell: |
-            gsettings set org.gnome.desktop.background picture-uri file:///home/{{ username }}/.wallpapers/yellow-black.jpg
-          environment:
-            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
-          changed_when: false
-
         - name: Set terminator configuration folder
           ansible.builtin.file:
             path: /etc/xdg/terminator
@@ -354,24 +395,6 @@
             mode: '0666'
             owner: root
             group: root
-
-        - name: Set Launcher Icons
-          become: true
-          become_user: "{{ username }}"
-          vars:
-            a1: org.mozilla.firefox.desktop
-            a2: terminator.desktop
-            a3: ranger.desktop
-            a4: geany.desktop
-            a5: code.desktop
-            a6: org.gnome.Nautilus.desktop
-#            a7: Zoom.desktop
-            a8: org.gnome.Software.desktop
-          ansible.builtin.shell: |
-            gsettings set org.gnome.shell favorite-apps "['{{ a1 }}','{{ a2 }}','{{ a3 }}','{{ a4 }}','{{ a5 }}','{{ a6 }}','{{ a8 }}']"
-          environment:
-            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
-          changed_when: false
 
         - name: Set Terminator custom-keybindings
           become: true
@@ -413,6 +436,80 @@
           become_user: "{{ username }}"
           ansible.builtin.shell: |
             gsettings set org.gnome.desktop.session idle-delay 0
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+          changed_when: false
+
+    - name: Configure looks and Icons
+      tags: background
+      become: true
+      become_user: "{{ username }}"
+      block:
+
+        - name: Download Wallpapers
+          ansible.builtin.get_url:
+            url: "{{ item }}"
+            dest: "/home/{{ username }}/.wallpapers/"
+            mode: "0660"
+            owner: "{{ username }}"
+            group: "{{ username }}"
+          loop:
+            - https://images.wallpapersden.com/image/download/linux-8k-ultra-hd-art_bWVnaGmUmZqaraWkpJRmZWdpZa1qbGtm.jpg
+            - https://images.wallpapersden.com/image/download/linux-os-bw_Z2hraG6UmZqaraWkpJRma2VlrWZnZWU.jpg
+            - https://podman-desktop.io/assets/images/onboarding-selkies-3ddb7cb6ee2cf9abed002b01f63b1822.png
+            - https://podman-desktop.io/assets/images/renovations-21ad5798164b1bb1beceb19646b2a762.png
+            - https://middleware.io/wp-content/uploads/2022/03/Microservices-Dockerization-1-2.png
+
+        - name: Set Launcher Icons for Linux
+          become: true
+          become_user: "{{ username }}"
+          vars:
+            a1: org.mozilla.firefox.desktop
+            a2: terminator.desktop
+            a3: ranger.desktop
+            a4: geany.desktop
+            a5: code.desktop
+            a6: org.gnome.Nautilus.desktop
+          ansible.builtin.shell: |
+            gsettings set org.gnome.shell favorite-apps "['{{ a1 }}','{{ a2 }}','{{ a3 }}','{{ a4 }}','{{ a5 }}','{{ a6 }}']"
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+          changed_when: false
+
+    - name: Configure wallpaper
+      tags: containers_looks
+      become: true
+      become_user: "{{ username }}"
+      block:
+
+        - name: Pick a random wallpaper
+          ansible.builtin.set_fact:
+            selected_wallpaper: "{{ wallpapers_containers | random }}"
+
+        - name: Set wallpaper
+          become: true
+          become_user: "{{ username }}"
+          ansible.builtin.shell: |
+            gsettings set org.gnome.desktop.background picture-uri "file:///home/{{ username }}/.wallpapers/{{ selected_wallpaper }}"
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+          changed_when: false
+
+    - name: Configure wallpaper
+      tags: linux_looks
+      become: true
+      become_user: "{{ username }}"
+      block:
+
+        - name: Pick a random wallpaper
+          ansible.builtin.set_fact:
+            selected_wallpaper: "{{ wallpapers_linux | random }}"
+
+        - name: Set wallpaper
+          become: true
+          become_user: "{{ username }}"
+          ansible.builtin.shell: |
+            gsettings set org.gnome.desktop.background picture-uri "file:///home/{{ username }}/.wallpapers/{{ selected_wallpaper }}"
           environment:
             DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
           changed_when: false
