@@ -78,6 +78,7 @@
           tags: workstation_pkgs
           ansible.builtin.dnf:
             state: present
+            skip_broken: true
             name:
               - geany
               - geany-plugins-*
@@ -97,6 +98,7 @@
           tags: development_pkgs
           ansible.builtin.dnf:
             state: present
+            skip_broken: true
             name:
               - git
               - ranger
@@ -128,6 +130,27 @@
               - pamtester
               - gparted
 
+<<<<<<< HEAD
+=======
+#        - name: Multimedia Packages
+#          tags: multimedia_pkgs
+#          ansible.builtin.dnf:
+#            state: present
+#            skip_broken: true
+#            exclude:
+#              - gstreamer1-plugins-bad-free-devel
+#              - lame-devel
+#            name:
+#              - gparted
+#              - python3-xlib
+#              - "@multimedia"
+#              - lame
+#              - gstreamer1-plugin-openh264
+#              - gstreamer1-plugins-base-*
+#              - gstreamer1-plugins-good-*
+#              - gstreamer1-plugins-bad-*
+
+>>>>>>> 4c54436 (fixes)
     - name: Setting up Configurations
       tags: configurations
       block:

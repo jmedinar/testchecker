@@ -15,12 +15,12 @@
 
   tasks:
 
-    - name: Decrypt the script
-      ansible.builtin.shell: |
-        ansible-vault decrypt --output /tmp/final /usr/bin/final
-      args:
-        executable: /bin/bash
-      changed_when: false
+    # - name: Decrypt the script
+    #   ansible.builtin.shell: |
+    #     ansible-vault decrypt --output /tmp/final /usr/bin/final
+    #   args:
+    #     executable: /bin/bash
+    #   changed_when: false
 
     - name: Make the script executable
       ansible.builtin.file:

@@ -26,3 +26,4 @@ rm -rf /tmp/class-setup.yml
 figlet "Done. Rebooting..." | lolcat 
 sleep 30
 reboot
+
