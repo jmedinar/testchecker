@@ -74,35 +74,6 @@
       tags: packages
       block:
 
- #       - name: Check if Zoom is already installed
- #         ansible.builtin.command: dnf info --installed zoom
- #         register: zoom_installed
- #         ignore_errors: true
- #         changed_when: false
-
- #       - name: Download Zoom if not installed
- #         tags: special_pkgs
- #         ansible.builtin.get_url:
- #           url: https://zoom.us/client/latest/zoom_x86_64.rpm
- #           dest: /tmp/
- #           mode: '0744'
- #         when: zoom_installed.rc != 0
-
- #       - name: Install Zoom if not installed
- #         tags: special_pkgs
- #         ansible.builtin.dnf:
- #           name: "/tmp/zoom_x86_64.rpm"
- #           state: present
- #           disable_gpg_check: true
- #         when: zoom_installed.rc != 0
-
- #       - name: Remove Zoom Package if downloaded
- #         tags: special_pkgs
- #         ansible.builtin.file:
- #           path: "/tmp/zoom_x86_64.rpm"
- #           state: absent
- #         when: zoom_installed.rc != 0
-
         - name: Workstation Packages
           tags: workstation_pkgs
           ansible.builtin.dnf:
@@ -157,47 +128,9 @@
               - pamtester
               - gparted
 
-#        - name: Multimedia Packages
-#          tags: multimedia_pkgs
-#          ansible.builtin.dnf:
-#            state: present
-#            exclude:
-#              - gstreamer1-plugins-bad-free-devel
-#              - lame-devel
-#            name:
-#              - gparted
-#              - python3-xlib
-#              - "@multimedia"
-#              - lame
-#              - gstreamer1-plugin-openh264
-#              - gstreamer1-plugins-base-*
-#              - gstreamer1-plugins-good-*
-#              - gstreamer1-plugins-bad-*
-
     - name: Setting up Configurations
       tags: configurations
       block:
-
-        - name: Get vimrc Copy
-          ansible.builtin.get_url:
-            url: https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/vimrc
-            dest: /tmp/vimrc
-            mode: '0644'
-
-        - name: Configure vim for Regular User
-          ansible.builtin.copy:
-            src: /tmp/vimrc
-            dest: /home/{{ username }}/.vimrc
-            mode: '0644'
-            owner: "{{ username }}"
-            group: "{{ username }}"
-
-        - name: Configure vim for the Administrator User
-          become: true
-          ansible.builtin.copy:
-            src: /tmp/vimrc
-            dest: ~/.vimrc
-            mode: '0644'
 
         - name: Setup Testchecker Tool
           become: true
