@@ -17,6 +17,8 @@ fi
 if [[ $(wget -q --spider http://google.com; echo $?) -ne 0 ]]; then echo "Internet connection required"; exit 2; fi
 
 dnf install -yqq ansible git figlet lolcat
+clear
+echo "Starting Linux Setup process..."
 sleep 10
 figlet "Linux Setup" | lolcat
 curl -s -o /tmp/class-setup.yml https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/class-setup.yml 
