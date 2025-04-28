@@ -37,7 +37,7 @@ _print_line
 echo -e "${CP} Assignment ${assignment} Verification"
 _print_line
 
-report="~/backup/system-backup.info"
+report=~/backup/system-backup.info
 
 _msg "System report file exist ~/backup/system-backup.info"
 if [[ -e ${report} ]]
