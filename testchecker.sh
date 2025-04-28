@@ -4,13 +4,14 @@ title="TestChecker"
 # Author: Professor Juan Medina
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
-version="4.0.4"
+version="4.1.0"
 # Purpose: This script will gater VM and Student information
 #          and will execute the interactive test verification scripts
 
 # Red         Green         Yellow        Blue  		Purple        Cyan          White
 CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
-username=$(who am i | awk '{print $1}')
+username=$(bash -c 'echo $SUDO_USER')
+#username=$(who am i | awk '{print $1}')
 testtype=$1
 studentid=0
 
