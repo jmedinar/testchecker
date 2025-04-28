@@ -6,8 +6,14 @@
 
 # Red           Green         Yellow        Blue          Purple        Cyan          White
 CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
-assignment=6    tq=0    ca=0
-_pid=false _name=false _resource=false _file=false _selection=false
+assignment=6
+tq=0
+ca=0
+_pid=false
+_name=false
+_resource=false
+_file=false
+_selection=false
 quotes=(
     "Bugs Bunny - What's up, doc?"
     "Homer Simpson - D'oh!"
