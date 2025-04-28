@@ -7,6 +7,7 @@
 # Red           Green         Yellow        Blue          Purple        Cyan          White
 CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
 assignment=6    tq=0    ca=0
+_pid=false _name=false _resource=false _file=false _selection=false
 quotes=(
     "Bugs Bunny - What's up, doc?"
     "Homer Simpson - D'oh!"
@@ -42,51 +43,19 @@ echo "From the process causing performance issues:"
 
 read -p "   1. Identify the PPID: " _pid
 ((tq++))
-if [[ "${_pid}" == "${process}" ]]
-then
-    _pid=true
-    ((ca++))
-else
-    _pid=false
-fi
-
-
+if [[ "${_pid}" == "${process}" ]]; then _pid=true; ((ca++)); fi
 
 read -p "   2. Identify the name: " _name
 ((tq++))
-if [[ "${_name}" == "${name}" ]]
-then
-    _name=true
-    ((ca++))
-else
-    _name=false
-fi
-
-
+if [[ "${_name}" == "${name}" ]]; then _name=true; ((ca++)); fi
 
 read -p "   3. Determine which resource (CPU, MEMORY, or IO) is being impacted: " _resource
 ((tq++))
-if [[ "${_resource^^}" == "${type}" ]]
-then
-    _resource=true
-    ((ca++))
-else
-    _resource=false
-fi
-
-
+if [[ "${_resource^^}" == "${type}" ]]; then _resource=true; ((ca++)); fi
 
 read -p "   4. Identify the name of the largest file open by the process: " _file
 ((tq++))
-if [[ "/usr/bin/stress-ng" == *"${_file}"* ]]
-then
-    _file=true
-    ((ca++))
-else
-    _file=false
-fi
-
-
+if [[ "/usr/bin/stress-ng" == *"${_file}"* ]]; then _file=true; ((ca++)); fi
 
 echo "   5. Identify the message logged by the process from the following list:"
 pos=0
@@ -97,13 +66,7 @@ do
 done
 read -p "       Choose a number: " _selection
 ((tq++))
-if [[ "${quotes[${_selection}]}" == "${funny}" ]]
-then
-    _selection=true
-    ((ca++))
-else
-    _selection=false
-fi
+if [[ "${quotes[${_selection}]}" == "${funny}" ]]; then _selection=true; ((ca++)); fi
 
 _print_line
 printf "${CG}%-10s%-10s%-10s%-10s%-10s${CW}\n" Q1 Q2 Q3 Q4 Q5
