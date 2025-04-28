@@ -15,9 +15,13 @@ realuser=$(who am i | awk '{print $1}')
 _eval() {
     ((tq=tq+3))
     exist="false"    owner="false"     mode="false"
-    if [[ -e ${1} ]]; then exist="true"; ((ca++)); fi
-    if [[ $(stat -c %U ${1} 2>/dev/null) == "${2}" ]]; then owner="true"; ((ca++)); fi
-    if [[ $(stat -c %a ${1} 2>/dev/null) == "${3}" ]]; then mode="true"; ((ca++)); fi
+    if [[ -e ${1} ]]
+    then 
+        exist="true"
+        ((ca++))
+        if [[ $(stat -c %U ${1} 2>/dev/null) == "${2}" ]]; then owner="true"; ((ca++)); fi
+        if [[ $(stat -c %a ${1} 2>/dev/null) == "${3}" ]]; then mode="true"; ((ca++)); fi
+    fi
     printf "${CY}%-40s%-10s%-10s%-10s${CW}\n" ${1} ${exist} ${owner} ${mode}
 }
 
