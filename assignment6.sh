@@ -76,7 +76,7 @@ if [[ "${quotes[${ans5}]}" == "${funny}" ]]; then _selection=true; ((ca++)); fi
 
 _print_line
 printf "${CG}%-10s%-10s%-10s%-10s%-10s${CW}\n" Q1 Q2 Q3 Q4 Q5
-printf "${CG}%-10s%-10s%-10s%-10s%-10s${CW}\n" ${ans1} ${ans2} ${ans3} ${ans4} ${ans5}
+printf "${CG}%-10s%-10s%-10s%-10s%-10s${CW}\n" ${_pid} ${_name} ${_resource} ${_file} ${_selection}
 _print_line
 
 grade="$(echo "(100/${tq})*${ca}" | bc -l)"
