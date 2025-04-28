@@ -37,7 +37,7 @@ _print_line
 echo -e "${CP} Assignment ${assignment} Verification"
 _print_line
 
-report="/home/$(who am i | awk '{print $1}')/backup/system-backup.info"
+report="/home/${USER}/backup/system-backup.info"
 
 _msg "System report file exist ~/backup/system-backup.info"
 if [[ -e ${report} ]]
