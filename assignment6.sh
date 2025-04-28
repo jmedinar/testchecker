@@ -47,21 +47,21 @@ funny=$(journalctl --since="3 hours ago" --priority=err --user -n 1 | awk -F ':'
 
 echo "From the process causing performance issues:"
 
-read -p "   1. Identify the PPID: " _pid
+read -p "   1. Identify the PPID: " ans1
 ((tq++))
-if [[ "${_pid}" == "${process}" ]]; then _pid=true; ((ca++)); fi
+if [[ "${ans1}" == "${process}" ]]; then _pid=true; ((ca++)); fi
 
-read -p "   2. Identify the name: " _name
+read -p "   2. Identify the name: " ans2
 ((tq++))
-if [[ "${_name}" == "${name}" ]]; then _name=true; ((ca++)); fi
+if [[ "${ans2}" == "${name}" ]]; then _name=true; ((ca++)); fi
 
-read -p "   3. Determine which resource (CPU, MEMORY, or IO) is being impacted: " _resource
+read -p "   3. Determine which resource (CPU, MEMORY, or IO) is being impacted: " ans3
 ((tq++))
-if [[ "${_resource^^}" == "${type}" ]]; then _resource=true; ((ca++)); fi
+if [[ "${ans3^^}" == "${type}" ]]; then _resource=true; ((ca++)); fi
 
-read -p "   4. Identify the name of the largest file open by the process: " _file
+read -p "   4. Identify the name of the largest file open by the process: " ans4
 ((tq++))
-if [[ "/usr/bin/stress-ng" == *"${_file}"* ]]; then _file=true; ((ca++)); fi
+if [[ "/usr/bin/stress-ng" == *"${ans4}"* ]]; then _file=true; ((ca++)); fi
 
 echo "   5. Identify the message logged by the process from the following list:"
 pos=0
@@ -70,13 +70,13 @@ do
     echo "      [${pos}] ${q}"
     ((pos+=1))
 done
-read -p "       Choose a number: " _selection
+read -p "       Choose a number: " ans5
 ((tq++))
-if [[ "${quotes[${_selection}]}" == "${funny}" ]]; then _selection=true; ((ca++)); fi
+if [[ "${quotes[${ans5}]}" == "${funny}" ]]; then _selection=true; ((ca++)); fi
 
 _print_line
 printf "${CG}%-10s%-10s%-10s%-10s%-10s${CW}\n" Q1 Q2 Q3 Q4 Q5
-printf "${CG}%-10s%-10s%-10s%-10s%-10s${CW}\n" $_pid $_name $_resource $_file $_selection
+printf "${CG}%-10s%-10s%-10s%-10s%-10s${CW}\n" ${ans1} ${ans2} ${ans3} ${ans4} ${ans5}
 _print_line
 
 grade="$(echo "(100/${tq})*${ca}" | bc -l)"
