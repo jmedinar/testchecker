@@ -16,10 +16,8 @@ _print_line() {
 _print_line
 echo -e "${CP} Assignment ${assignment} Verification"
 _print_line
-echo -e "${CL} Congratulations on completing the class!"
-echo -e "${CY} You've undoubtedly gained a lot of knowledge,
- and while questions may arise, 
+figlet "Congratulations!" | lolcat
+echo -e "${CY} You've gained a lot of knowledge, and while questions may arise, 
  continuous practice is the key to solidifying your skills."
-echo -e "${CL} With dedication, you'll soon find yourself evolving into a Linux expert."
-echo -e "${CY} Embrace the world of Linux!"
+figlet "Embrace the world of Linux!" | lolcat
 echo -e "${CC} Wishing you the best of luck on your journey!${CW}"
