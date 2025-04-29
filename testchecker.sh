@@ -4,7 +4,7 @@ title="TestChecker"
 # Author: Professor Juan Medina
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
-version="4.1.0"
+version="4.1.3"
 # Purpose: This script will gater VM and Student information
 #          and will execute the interactive test verification scripts
 
