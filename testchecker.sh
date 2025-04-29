@@ -10,8 +10,7 @@ version="4.1.0"
 
 # Red         Green         Yellow        Blue  		Purple        Cyan          White
 CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
-username=$(bash -c 'echo $SUDO_USER')
-#username=$(who am i | awk '{print $1}')
+realuser=$(bash -c 'echo $SUDO_USER')
 testtype=$1
 studentid=0
 
@@ -67,7 +66,7 @@ _print_line
 echo -e "${CL}                        C O L L I N   C O L L E G E "
 echo -e "${CP}                        ${title} Version: ${version} "
 _print_line
-echo -e "${CG} DATE: ${CY} $(date) ${CG} STUDENT: ${CY} ${username} ${CW}"
+echo -e "${CG} DATE: ${CY} $(date) ${CG} STUDENT: ${CY} ${realuser} ${CW}"
 read -p " Introduce your student numeric ID: " studentid
 if [[ -z ${testtype} ]]
 then
@@ -93,6 +92,6 @@ then
 	esac
 else
 	source <(curl -sk -H 'Cache-Control: no-cache' \
-			$(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL3JlZnMvaGVhZHMvbWFpbi9maW5hbHMvY2hlY2stZmluYWwuc2gK" | base64 -d)) ${testtype} ${studentid} ${username}
+			$(echo "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL3JlZnMvaGVhZHMvbWFpbi9maW5hbHMvY2hlY2stZmluYWwuc2gK" | base64 -d)) ${testtype} ${studentid} ${realuser}
 fi
 _print_line

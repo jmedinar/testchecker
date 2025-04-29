@@ -37,8 +37,8 @@ _print_line
 echo -e "${CP} Assignment ${assignment} Verification"
 _print_line
 
-real_user=$(bash -c 'echo $SUDO_USER')
-report=/home/${real_user}/backup/system-backup.info
+realuser=$(bash -c 'echo $SUDO_USER')
+report=/home/${realuser}/backup/system-backup.info
 
 _msg "System report file exist ~/backup/system-backup.info"
 if [[ -e ${report} ]]

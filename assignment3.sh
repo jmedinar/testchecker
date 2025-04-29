@@ -10,7 +10,7 @@ assignment=3
 ca=0 # Correct Answers
 tq=0 # Total Questions
 basedir="/opt/enterprise-app"
-realuser=$(who am i | awk '{print $1}')
+realuser=$(bash -c 'echo $SUDO_USER')
 
 _eval() {
     ((tq=tq+3))
