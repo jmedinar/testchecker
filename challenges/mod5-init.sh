@@ -3,7 +3,7 @@
 # Date: Apr 2024
 # Description: Setup challenge scripts for module five
 
-realuser=$(who am i | awk '{ print $1}')
+realuser=$(bash -c 'echo $SUDO_USER')
 if [[ ${UID} -ne 0 ]]; then echo "Execute this script with sudo"; exit 1; fi
 if [[ $(wget -q --spider http://google.com; echo $?) -ne 0 ]]; then echo "Internet connection required"; exit 2; fi
 mkdir -p /sysadm/bin; cd /sysadm/bin
