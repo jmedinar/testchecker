@@ -162,7 +162,6 @@
           - ncurses-libs
           - ncurses-static
           - ncurses
-          - java-latest-openjdk.x86_64
           - screen
           - bash-completion
           - libguestfs-bash-completion
