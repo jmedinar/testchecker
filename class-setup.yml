@@ -67,15 +67,6 @@
             name: "{{ rpmfusion }}/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
             state: present
 
-        - name: Vivaldi
-          ansible.builtin.yum_repository:
-            name: vivaldi
-            description: Vivaldi browser repository
-            baseurl: https://repo.vivaldi.com/archive/rpm/x86_64/
-            gpgkey: https://repo.vivaldi.com/archive/linux_signing_key.pub
-            gpgcheck: true
-            enabled: true
-
     - name: Installing packages for complete desktop
       tags: desktop_packages
       block:
@@ -160,7 +151,6 @@
           - vim
           - wget
           - fuse-sshfs
-          - vivaldi-stable
           - terminator
           - git
           - ranger
