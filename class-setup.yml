@@ -136,6 +136,7 @@
 
     - name: Installing Extra Packages
       tags: extra_packages
+      ignore_errors: true
       ansible.builtin.dnf:
         state: present
         skip_broken: true
