@@ -47,55 +47,40 @@
             gpgcheck: true
             gpgkey: https://dl.google.com/linux/linux_signing_key.pub
 
-        - name: RPM Fusion free GPG key
-          ansible.builtin.rpm_key:
-            key: "{{ rpmfusion }}/free/fedora/RPM-GPG-KEY-rpmfusion-free-fedora-2020"
-            state: present
-
-        - name: RPM Fusion Free
+        - name: RPM Fusion
           ansible.builtin.dnf:
-            name: "{{ rpmfusion }}/free/fedora/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+            name: rpmfusion-*-release
             state: present
 
-        - name: RPM Fusion non-free GPG key
-          ansible.builtin.rpm_key:
-            key: "{{ rpmfusion }}/nonfree/fedora/RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020"
-            state: present
+        # - name: RPM Fusion free GPG key
+        #   ansible.builtin.rpm_key:
+        #     key: "{{ rpmfusion }}/free/fedora/RPM-GPG-KEY-rpmfusion-free-fedora-2020"
+        #     state: present
 
-        - name: RPM Fusion Non-Free
-          ansible.builtin.dnf:
-            name: "{{ rpmfusion }}/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
-            state: present
+        # - name: RPM Fusion Free
+        #   ansible.builtin.dnf:
+        #     name: "{{ rpmfusion }}/free/fedora/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+        #     state: present
+
+        # - name: RPM Fusion non-free GPG key
+        #   ansible.builtin.rpm_key:
+        #     key: "{{ rpmfusion }}/nonfree/fedora/RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020"
+        #     state: present
+
+        # - name: RPM Fusion Non-Free
+        #   ansible.builtin.dnf:
+        #     name: "{{ rpmfusion }}/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+        #     state: present
 
     - name: Installing packages for complete desktop
       tags: desktop_packages
       block:
 
-        - name: Check if Zoom is already installed
-          ansible.builtin.command: dnf info --installed zoom
-          register: zoom_installed
-          ignore_errors: true
-          changed_when: false
-
-        - name: Download Zoom if not installed
-          ansible.builtin.get_url:
-            url: https://zoom.us/client/latest/zoom_x86_64.rpm
-            dest: /tmp/
-            mode: '0744'
-          when: zoom_installed.rc != 0
-
-        - name: Install Zoom if not installed
+        - name: Install Zoom
           ansible.builtin.dnf:
-            name: "/tmp/zoom_x86_64.rpm"
+            name: https://zoom.us/client/latest/zoom_x86_64.rpm
             state: present
             disable_gpg_check: true
-          when: zoom_installed.rc != 0
-
-        - name: Remove Zoom Package if downloadeda
-          ansible.builtin.file:
-            path: "/tmp/zoom_x86_64.rpm"
-            state: absent
-          when: zoom_installed.rc != 0
 
         - name: Multimedia Packages
           ansible.builtin.dnf:
@@ -105,7 +90,6 @@
               - gstreamer1-plugins-bad-free-devel
               - lame-devel
             name:
-              - gparted
               - python3-xlib
               - "@multimedia"
               - lame
@@ -136,7 +120,6 @@
 
     - name: Installing Extra Packages
       tags: extra_packages
-      ignore_errors: true
       ansible.builtin.dnf:
         state: present
         skip_broken: true
@@ -155,7 +138,6 @@
           - git
           - ranger
           - powerline-fonts
-          - fzf
           - code
           - kernel-devel
           - ncurses-devel
@@ -346,6 +328,7 @@
             permanent: true
             port: 9090/tcp
             state: enabled
+            immediate: true
 
         - name: Remove root from disalowed users list
           ansible.builtin.lineinfile:

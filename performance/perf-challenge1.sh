@@ -1,6 +1,19 @@
 #!/bin/bash
 
-if ! command -v stress-ng -V &>/dev/null; then sudo dnf install -yqq stress-ng &>/dev/null; fi
+# Exit immediately if a command exits with a non-zero status.
+set -e
+# Treat unset variables as an error when substituting.
+set -u
+# Cause pipelines to return the exit status of the last command that failed.
+set -o pipefail
+
+# --- Configuration ---
+STRESS_DURATION_SECONDS=3600 # 1 hour
+MEMORY_STRESS_BYTES="256M"   # Amount of memory for the memory stressor
+LOG_FACILITY="user.notice" # Syslog facility for logger
+# --- End Configuration ---
+
+if ! command -v stress-ng -V &>/dev/null; then sudo dnf install -yq stress-ng &>/dev/null; else echo "no stress binary found!"; exit 1; fi
 
 quotes=( 
     "Bugs Bunny - What's up, doc?"
@@ -19,22 +32,47 @@ quotes=(
     "He-Man - I have the power!"
 )
 
-if ps -ef | grep stress-ng | grep run &>/dev/null
-then
-    echo "The process is already running and will continue for a max of three hours. Skipping..."
-    exit 1
+# Check if stress-ng is already running using pgrep for exact match
+if pgrep -x "stress-ng" > /dev/null; then
+    echo "A 'stress-ng' process is already running. Skipping..."
+    echo "Use performance tools (top, htop, vmstat, iostat), lsof, and journalctl to investigate."
+    exit 0 # Exit successfully, as the goal state (a running process) is met
 else
+    # Define the types of stress tests
     procs=(cpu mem io)
-    case ${procs[$((RANDOM % ${#procs[@]}))]} in
-        cpu) /usr/bin/logger "stress-ng-cpu is now impacting your CPU - ${quotes[$((RANDOM % ${#quotes[@]}))]}" -p local3.error
-             /usr/bin/stress-ng -q --timeout 3600 -c 1 --oom-avoid &>/dev/null & disown
-             ;;
-        mem) /usr/bin/logger "stress-ng-vm is now impacting your MEMORY - ${quotes[$((RANDOM % ${#quotes[@]}))]}" -p local3.error
-             /usr/bin/stress-ng -q --timeout 3600 -m 1 --vm-bytes 32M &>/dev/null & disown
-             ;;
-         io) /usr/bin/logger "stress-ng-io is now impacting your IO - ${quotes[$((RANDOM % ${#quotes[@]}))]}" -p local3.error
-             /usr/bin/stress-ng -q --timeout 3600 -i 1 &>/dev/null & disown
-             ;;
-         *) echo "unknown" ;;
+    # Select a random stress type
+    selected_proc=${procs[$((RANDOM % ${#procs[@]}))]}
+    # Select a random quote
+    random_quote=${quotes[$((RANDOM % ${#quotes[@]}))]}
+
+    case $selected_proc in
+        cpu)
+            /usr/bin/logger -p "$LOG_FACILITY" "STRESS-TEST-SCRIPT: stress-ng-cpu is now impacting your CPU - ${random_quote}"
+            /usr/bin/stress-ng --quiet --timeout "${STRESS_DURATION_SECONDS}s" --cpu 1 --oom-avoid & disown
+            ;;
+        mem)
+            /usr/bin/logger -p "$LOG_FACILITY" "STRESS-TEST-SCRIPT: stress-ng-vm is now impacting your MEMORY - ${random_quote}"
+            /usr/bin/stress-ng --quiet --timeout "${STRESS_DURATION_SECONDS}s" --vm 1 --vm-bytes "$MEMORY_STRESS_BYTES" & disown
+            ;;
+         io)
+            /usr/bin/logger -p "$LOG_FACILITY" "STRESS-TEST-SCRIPT: stress-ng-io is now impacting your IO - ${random_quote}"
+            /usr/bin/stress-ng --quiet --timeout "${STRESS_DURATION_SECONDS}s" --io 1 & disown
+            ;;
+         *)
+            echo "Error: Unknown stress type selected. This should not happen." >&2
+            exit 2
+            ;;
     esac
+
+    sleep 2
+
+    # Final confirmation check (silent)
+    if ! pgrep -x "stress-ng" > /dev/null; then
+        # Log error if it failed to start, but don't echo to user
+        /usr/bin/logger -p user.error "STRESS-TEST-SCRIPT: 'stress-ng' process failed to start or exited immediately."
+        exit 3
+    fi
+
 fi
+
+exit 0
