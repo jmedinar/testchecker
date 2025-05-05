@@ -151,7 +151,7 @@ fi
 
 # Question 5: Logged Message (Quote)
 ((total_questions++))
-echo -e "$   5. Identify the funny message logged by the process (check journal):"
+echo -e "   5. Identify the funny message logged by the process (check journal):"
 pos=0
 # Display the list of possible quotes
 for q in "${quotes[@]}"; do
