@@ -38,15 +38,6 @@ _check_file_metadata() {
     local path="$1"
     local expected_owner="$2"
     local expected_mode="$3"
-    local check_desc # Description for output table
-
-    # Use relative path for display if it starts with basedir
-    # if [[ "$path" == "$basedir"* ]]; then
-    #     check_desc=".${path#$basedir}" # e.g., ./bin/app.py
-    # else
-         check_desc="$path"
-    # fi
-
     local exists="-" owner_ok="-" mode_ok="-"
     local actual_owner="" actual_mode=""
     local details=""
@@ -88,23 +79,14 @@ _check_file_metadata() {
 
     # Print results row
     printf "${CY}%-40s %-10s %-10s %-10s ${CR}%s${CW}\n" \
-        "${check_desc}" "${exists}" "${owner_ok}" "${mode_ok}" "${details}"
+        "${path}" "${exists}" "${owner_ok}" "${mode_ok}" "${details}"
 }
 
 # Function to check for specific lines in the report file
 # Arguments: $1=file_path_to_check_for (used to extract basename)
 _check_report_content() {
-    local file_path="$1"
-    local filename=$(basename "${file_path}")
-    local check_desc # Description for output table
-
-    # Use relative path for display if it starts with basedir
-    # if [[ "$file_path" == "$basedir"* ]]; then
-    #     check_desc=".${file_path#$basedir}" # e.g., ./bin/app.py
-    # else
-         check_desc="$file_path"
-    # fi
-
+    local path="$1"
+    local filename=$(basename "${path}")
     local owner_ok="-" perm_ok="-" inode_ok="-"
     local details=""
 
@@ -141,7 +123,7 @@ _check_report_content() {
 
     # Print results row
     printf "${CY}%-40s %-12s %-15s %-12s ${CR}%s${CW}\n" \
-        "${check_desc}" "${owner_ok}" "${perm_ok}" "${inode_ok}" "${details}"
+        "${path}" "${owner_ok}" "${perm_ok}" "${inode_ok}" "${details}"
 }
 
 # --- Verification Logic ---
