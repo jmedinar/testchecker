@@ -52,15 +52,15 @@ else
 
     case $selected_proc in
         cpu)
-            /usr/bin/logger -p ${LOG_FACILITY} "stress-ng is now impacting your CPU, ${random_quote}"
+            /usr/bin/logger -p ${LOG_FACILITY} "stress-ng is now impacting your CPU: ${random_quote}"
             /usr/bin/stress-ng --quiet --timeout "${STRESS_DURATION_SECONDS}s" --cpu 1 --oom-avoid & disown
             ;;
         mem)
-            /usr/bin/logger -p ${LOG_FACILITY} "stress-ng is now impacting your MEMORY, ${random_quote}"
+            /usr/bin/logger -p ${LOG_FACILITY} "stress-ng is now impacting your MEMORY: ${random_quote}"
             /usr/bin/stress-ng --quiet --timeout "${STRESS_DURATION_SECONDS}s" --vm 1 --vm-bytes "$MEMORY_STRESS_BYTES" & disown
             ;;
          io)
-            /usr/bin/logger -p ${LOG_FACILITY} "stress-ng is now impacting your IO, ${random_quote}"
+            /usr/bin/logger -p ${LOG_FACILITY} "stress-ng is now impacting your IO: ${random_quote}"
             /usr/bin/stress-ng --quiet --timeout "${STRESS_DURATION_SECONDS}s" --io 1 & disown
             ;;
     esac
