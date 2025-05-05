@@ -77,10 +77,8 @@ else
 fi
 
 # 3. Check Typora installation/existence
-# This assumes Typora is installed manually or via a method not tracked by rpm.
-# Adjust TYPORA_EXEC_PATH if the expected location is different.
 _msg "Typora application exists"
-if [[ -f "${TYPORA_EXEC_PATH}" ]]; then
+if [ -x ${TYPORA_EXEC_PATH} ]; then
     _pass
 else
     _fail
