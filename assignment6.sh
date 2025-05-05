@@ -104,7 +104,6 @@ if echo "${lsof_output}" | grep -qF "${expected_file_path}"; then
     lsof_contains_executable=true
 fi
 
-
 # --- Ask Student Questions ---
 
 echo -e "${CY}Answer the following questions based on the running stress process:${CW}"

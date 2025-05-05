@@ -10,7 +10,7 @@ set -o pipefail
 # --- Configuration ---
 STRESS_DURATION_SECONDS=3600 # 1 hour
 MEMORY_STRESS_BYTES="256M"   # Amount of memory for the memory stressor
-LOG_FACILITY="user.notice" # Syslog facility for logger
+LOG_FACILITY="user.error" # Syslog facility for logger
 
 # Check if stress-ng is installed, install if necessary (Fedora only)
 if ! command -v stress-ng &>/dev/null; then
