@@ -117,7 +117,7 @@ _check_script_output(){
     fi
 
     # Print result row
-    printf "${CY}%-30s %-10s %-10s ${CR}%s${CW}\n" \
+    printf "${CY}%-20s %-10s %-10s ${CR}%s${CW}\n" \
         "${script_basename}.sh" "${result_status}" "${points_awarded}" "${details}"
 }
 
@@ -132,7 +132,7 @@ _print_line
 realuser="${SUDO_USER}"
 
 # --- Execute and Check Student Scripts ---
-printf "${CG}%-30s %-10s %-10s %s${CW}\n" "SCRIPT" "RESULT" "POINTS" "DETAILS"
+printf "${CG}%-20s %-10s %-10s %s${CW}\n" "SCRIPT" "RESULT" "POINTS" "DETAILS"
 _print_line
 
 for t in "${targets[@]}"
