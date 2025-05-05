@@ -80,15 +80,15 @@ if [[ -n "${journal_entry}" ]]; then
     # Extract resource type (CPU, MEMORY, IO) - assumes format like 
     # "...impacting your X - ..."
     # Use parameter expansion and case-insensitivity
-    if [[ "${journal_entry,,}" == *"impacting your cpu"* ]]; then
+    if [[ "${journal_entry,,}" == *"impacting your CPU"* ]]; then
         resource_type="CPU"
-    elif [[ "${journal_entry,,}" == *"impacting your memory"* ]]; then
+    elif [[ "${journal_entry,,}" == *"impacting your MEMORY"* ]]; then
         resource_type="MEMORY"
-    elif [[ "${journal_entry,,}" == *"impacting your io"* ]]; then
+    elif [[ "${journal_entry,,}" == *"impacting your IO"* ]]; then
         resource_type="IO"
     fi
-    # Extract the quote part (everything after the last hyphen)
-    funny_quote=$(echo "${journal_entry}" | sed 's/.* - //')
+    # Extract the quote part (everything after the last comma)
+    funny_quote=$(echo "${journal_entry}" | sed 's/.* , //')
 else
     echo -e "${CR}Warning: Could not find the expected log entry from ${LOG_TAG} in journalctl.${CW}" >&2
     # Allow script to continue, but some checks might fail
