@@ -44,7 +44,7 @@ _check_file_metadata() {
     # if [[ "$path" == "$basedir"* ]]; then
     #     check_desc=".${path#$basedir}" # e.g., ./bin/app.py
     # else
-    #     check_desc="$path"
+         check_desc="$path"
     # fi
 
     local exists="-" owner_ok="-" mode_ok="-"
@@ -102,7 +102,7 @@ _check_report_content() {
     # if [[ "$file_path" == "$basedir"* ]]; then
     #     check_desc=".${file_path#$basedir}" # e.g., ./bin/app.py
     # else
-    #     check_desc="$file_path"
+         check_desc="$file_path"
     # fi
 
     local owner_ok="-" perm_ok="-" inode_ok="-"
