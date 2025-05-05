@@ -187,12 +187,9 @@ _print_line
 
 # --- Grade Calculation & Reporting ---
 
-echo "" # Add a blank line for spacing
 _print_line
-
-# Calculate the final grade percentage, capped at 100%
 final_grade_percentage=0
-target_points_for_100=100 # Define the target score for 100%
+target_points_for_100=100
 
 if [[ ${max_possible_points} -eq 0 ]]; then
     # Avoid division by zero if no scripts were configured or points assigned
@@ -210,7 +207,6 @@ else
     final_grade_percentage=$(printf '%.0f' "${final_grade_percentage}")
 fi
 
-# Print the final result
 printf "${CP}Assignment ${assignment} Result: ${CG}%d%%${CW} (%d points earned towards target of %d)\n" \
        "${final_grade_percentage}" \
        "${total_points_earned}" \

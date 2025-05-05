@@ -106,7 +106,6 @@ fi
 
 # --- Grade Calculation & Reporting ---
 
-echo "" # Add a blank line for spacing
 _print_line
 if [[ ${total_questions} -gt 0 ]]; then
     # Calculate grade using bc for floating point
