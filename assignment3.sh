@@ -54,17 +54,17 @@ _check_file_metadata() {
     # Check Existence
     ((total_questions++))
     if [[ -e "${path}" ]]; then
-        exists="${CG}PASS${CW}"
+        exists="PASS"
         ((correct_answers++))
 
         # Check Owner (only if exists)
         ((total_questions++))
         actual_owner=$(stat -c %U "${path}" 2>/dev/null || echo "Error")
         if [[ "${actual_owner}" == "${expected_owner}" ]]; then
-            owner_ok="${CG}PASS${CW}"
+            owner_ok="PASS"
             ((correct_answers++))
         else
-            owner_ok="${CR}FAIL${CW}"
+            owner_ok="FAIL"
             details+=" Own:${actual_owner}(Exp:${expected_owner})"
         fi
 
@@ -72,16 +72,16 @@ _check_file_metadata() {
         ((total_questions++))
         actual_mode=$(stat -c %a "${path}" 2>/dev/null || echo "Error")
          if [[ "${actual_mode}" == "${expected_mode}" ]]; then
-            mode_ok="${CG}PASS${CW}"
+            mode_ok="PASS"
             ((correct_answers++))
         else
-            mode_ok="${CR}FAIL${CW}"
+            mode_ok="FAIL"
             details+=" Mode:${actual_mode}(Exp:${expected_mode})"
         fi
     else
-        exists="${CR}FAIL${CW}"
-        owner_ok="${CR}FAIL${CW}" # Cannot check owner if not exists
-        mode_ok="${CR}FAIL${CW}"  # Cannot check mode if not exists
+        exists="FAIL"
+        owner_ok="FAIL" # Cannot check owner if not exists
+        mode_ok="FAIL"  # Cannot check mode if not exists
         ((total_questions+=2)) # Increment tq for owner/mode checks even though they auto-fail
         details+=" Does not exist."
     fi
@@ -112,30 +112,30 @@ _check_report_content() {
     ((total_questions++))
     # Regex: Start of line (^), "OWNER:", optional whitespace (\s*), any chars (.*), the filename, any chars (.*)
     if grep -qE "^OWNER:\s*.*${filename}.*" "${report_path}"; then
-        owner_ok="${CG}PASS${CW}"
+        owner_ok="PASS"
         ((correct_answers++))
     else
-        owner_ok="${CR}FAIL${CW}"
+        owner_ok="FAIL"
         details+=" Owner line missing."
     fi
 
     # Check Permissions line in report
     ((total_questions++))
     if grep -qE "^PERMISSIONS:\s*.*${filename}.*" "${report_path}"; then
-        perm_ok="${CG}PASS${CW}"
+        perm_ok="PASS"
         ((correct_answers++))
     else
-        perm_ok="${CR}FAIL${CW}"
+        perm_ok="FAIL"
         details+=" Perms line missing."
     fi
 
     # Check Inode line in report
     ((total_questions++))
     if grep -qE "^INODE:\s*.*${filename}.*" "${report_path}"; then
-        inode_ok="${CG}PASS${CW}"
+        inode_ok="PASS"
         ((correct_answers++))
     else
-        inode_ok="${CR}FAIL${CW}"
+        inode_ok="FAIL"
         details+=" Inode line missing."
     fi
 
