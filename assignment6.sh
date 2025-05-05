@@ -80,11 +80,11 @@ if [[ -n "${journal_entry}" ]]; then
     # Extract resource type (CPU, MEMORY, IO) - assumes format like 
     # "...impacting your X - ..."
     # Use parameter expansion and case-insensitivity
-    if [[ "${journal_entry,,}" == *"impacting your CPU"* ]]; then
+    if [[ "${journal_entry,,}" == *"impacting your CPU:"* ]]; then
         resource_type="CPU"
-    elif [[ "${journal_entry,,}" == *"impacting your MEMORY"* ]]; then
+    elif [[ "${journal_entry,,}" == *"impacting your MEMORY:"* ]]; then
         resource_type="MEMORY"
-    elif [[ "${journal_entry,,}" == *"impacting your IO"* ]]; then
+    elif [[ "${journal_entry,,}" == *"impacting your IO:"* ]]; then
         resource_type="IO"
     fi
     # Extract the quote part (everything after the last colon)
@@ -178,7 +178,6 @@ else
     if [[ -z "${journal_entry}" ]]; then echo -e "      ${CR}(Hint: Could not find journal entry)${CW}"; fi
     if [[ -n "${journal_entry}" && "${quotes[${ans5}]}" != "${funny_quote}" ]]; then echo -e "      ${CR}(Hint: Quote does not match journal entry)${CW}"; fi
 fi
-
 
 # --- Display Results Summary ---
 _print_line
