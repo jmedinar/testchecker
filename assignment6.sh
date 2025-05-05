@@ -147,16 +147,11 @@ q4_correct=false
 if [[ "${ans4}" == "${expected_file_path}" ]]; then
     q4_correct=true
     ((correct_answers++))
-# else # Optional: Provide feedback if the lsof check passed but answer was wrong
-#    if [[ "$lsof_contains_executable" = true ]]; then
-#       echo -e "      ${CR}(Hint: Check the path carefully)${CW}"
-#    fi
 fi
 
 # Question 5: Logged Message (Quote)
 ((total_questions++))
-echo ""
-echo -e "${CY}   5. Identify the funny message logged by the process (check journal):${CW}"
+echo -e "$   5. Identify the funny message logged by the process (check journal):"
 pos=0
 # Display the list of possible quotes
 for q in "${quotes[@]}"; do
