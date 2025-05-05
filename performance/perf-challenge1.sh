@@ -4,9 +4,6 @@
 # Email: jmedina@collin.edu
 # Date: Mar 2024
 
-# Cause pipelines to return the exit status of the last command that failed.
-set -o pipefail
-
 # --- Configuration ---
 STRESS_DURATION_SECONDS=3600 # 1 hour
 MEMORY_STRESS_BYTES="256M"   # Amount of memory for the memory stressor
@@ -55,20 +52,16 @@ else
 
     case $selected_proc in
         cpu)
-            /usr/bin/logger -p "$LOG_FACILITY" "stress-ng-cpu is now impacting your CPU - ${random_quote}"
+            /usr/bin/logger -p ${LOG_FACILITY} "stress-ng is now impacting your CPU, ${random_quote}"
             /usr/bin/stress-ng --quiet --timeout "${STRESS_DURATION_SECONDS}s" --cpu 1 --oom-avoid & disown
             ;;
         mem)
-            /usr/bin/logger -p "$LOG_FACILITY" "stress-ng-vm is now impacting your MEMORY - ${random_quote}"
+            /usr/bin/logger -p ${LOG_FACILITY} "stress-ng is now impacting your MEMORY, ${random_quote}"
             /usr/bin/stress-ng --quiet --timeout "${STRESS_DURATION_SECONDS}s" --vm 1 --vm-bytes "$MEMORY_STRESS_BYTES" & disown
             ;;
          io)
-            /usr/bin/logger -p "$LOG_FACILITY" "stress-ng-io is now impacting your IO - ${random_quote}"
+            /usr/bin/logger -p ${LOG_FACILITY} "stress-ng is now impacting your IO, ${random_quote}"
             /usr/bin/stress-ng --quiet --timeout "${STRESS_DURATION_SECONDS}s" --io 1 & disown
-            ;;
-         *)
-            echo "Error: Unknown stress type selected. This should not happen." >&2
-            exit 2
             ;;
     esac
 
