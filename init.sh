@@ -45,6 +45,7 @@ fi
 # === Setup ===
 
 # 5. Install required packages
+echo "Preflight configuration..."
 dnf install -yq ansible git figlet lolcat curl
 
 # 6. Prepare visuals
@@ -72,7 +73,7 @@ ansible-playbook "$TEMP_PLAYBOOK" --tags "$PLAYBOOK_TAGS"
 
 figlet "Setup completed!" | lolcat
 echo "The system will automatically reboot in 20 seconds..."
-echo "      press Ctrl+c to cancel the reboot process"
+echo "      press Ctrl+c if you need to cancel the reboot process"
 sleep 20
 echo "Rebooting now!"
 rm -rf /tmp/class-setup.yml

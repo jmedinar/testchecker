@@ -52,26 +52,6 @@
             name: rpmfusion-*-release
             state: present
 
-        # - name: RPM Fusion free GPG key
-        #   ansible.builtin.rpm_key:
-        #     key: "{{ rpmfusion }}/free/fedora/RPM-GPG-KEY-rpmfusion-free-fedora-2020"
-        #     state: present
-
-        # - name: RPM Fusion Free
-        #   ansible.builtin.dnf:
-        #     name: "{{ rpmfusion }}/free/fedora/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
-        #     state: present
-
-        # - name: RPM Fusion non-free GPG key
-        #   ansible.builtin.rpm_key:
-        #     key: "{{ rpmfusion }}/nonfree/fedora/RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020"
-        #     state: present
-
-        # - name: RPM Fusion Non-Free
-        #   ansible.builtin.dnf:
-        #     name: "{{ rpmfusion }}/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
-        #     state: present
-
     - name: Installing packages for complete desktop
       tags: desktop_packages
       block:
@@ -131,6 +111,7 @@
           - firefox
           - flatpak
           - gnome-tweaks
+          - google-chrome
           - vim
           - wget
           - fuse-sshfs
