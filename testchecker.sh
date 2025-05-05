@@ -46,7 +46,12 @@ if [[ ${UID} -ne 0 ]]; then
     exit 1
 fi
 
-realuser=$(bash -c 'echo $SUDO_USER')
+if [[ -z "${SUDO_USER}" ]]; then
+    echo -e "${CR}Error: Could not determine the original user. Make sure you are using 'sudo' correctly.${CW}" >&2
+    exit 1
+fi
+realuser="${SUDO_USER}" # Use the environment variable
+
 
 if id "liveuser" &>/dev/null || [ -f /etc/live-release ] || [[ "$(findmnt -n -o FSTYPE /)" =~ (squashfs|overlay) ]]; then
     echo -e "${CR}Error: This script should not be run as the 'liveuser' or from the live ISO environment.${CW}" >&2
@@ -152,7 +157,4 @@ fi
 
 echo ""
 _print_line
-echo -e "${CG}TestChecker process completed.${CW}"
-echo ""
-
 exit 0
