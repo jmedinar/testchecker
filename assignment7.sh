@@ -3,33 +3,128 @@
 # Author: Professor Juan Medina
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
+# Purpose: Verifies the installation of specific packages and website content for Assignment 7.
 
-# Red           Green         Yellow        Blue          Purple        Cyan          White
-CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
+# --- Configuration ---
 assignment=7
-ca=0
-tq=5
+correct_answers=0 # Counter for correct answers
+total_questions=0 # Counter for total questions checked
 
-_print_line() {
-    printf "${CC}%0.s=" {1..80}
-    printf "${CW}\n"
+# Expected path for Typora if installed manually
+TYPORA_EXEC_PATH="/opt/bin/T*/Typora"
+# Expected path for the website index file
+WEBSITE_INDEX_PATH="/var/www/html/index.html"
+
+# Color Codes
+CR='\e[0;31m' # Red
+CG='\e[0;32m' # Green
+CY='\e[0;33m' # Yellow
+CL='\e[0;34m' # Blue
+CP='\e[0;35m' # Purple
+CC='\e[0;36m' # Cyan
+CW='\e[0;37m' # White (reset)
+
+ENCODER_SCRIPT_URL="https://raw.githubusercontent.com/jmedinar/testchecker/main/encoder.sh"
+
+# --- Helper Functions ---
+
+function _msg() {
+   echo -ne "${CY}Checking: ${1}... ${CW}" 
+   ((total_questions++))
 }
 
+function _pass() {
+   echo -e "${CG}PASS${CW}"
+   ((correct_answers++))
+}
+
+function _fail() {
+   echo -e "${CR}FAIL${CW}" #
+}
+
+function _print_line() {
+    printf "${CC}%0.s=" {1..80} # Print 80 '=' characters
+    printf "${CW}\n" # Reset color and add newline
+}
+
+# --- Verification Logic ---
+
 _print_line
-echo -e "${CP} Assignment ${assignment} Verification"
+echo -e "${CP}Assignment ${assignment} Verification Started${CW}"
 _print_line
 
-printf "${CG}%-10s%-10s%-10s%-10s%-10s\n" Nmap Wireshark Typora TuxPaint Website
-nmap="false" wireshark="false" typora="false" tuxpaint="false" website="false"
-if rpm -qa | grep "nmap-[[:digit:]]" &>/dev/null; then nmap="true"; ((ca++)); fi
-if rpm -qa | grep "^wireshark-[[:digit:]]" &>/dev/null; then wireshark="true"; ((ca++)); fi
-if ls /opt/bin/T*/Typora &>/dev/null; then typora="true"; ((ca++)); fi
-if rpm -qa | grep "tuxpaint-[[:digit:]]" &>/dev/null; then tuxpaint="true"; ((ca++)); fi
-if grep -E "Assignment 7|Learning Linux" /var/www/html/index.html &>/dev/null; then website="true"; ((ca++)); fi
-printf "${CY}%-10s%-10s%-10s%-10s%-10s\n" ${nmap} ${wireshark} ${typora} ${tuxpaint} ${website}
+# Get the username from the environment variable set by sudo
+# Assumes the parent script (testChecker.sh) already validated SUDO_USER
+realuser="${SUDO_USER}"
 
-grade="$(echo "(100/${tq})*${ca}" | bc -l)"
-printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" ${grade}
-echo ""
-target="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vZW5jb2Rlci5zaAo="
-source <(curl -sk -H 'Cache-Control: no-cache' $(echo ${target} | base64 -d)) ${grade} ${assignment}
+# --- Perform Checks ---
+
+# 1. Check Nmap installation
+_msg "Nmap package installed"
+# Use rpm -q for a direct query. Redirect stdout/stderr to hide output.
+if rpm -q nmap &> /dev/null; then
+    _pass
+else
+    _fail
+fi
+
+# 2. Check Wireshark installation
+_msg "Wireshark package installed"
+if rpm -q wireshark &> /dev/null; then
+    _pass
+else
+    _fail
+fi
+
+# 3. Check Typora installation/existence
+# This assumes Typora is installed manually or via a method not tracked by rpm.
+# Adjust TYPORA_EXEC_PATH if the expected location is different.
+_msg "Typora application exists (${TYPORA_EXEC_PATH})"
+if [[ -x "${TYPORA_EXEC_PATH}" ]]; then # Check if the file exists and is executable
+    _pass
+else
+    _fail
+    # Optional: Add hint if file exists but isn't executable
+    if [[ -f "${TYPORA_EXEC_PATH}" ]]; then
+        echo -e "      ${CR}(Hint: File exists but is not executable)${CW}"
+    fi
+fi
+
+# 4. Check TuxPaint installation
+_msg "TuxPaint package installed"
+if rpm -q tuxpaint &> /dev/null; then
+    _pass
+else
+    _fail
+fi
+
+# 5. Check Website Content
+_msg "Website content (${WEBSITE_INDEX_PATH})"
+if [[ ! -f "${WEBSITE_INDEX_PATH}" ]]; then
+    _fail
+    echo -e "      ${CR}(Hint: File ${WEBSITE_INDEX_PATH} not found)${CW}"
+elif grep -qE "Assignment 7|Learning Linux" "${WEBSITE_INDEX_PATH}"; then
+    _pass
+else
+    _fail
+    echo -e "      ${CR}(Hint: Required text 'Assignment 7' or 'Learning Linux' not found in file)${CW}"
+fi
+
+# --- Grade Calculation & Reporting ---
+
+echo "" # Add a blank line for spacing
+_print_line
+if [[ ${total_questions} -gt 0 ]]; then
+    # Calculate grade using bc for floating point
+    grade=$(echo "scale=2; (100 / ${total_questions}) * ${correct_answers}" | bc -l)
+    # Print rounded grade
+    printf "${CP}Assignment ${assignment} Result: ${CG}%d%%${CW} (%d/%d checks passed)\n" \
+           "$(printf '%.0f' ${grade})" \
+           "${correct_answers}" \
+           "${total_questions}"
+else
+    echo -e "${CR}No questions were checked. Grade cannot be calculated.${CW}"
+    grade=0 # Assign 0 if no questions were run
+fi
+_print_line
+source <(curl -s --fail -L -H 'Cache-Control: no-cache' "${ENCODER_SCRIPT_URL}") "${grade}" "${assignment}"
