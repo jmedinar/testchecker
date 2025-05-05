@@ -3,8 +3,6 @@
 # Date: Mar 2025
 # Description: Setup Linux Class System
 
-# Exit immediately if a command exits with a non-zero status.
-set -e
 # Cause pipelines to return the exit status of the last command that failed.
 set -o pipefail
 

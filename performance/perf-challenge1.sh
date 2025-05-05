@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Exit immediately if a command exits with a non-zero status.
-set -e
-# Treat unset variables as an error when substituting.
-set -u
 # Cause pipelines to return the exit status of the last command that failed.
 set -o pipefail
 
