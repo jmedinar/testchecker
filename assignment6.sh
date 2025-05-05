@@ -65,7 +65,6 @@ if [[ -z "${stress_pid}" ]]; then
 fi
 
 # Get PPID and Command Name using the found PID
-process_ppid=$(ps -o ppid= -p "${stress_pid}" | awk '{print $1}')
 process_name=$(ps -o comm= -p "${stress_pid}")
 
 # --- Get info from journalctl ---
@@ -113,7 +112,7 @@ echo ""
 ((total_questions++))
 read -p "   1. Identify the Parent Process ID (PPID) of the stress process: " ans1
 q1_correct=false
-if [[ "${ans1}" == "${process_ppid}" ]]; then
+if [[ "${ans1}" == "${stress_pid}" ]]; then
     q1_correct=true
     ((correct_answers++))
 fi
