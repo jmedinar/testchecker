@@ -150,47 +150,6 @@ _check_user_config() {
         "${username}" "${exists_status}" "${primary_status}" "${aux_status}" "${gecos_status}" "${details}"
 }
 
-# _user() {
-# 	exist="false" 	primary="false" 	auxiliar="false" 	gecos="false"
-
-#    # Check if the user exists
-# 	if id ${1} &>/dev/null
-#    then 
-#       exist="true"
-#       ((ca++))
-
-#       # Primary group verification
-#       if [[ "$(id -gn ${1} 2>/dev/null)" == "${2}" ]]; then ((ca++)); primary="true"; fi
-
-#       # gecos field verification
-#       if grep "${1}@wedbit.com" /etc/passwd &>/dev/null; then ((ca++)); gecos="true"; fi
-
-#       # auxiliar groups verification
-#       case ${2} in
-#          "accounting" | "technology") # Only requires the primary group, so Aux must be empty
-#             if [[ "$(userdbctl user ${1} 2>/dev/null | grep Aux)" == "" ]]; then ((ca++)); auxiliar="true"; fi ;;
-#          "humanresources") # Requires accounting
-#             for g in $(id -nG ${1} 2>/dev/null); do
-#                if [[ ${g} != "humanresources" ]]; then
-#                   if [[ ${g} == "accounting" ]]; then ((ca++)); auxiliar="true"; fi
-#                fi
-#             done ;;
-#          "directionboard") # Requires the three other groups
-#             count=0
-#             for g in $(id -nG ${1} 2>/dev/null); do
-#                if [[ ${g} != "directionboard" ]]; then
-#                   if [[ ${g} == "technology" ]]; then ((count++))
-#                   elif [[ ${g} == "humanresources" ]]; then ((count++))
-#                   elif [[ ${g} == "accounting" ]]; then ((count++)); fi
-#                fi
-#             done
-#             if [[ ${count} -eq 3 ]]; then ((ca++)); auxiliar="true"; fi ;;
-#          *) echo "Unknown" ;;
-#       esac
-#    fi
-# 	printf "${CY}%-10s%-8s%-15s%-18s%-10s${CW}\n" ${1} ${exist} ${primary} ${auxiliar} ${gecos}
-# }
-
 # --- Verification Logic ---
 
 _print_line
@@ -216,19 +175,6 @@ _check_user_config "llopez"   "directionboard"
 _check_user_config "jramirez" "humanresources"
 _print_line
 
-# printf "${CG}%-10s%-8s%-15s%-18s%-10s${CW}\n" USER EXIST PRIMARY_GROUP AUXILIARY_GROUP GECOS_COMMENT
-# _print_line
-# _user cyen accounting
-# _user mpearl accounting
-# _user jgreen directionboard
-# _user dpaul technology
-# _user msmith technology
-# _user poto technology
-# _user mkhan technology
-# _user llopez directionboard
-# _user jramirez humanresources
-# _print_line
-
 # --- Grade Calculation & Reporting ---
 
 echo "" # Add a blank line for spacing
@@ -247,4 +193,3 @@ else
 fi
 _print_line
 source <(curl -s --fail -L -H 'Cache-Control: no-cache' "${ENCODER_SCRIPT_URL}") "${grade}" "${assignment}"
-
