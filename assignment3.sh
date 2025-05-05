@@ -140,7 +140,7 @@ realuser="${SUDO_USER}"
 # --- File Structure Verification ---
 
 echo -e "${CC}File Structure Verification (Existence / Owner / Mode)${CW}"
-printf "${CG}%-40s %-10s %-10s %-10s %s${CW}\n" "OBJECT" "EXISTS" "OWNER" "MODE" "DETAILS"
+printf "${CG}%-40s %-10s %-10s %-10s %s${CW}\n" "OBJECT CHECKED" "EXISTS" "OWNER" "MODE" "DETAILS"
 _print_line
 _check_file_metadata "${basedir}"             "root"     755
 _check_file_metadata "${basedir}/bin"         "root"     755
