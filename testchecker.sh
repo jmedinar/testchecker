@@ -52,7 +52,6 @@ if [[ -z "${SUDO_USER}" ]]; then
 fi
 realuser="${SUDO_USER}" # Use the environment variable
 
-
 if id "liveuser" &>/dev/null || [ -f /etc/live-release ] || [[ "$(findmnt -n -o FSTYPE /)" =~ (squashfs|overlay) ]]; then
     echo -e "${CR}Error: This script should not be run as the 'liveuser' or from the live ISO environment.${CW}" >&2
     echo "Please complete the Fedora installation and log in as your user before running this script with sudo." >&2
