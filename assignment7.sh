@@ -79,15 +79,11 @@ fi
 # 3. Check Typora installation/existence
 # This assumes Typora is installed manually or via a method not tracked by rpm.
 # Adjust TYPORA_EXEC_PATH if the expected location is different.
-_msg "Typora application exists (${TYPORA_EXEC_PATH})"
-if [[ -x "${TYPORA_EXEC_PATH}" ]]; then # Check if the file exists and is executable
+_msg "Typora application exists"
+if [[ -f "${TYPORA_EXEC_PATH}" ]]; then
     _pass
 else
     _fail
-    # Optional: Add hint if file exists but isn't executable
-    if [[ -f "${TYPORA_EXEC_PATH}" ]]; then
-        echo -e "      ${CR}(Hint: File exists but is not executable)${CW}"
-    fi
 fi
 
 # 4. Check TuxPaint installation
@@ -99,7 +95,7 @@ else
 fi
 
 # 5. Check Website Content
-_msg "Website content (${WEBSITE_INDEX_PATH})"
+_msg "Website content"
 if [[ ! -f "${WEBSITE_INDEX_PATH}" ]]; then
     _fail
     echo -e "      ${CR}(Hint: File ${WEBSITE_INDEX_PATH} not found)${CW}"
