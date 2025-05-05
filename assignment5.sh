@@ -48,7 +48,7 @@ _check_script_output(){
     local script_path="${script_base_dir}/${script_basename}.sh"
     local points_value=0
     local points_awarded=0
-    local result_status="${CR}FAIL${CW}" # Default to FAIL
+    local result_status="FAIL"
     local details=""
 
     # Determine points value for this script
@@ -86,7 +86,7 @@ _check_script_output(){
             #     fi
             # fi
             # if [[ "$code_check_passed" == true ]]; then
-                 result_status="${CG}PASS${CW}"
+                 result_status="PASS"
                  points_awarded=${points_value}
                  ((total_points_earned += points_awarded))
             # fi
