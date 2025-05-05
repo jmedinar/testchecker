@@ -102,7 +102,7 @@ _check_script_output(){
             #     fi
             # fi
             # if [[ "$code_check_passed" == true ]]; then
-                 result_status="${CG}PASS${CW}"
+                 result_status="PASS"
                  points_awarded=${points_value}
                  ((total_points_earned += points_awarded))
             # fi
