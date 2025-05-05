@@ -13,7 +13,7 @@ set -o pipefail
 
 # --- Configuration ---
 title="TestChecker"
-version="5.0.0" # This version string is compared against the remote script's version
+version="5.0.1" # This version string is compared against the remote script's version
 
 # Base URL for raw GitHub content
 GH_RAW_BASE="https://raw.githubusercontent.com/jmedinar/testchecker/main"
