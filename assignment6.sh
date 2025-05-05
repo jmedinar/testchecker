@@ -74,7 +74,7 @@ funny_quote=""
 
 # Retrieve the latest log entry with the specific tag
 # Use -o cat for plain message, --no-pager to avoid interactivity
-journal_entry=$(journalctl --since="3 hours ago" --priority=err --user -n 1 --no-pager -o cat)
+journal_entry=$(journalctl --since="3 hours ago" --priority=err -n 1 --no-pager -o cat)
 
 if [[ -n "${journal_entry}" ]]; then
     # Extract resource type (CPU, MEMORY, IO) - assumes format like 
