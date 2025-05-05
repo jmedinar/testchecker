@@ -1,4 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Script: perf-challenge1.sh
+# Author: Professor Juan Medina
+# Email: jmedina@collin.edu
+# Date: Mar 2024
 
 # Cause pipelines to return the exit status of the last command that failed.
 set -o pipefail
@@ -7,9 +11,10 @@ set -o pipefail
 STRESS_DURATION_SECONDS=3600 # 1 hour
 MEMORY_STRESS_BYTES="256M"   # Amount of memory for the memory stressor
 LOG_FACILITY="user.notice" # Syslog facility for logger
-# --- End Configuration ---
 
 if ! command -v stress-ng -V &>/dev/null; then sudo dnf install -yq stress-ng &>/dev/null; else echo "no stress binary found!"; exit 1; fi
+
+# --- Quotes for Logging ---
 
 quotes=( 
     "Bugs Bunny - What's up, doc?"
@@ -31,8 +36,7 @@ quotes=(
 # Check if stress-ng is already running using pgrep for exact match
 if pgrep -x "stress-ng" > /dev/null; then
     echo "A 'stress-ng' process is already running. Skipping..."
-    echo "Use performance tools (top, htop, vmstat, iostat), lsof, and journalctl to investigate."
-    exit 0 # Exit successfully, as the goal state (a running process) is met
+    exit 0
 else
     # Define the types of stress tests
     procs=(cpu mem io)
@@ -43,15 +47,15 @@ else
 
     case $selected_proc in
         cpu)
-            /usr/bin/logger -p "$LOG_FACILITY" "STRESS-TEST-SCRIPT: stress-ng-cpu is now impacting your CPU - ${random_quote}"
+            /usr/bin/logger -p "$LOG_FACILITY" "stress-ng-cpu is now impacting your CPU - ${random_quote}"
             /usr/bin/stress-ng --quiet --timeout "${STRESS_DURATION_SECONDS}s" --cpu 1 --oom-avoid & disown
             ;;
         mem)
-            /usr/bin/logger -p "$LOG_FACILITY" "STRESS-TEST-SCRIPT: stress-ng-vm is now impacting your MEMORY - ${random_quote}"
+            /usr/bin/logger -p "$LOG_FACILITY" "stress-ng-vm is now impacting your MEMORY - ${random_quote}"
             /usr/bin/stress-ng --quiet --timeout "${STRESS_DURATION_SECONDS}s" --vm 1 --vm-bytes "$MEMORY_STRESS_BYTES" & disown
             ;;
          io)
-            /usr/bin/logger -p "$LOG_FACILITY" "STRESS-TEST-SCRIPT: stress-ng-io is now impacting your IO - ${random_quote}"
+            /usr/bin/logger -p "$LOG_FACILITY" "stress-ng-io is now impacting your IO - ${random_quote}"
             /usr/bin/stress-ng --quiet --timeout "${STRESS_DURATION_SECONDS}s" --io 1 & disown
             ;;
          *)
@@ -61,13 +65,6 @@ else
     esac
 
     sleep 2
-
-    # Final confirmation check (silent)
-    if ! pgrep -x "stress-ng" > /dev/null; then
-        # Log error if it failed to start, but don't echo to user
-        /usr/bin/logger -p user.error "STRESS-TEST-SCRIPT: 'stress-ng' process failed to start or exited immediately."
-        exit 3
-    fi
 
 fi
 
