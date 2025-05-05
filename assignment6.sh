@@ -88,7 +88,7 @@ if [[ -n "${journal_entry}" ]]; then
         resource_type="IO"
     fi
     # Extract the quote part (everything after the last colon)
-    funny_quote=$(echo "${journal_entry}" | sed 's/.* : //')
+    funny_quote=$(echo "${journal_entry}" | sed 's/.*: //')
 else
     echo -e "${CR}Warning: Could not find the expected log entry from ${LOG_TAG} in journalctl.${CW}" >&2
     # Allow script to continue, but some checks might fail
