@@ -25,9 +25,7 @@ ENCODER_SCRIPT_URL="https://raw.githubusercontent.com/jmedinar/testchecker/main/
 
 function _msg() {
    echo -ne "${CY}Checking: ${1}... ${CW}" 
-   echo here1
    ((total_questions++))
-   echo here2
 }
 
 function _pass() {
@@ -53,18 +51,12 @@ _print_line
 
 # 1. Memory Check (Target: > 1.8 GiB)
 _msg "System Memory (> 1.8 GiB)"
-echo here3
 mem_kib=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-echo here4
 # Calculate GiB (integer division is fine here)
 mem_gib=$(( mem_kib / 1024 / 1024 ))
-echo here5
 # Check if memory in KiB is greater than 1.8 * 1024 * 1024 KiB
-echo here6
 if [[ ${mem_kib} -gt 1887436 ]]; then # 1.8 * 1024 * 1024 = 1887436.8
-   echo here7
     _pass
-    echo here8
 else
     _fail
     echo -e "   ${CY}Detected Memory: ${mem_gib} GiB${CW}" # Show detected value on fail
