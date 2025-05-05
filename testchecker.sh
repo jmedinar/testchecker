@@ -6,14 +6,12 @@
 # Purpose: This script gathers VM and Student information
 #          and executes the interactive test verification scripts
 
-# Exit immediately if a command exits with a non-zero status.
-set -e
 # Cause pipelines to return the exit status of the last command that failed.
 set -o pipefail
 
 # --- Configuration ---
 title="TestChecker"
-version="5.0.1" # This version string is compared against the remote script's version
+version="5.0.2" # This version string is compared against the remote script's version
 
 # Base URL for raw GitHub content
 GH_RAW_BASE="https://raw.githubusercontent.com/jmedinar/testchecker/main"
