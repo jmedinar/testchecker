@@ -33,8 +33,7 @@ function _pass() {
    ((correct_answers++))
 }
 
-# Function to print fail status
-_fail() {
+function _fail() {
    echo -e "${CR}FAIL${CW}" #
 }
 

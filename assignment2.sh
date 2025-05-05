@@ -4,69 +4,164 @@
 # Email: jmedina@collin.edu
 # Date: 03/23/2024
 
-# Red           Green         Yellow        Blue          Purple        Cyan          White
-CR='\e[0;31m' CG='\e[0;32m' CY='\e[0;33m' CL='\e[0;34m' CP='\e[0;35m' CC='\e[0;36m' CW='\e[0;37m'
-assignment=2 
-ca=0  # Correct Answers
-tq=0  # Total Questions
+# --- Configuration ---
 
-_msg() {
-   echo -ne "${CY} ${1}"
-   ((tq++))
+assignment=2
+correct_answers=0 # Counter for correct answers
+total_questions=0 # Counter for total questions checked
+
+# Color Codes
+CR='\e[0;31m' # Red
+CG='\e[0;32m' # Green
+CY='\e[0;33m' # Yellow
+CL='\e[0;34m' # Blue
+CP='\e[0;35m' # Purple
+CC='\e[0;36m' # Cyan
+CW='\e[0;37m' # White (reset)
+
+ENCODER_SCRIPT_URL="https://raw.githubusercontent.com/jmedinar/testchecker/main/encoder.sh"
+
+# --- Helper Functions ---
+
+function _msg() {
+   echo -ne "${CY}Checking: ${1}... ${CW}" 
+   ((total_questions++))
 }
 
-_pass() {
-   echo -e "${CG} true ${CR}"
-   ((ca++))
+function _pass() {
+   echo -e "${CG}PASS${CW}"
+   ((correct_answers++))
 }
 
-_fail() {
-   echo -e "${CR} false ${CG}"
+function _fail() {
+   echo -e "${CR}FAIL${CW}" #
 }
 
-_eval() {
-    if eval ${1} &>/dev/null; then _pass; else _fail; fi
+function _print_line() {
+    printf "${CC}%0.s=" {1..80} # Print 80 '=' characters
+    printf "${CW}\n" # Reset color and add newline
 }
 
-_print_line() {
-    printf "${CC}%0.s=" {1..80}
-    printf "${CW}\n"
-}
+# --- Verification Logic ---
 
 _print_line
-echo -e "${CP} Assignment ${assignment} Verification"
+echo -e "${CP}Assignment ${assignment} Verification Started${CW}"
 _print_line
 
-realuser=$(bash -c 'echo $SUDO_USER')
-report=/home/${realuser}/backup/system-backup.info
+# Get the username from the environment variable set by sudo
+# Assumes the parent script (testChecker.sh) already validated SUDO_USER
+realuser="${SUDO_USER}"
+# realuser=$(bash -c 'echo $SUDO_USER')
+report_path="/home/${realuser}/backup/system-backup.info"
 
-_msg "System report file exist ~/backup/system-backup.info"
-if [[ -e ${report} ]]
-then 
+# 1. Check if the report file exists
+_msg "Report file exists (~/backup/system-backup.info)"
+if [[ -f "${report_path}" ]]; then
     _pass
-    _msg "Full Hostname:"
-        _eval "grep $(hostname -f) ${report}"
-    _msg "Current Date:"
-        _eval "grep -E 'CDT|$(date +%Y)' ${report}"
-    _msg "Uptime Information:"
-        _eval "grep 'load average' ${report}"
-    _msg "Last Name in the Proper Format:"
-        _eval "grep 'LASTNAME' ${report}"
-    _msg "Content of the /etc/resolv.conf File"
-        _eval "grep 'nameserver' ${report}"
-    _msg "List of Files in the /var/log/ Directory"
-        _eval "grep 'boot.log' ${report}"
-    _msg "Space Usage for the /home Directory"
-        _eval "grep 'Filesystem' ${report}"
-    _msg "The 'apropos uname' Command Output Without the String 'kernel'"
-        _eval "grep uname ${report} | grep -v kernel"
-else 
+
+    # 2. Check for Full Hostname
+    _msg "Report contains Full Hostname"
+    # Use grep -F for fixed string search, -q for quiet (only exit status)
+    if grep -qF "$(hostname -f)" "${report_path}"; then
+        _pass
+    else
+        _fail
+    fi
+
+    # 3. Check for Current Date (Year and timezone check)
+    _msg "Report contains Current Date Info (Year/Timezone)"
+    # Checks for the current year OR CDT/CST timezone abbreviation
+    # This might need refinement based on the exact expected date format in the report
+    if grep -qE "($(date +%Y)|CDT|CST)" "${report_path}"; then
+        _pass
+    else
+        _fail
+    fi
+
+    # 4. Check for Uptime Information
+    _msg "Report contains Uptime Information ('load average')"
+    if grep -q 'load average' "${report_path}"; then
+        _pass
+    else
+        _fail
+    fi
+
+    # 5. Check for Last Name Placeholder (Assuming literal 'LASTNAME')
+    _msg "Report contains 'LASTNAME' placeholder"
+    if grep -q 'LASTNAME' "${report_path}"; then
+        _pass
+    else
+        _fail
+    fi
+
+    # 6. Check for /etc/resolv.conf Content
+    _msg "Report contains '/etc/resolv.conf' entries"
+    if grep -q 'nameserver' "${report_path}"; then
+        _pass
+    else
+        _fail
+    fi
+
+    # 7. Check for /var/log/ File List Content
+    _msg "Report contains the list of files in the '/var/log' directory"
+    # Assumes 'boot.log' is a representative file expected in the listing
+    if grep -q 'boot.log' "${report_path}"; then
+        _pass
+    else
+        _fail
+    fi
+
+    # 8. Check for /home Directory Space Usage Info
+    _msg "Report contains space usage information for the '/home' directory"
+    # Checks for the header typically included in df output
+    if grep -q 'Filesystem' "${report_path}"; then
+        _pass
+    else
+        _fail
+    fi
+
+    # 9. Check for 'apropos uname' Output (excluding 'kernel')
+    _msg "Report contains 'apropos uname' output (without 'kernel')"
+    # Use a pipeline: find lines with 'uname', then exclude lines with 'kernel'
+    # grep -q returns true if *any* line matches the combined condition
+    if grep 'uname' "${report_path}" | grep -qv 'kernel'; then
+        _pass
+    else
+        _fail
+    fi
+
+else
+    # Report file does not exist
     _fail
-    echo -e "${CR} The verification process cannot proceed without the presence of the ~/backup/system-backup.info file. ${CW}"
+    echo -e "${CR}Error: The report file '${report_path}' was not found.${CW}" >&2
+    echo -e "${CR}Cannot perform further checks for Assignment ${assignment}.${CW}" >&2
+    exit 1
 fi
 
-grade="$(echo "(100/${tq})*${ca}" | bc -l)"
-printf "${CP} FINAL GRADE: ${CC} %.0f ${CW}" ${grade}
-echo ""
-target="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2ptZWRpbmFyL3Rlc3RjaGVja2VyL21haW4vZW5jb2Rlci5zaAo="
-source <(curl -sk -H 'Cache-Control: no-cache' $(echo ${target} | base64 -d)) ${grade} ${assignment}
+# --- Grade Calculation & Reporting ---
+
+echo "" # Add a blank line for spacing
+_print_line
+if [[ ${total_questions} -gt 0 ]]; then
+    # Calculate grade using bc for floating point
+    grade=$(echo "scale=2; (100 / ${total_questions}) * ${correct_answers}" | bc -l)
+    # Print rounded grade
+    printf "${CP}Assignment ${assignment} Result: ${CG}%d%%${CW} (%d/%d checks passed)\n" \
+           "$(printf '%.0f' ${grade})" \
+           "${correct_answers}" \
+           "${total_questions}"
+else
+    echo -e "${CR}No questions were checked. Grade cannot be calculated.${CW}"
+    grade=0 # Assign 0 if no questions were run
+fi
+_print_line
+echo "" # Add a blank line
+
+# Source the encoder/reporter script, passing the calculated grade and assignment number
+# Assumes the encoder script handles the student ID and username passed by the main testChecker
+echo -e "${CY}Reporting results...${CW}"
+# Use curl: -s silent, --fail error on HTTP failure, -L follow redirects
+# If curl fails, set -e inherited from parent script should cause an exit
+source <(curl -s --fail -L -H 'Cache-Control: no-cache' "${ENCODER_SCRIPT_URL}") "${grade}" "${assignment}"
+
+# The script finish is handled by the parent script (testChecker.sh)
