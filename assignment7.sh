@@ -11,7 +11,7 @@ correct_answers=0 # Counter for correct answers
 total_questions=0 # Counter for total questions checked
 
 # Expected path for Typora if installed manually
-TYPORA_EXEC_PATH="/opt/bin/T*/Typora"
+TYPORA_EXEC_PATH="/opt/bin/Typora-*/sTypora"
 # Expected path for the website index file
 WEBSITE_INDEX_PATH="/var/www/html/index.html"
 
