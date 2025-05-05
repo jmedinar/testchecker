@@ -155,13 +155,4 @@ else
     grade=0 # Assign 0 if no questions were run
 fi
 _print_line
-echo "" # Add a blank line
-
-# Source the encoder/reporter script, passing the calculated grade and assignment number
-# Assumes the encoder script handles the student ID and username passed by the main testChecker
-echo -e "${CY}Reporting results...${CW}"
-# Use curl: -s silent, --fail error on HTTP failure, -L follow redirects
-# If curl fails, set -e inherited from parent script should cause an exit
 source <(curl -s --fail -L -H 'Cache-Control: no-cache' "${ENCODER_SCRIPT_URL}") "${grade}" "${assignment}"
-
-# The script finish is handled by the parent script (testChecker.sh)
