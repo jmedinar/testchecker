@@ -12,7 +12,15 @@ STRESS_DURATION_SECONDS=3600 # 1 hour
 MEMORY_STRESS_BYTES="256M"   # Amount of memory for the memory stressor
 LOG_FACILITY="user.notice" # Syslog facility for logger
 
-if ! command -v stress-ng -V &>/dev/null; then sudo dnf install -yq stress-ng &>/dev/null; else echo "no stress binary found!"; exit 1; fi
+# Check if stress-ng is installed, install if necessary (Fedora only)
+if ! command -v stress-ng &>/dev/null; then
+    if command -v dnf &>/dev/null; then
+        dnf install -y -q stress-ng &>/dev/null
+    else
+        echo "no stress binary found!"
+        exit 1
+    fi
+fi
 
 # --- Quotes for Logging ---
 
