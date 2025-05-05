@@ -55,6 +55,7 @@ mem_kib=$(grep MemTotal /proc/meminfo | awk '{print $2}')
 # Calculate GiB (integer division is fine here)
 mem_gib=$(( mem_kib / 1024 / 1024 ))
 # Check if memory in KiB is greater than 1.8 * 1024 * 1024 KiB
+echo here
 if [[ ${mem_kib} -gt 1887436 ]]; then # 1.8 * 1024 * 1024 = 1887436.8
     _pass
 else
