@@ -85,7 +85,7 @@ _check_script_output(){
 
     # Print result row
     printf "${CY}%-30s %-10s %-10s ${CR}%s${CW}\n" \
-        "${script_basename}.sh" "${result_status}" "${points_awarded}/${points_value}" "${details}"
+        "${script_basename}.sh" "${result_status}" "${points_awarded}" "${details}"
 }
 
 # --- Verification Logic ---
@@ -157,7 +157,7 @@ _print_line
 echo "" # Add a blank line for spacing
 _print_line
 
-local grade_percentage=0
+grade_percentage=0
 if [[ ${max_possible_points} -gt 0 ]]; then
     # Calculate grade percentage using bc for floating point
     grade_percentage=$(echo "scale=2; (100 / ${max_possible_points}) * ${total_points_earned}" | bc -l)
