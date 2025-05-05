@@ -18,6 +18,16 @@ targets=(
     homeChecker rabbitJumps testString processFile userValidator
 )
 
+# Define points for each script type
+declare -A script_points=(
+    ["challenge"]=10
+    ["processFile"]=30
+    ["testString"]=30
+    ["homeChecker"]=20
+    ["rabbitJumps"]=20
+    ["userValidator"]=20
+)
+
 # Color Codes
 CR='\e[0;31m' # Red
 CG='\e[0;32m' # Green
@@ -49,12 +59,15 @@ _check_script_output(){
     local result_status="FAIL"
     local details=""
 
-    # Determine points value for this script
-    case "${script_basename}" in
-        challenge*)      points_value=10 ;;
-        processFile|testString) points_value=30 ;;
-        *)               points_value=20 ;; # homeChecker, rabbitJumps, userValidator
-    esac
+     # Determine points value for this script based on type
+    local script_type="challenge" # Default type
+    if [[ "${script_basename}" == "processFile" || "${script_basename}" == "testString" ]]; then
+        script_type="processFile" # Treat testString same as processFile for points
+    elif [[ "${script_basename}" == "homeChecker" || "${script_basename}" == "rabbitJumps" || "${script_basename}" == "userValidator" ]]; then
+        script_type="homeChecker" # Group other 20-point scripts
+    fi
+    points_value=${script_points[$script_type]:-10} # Default to 10 if type not found
+
     # Add points value to max possible *before* checking existence
     ((max_possible_points += points_value))
 
@@ -67,25 +80,45 @@ _check_script_output(){
         # Check 2: Script Output
         local script_output=""
         local exit_code=0
-        # Run the script, capture output and exit code. Redirect stderr to /dev/null.
-        script_output=$("${script_path}" ${script_args} 2>/dev/null) || exit_code=$?
 
-        if [[ ${exit_code} -ne 0 ]]; then
+        # Run the script, capture output and exit code. Redirect stderr to /dev/null.
+        # Use timeout to prevent hung scripts (e.g., 5 seconds)
+        script_output=$(timeout 5 "${script_path}" ${script_args} 2>/dev/null) || exit_code=$?
+
+        # Check timeout exit code (124)
+        if [[ ${exit_code} -eq 124 ]]; then
+             details+=" Script timed out (>${CG}5s${CR})."
+        elif [[ ${exit_code} -ne 0 ]]; then
             details+=" Script exited with error (code ${exit_code})."
         # Check if the output contains the expected substring
         # Using grep -F for fixed string matching is safer if no regex is needed
         elif echo "${script_output}" | grep -qF "${expected_output}"; then
-            result_status="PASS"
-            points_awarded=${points_value}
-            ((total_points_earned += points_awarded))
+            # Check 3: Source Code Pattern (Optional - currently disabled)
+            # local code_check_passed=true # Assume true if check is disabled
+            # if [[ -n "${expected_code_pattern}" ]]; then
+            #     if ! grep -q "${expected_code_pattern}" "${script_path}"; then
+            #         code_check_passed=false
+            #         details+=" Required code pattern not found."
+            #     fi
+            # fi
+            # if [[ "$code_check_passed" == true ]]; then
+                 result_status="${CG}PASS${CW}"
+                 points_awarded=${points_value}
+                 ((total_points_earned += points_awarded))
+            # fi
         else
-            details+=" Output mismatch (Expected: '${expected_output}')."
+            # Check if output was empty when expected output was not
+            if [[ -z "${script_output}" && -n "${expected_output}" ]]; then
+                details+=" No output produced."
+            else
+                details+=" Output mismatch (Expected: '${expected_output}')."
+            fi
         fi
     fi
 
     # Print result row
     printf "${CY}%-30s %-10s %-10s ${CR}%s${CW}\n" \
-        "${script_basename}.sh" "${result_status}" "${points_awarded}" "${details}"
+        "${script_basename}.sh" "${result_status}" "${points_awarded}/${points_value}" "${details}"
 }
 
 # --- Verification Logic ---
@@ -157,18 +190,31 @@ _print_line
 echo "" # Add a blank line for spacing
 _print_line
 
-grade_percentage=0
-if [[ ${max_possible_points} -gt 0 ]]; then
-    # Calculate grade percentage using bc for floating point
-    grade_percentage=$(echo "scale=2; (100 / ${max_possible_points}) * ${total_points_earned}" | bc -l)
-    printf "${CP}Assignment ${assignment} Result: ${CG}%d%%${CW} (%d/%d points earned)\n" \
-           "$(printf '%.0f' ${grade_percentage})" \
-           "${total_points_earned}" \
-           "${max_possible_points}"
+# Calculate the final grade percentage, capped at 100%
+final_grade_percentage=0
+target_points_for_100=100 # Define the target score for 100%
+
+if [[ ${max_possible_points} -eq 0 ]]; then
+    # Avoid division by zero if no scripts were configured or points assigned
+    echo -e "${CR}No points were assigned for checks. Grade cannot be calculated.${CW}"
+    final_grade_percentage=0
+elif [[ ${total_points_earned} -ge ${target_points_for_100} ]]; then
+    # If earned points meet or exceed the target, grade is 100%
+    final_grade_percentage=100
+    echo -e "${CG}Target score of ${target_points_for_100} points reached or exceeded!${CW}"
 else
-    echo -e "${CR}No questions were checked or max points is zero. Grade cannot be calculated.${CW}"
-    grade_percentage=0 # Assign 0 if no questions were run
+    # Calculate percentage based on the target score needed for 100%
+    # This effectively scales the grade based on progress towards 100 points.
+    final_grade_percentage=$(echo "scale=2; (100 / ${target_points_for_100}) * ${total_points_earned}" | bc -l)
+    # Round to nearest integer for final reporting
+    final_grade_percentage=$(printf '%.0f' "${final_grade_percentage}")
 fi
+
+# Print the final result
+printf "${CP}Assignment ${assignment} Result: ${CG}%d%%${CW} (%d points earned towards target of %d)\n" \
+       "${final_grade_percentage}" \
+       "${total_points_earned}" \
+       "${target_points_for_100}"
 
 _print_line
 source <(curl -s --fail -L -H 'Cache-Control: no-cache' "${ENCODER_SCRIPT_URL}") "${grade}" "${assignment}"
