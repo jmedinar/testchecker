@@ -64,24 +64,19 @@
 #                   Verify the output matches the "Expected Output" exactly.
 # -----------------------------------------------------------------------------
 
-# --- Script Code (Contains Errors) ---
+# --- Script Code ---
 
-# Problem 1: Incorrect Shebang
-#!/bin/trash
-
-# Problem 2: Incorrect Root Check
 if [[ $USER != "root" ]]
 then
     echo "Run this script using sudo!. Exiting..."
     exit 1
 else
-    # These commands correctly create and delete the user to orphan the directory
-    useradd goneuser &>/dev/null
+    # These commands correctly create and delete the user to orphan the directory and groups
+    groupadd gonegroup -g 1010
+    useradd goneuser -u 1010 -g 1010 &>/dev/null
     userdel goneuser &>/dev/null
-
-    # Problem 3: find command's output format doesn't match expected output
-    # -print adds a newline, -exec stat adds another newline.
-    find /home -maxdepth 1 -type d -nouser -print -exec stat -c "%u:%g" {} \;
+    groupdel gonegroup
+    find /home -maxdepth 1 -type d -nouser -exec stat -c "%u:%g" {} \;
 fi
 
 # --- End of Script ---

@@ -58,7 +58,7 @@
 #                   above exactly.
 # -----------------------------------------------------------------------------
 
-# --- Script Code (Contains Errors) ---
+# --- Script Code ---
 
 # Global variable accessible by functions
 name=""
@@ -66,7 +66,6 @@ name=""
 # Function to set the global 'name' variable
 get_name(){
     name="student"
-    # This function doesn't print anything itself, it just sets the variable.
 }
 
 # Function to print a hello message
@@ -81,18 +80,10 @@ goodbye() {
 
 # Function intended to print the final complex message
 beatles() {
-    # Problem Area: This echo command incorrectly includes "hello" literally
-    #               and tries to embed the output of goodbye() incorrectly.
-    #               It should produce: "Hey! student. Like in the Beatles song, Hello, Goodbye!"
-    #               The "Hello, Goodbye!" part comes from the song title reference,
-    #               not necessarily from calling the hello() and goodbye() functions here.
-    #               The expected output implies only the *reference* to the song title.
-    #               Let's assume the goal IS to embed the output of goodbye() based on the original code attempt.
-    echo -n "Hey! ${name}. Like in the Beatles song, hello $(goodbye)" # Incorrect structure and call
-    echo "" # Prints a newline separately
+    echo -n "Hey! ${name}. Like in the Beatles song, hello $(goodbye)" 
 }
 
-# --- Script Execution Flow ---
+# --- Script Code ---
 
 # Call functions in sequence
 get_name # Sets the name variable

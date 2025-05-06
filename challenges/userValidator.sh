@@ -73,43 +73,33 @@
 #                      status reported for users like `root`, `bin`, `sync`, and your own user seems correct.
 # -----------------------------------------------------------------------------
 
-# --- Script Code (Contains Errors) ---
+# --- Script Code ---
 
 #!/bin/bash
 
-# Problem 1: Incorrect Root Check
 if [[ 'root' != $(whoami) ]]
 then
-    echo 'Script must be executed with root authority' >&2 # Send errors to stderr
+    echo 'Script must be executed with root authority' >&2
     exit 1
 fi
 
 # Temporarily lock the 'sync' user account to test lock detection
-# This part is functionally okay but relies on the rest of the script working.
 passwd -l sync &>/dev/null
 
-# Problem 2: User list generation might be fragile
-# Problem 4 & 5: Command to get status and subsequent checks are likely incorrect
 for user in $(cat /etc/passwd | grep -vE 'nologin|false' | sed 's/:/ /g' | awk '{print $1}') # Added 'false' to grep -vE
 do
-    # Problem 3: Incorrect variable assignment syntax (spaces around =)
-    # Problem 4: Command and grep likely don't provide the needed status info
     status = $(userdbctl user ${user} | grep "Password OK" 2>/dev/null)
-
-    # Problem 5: The patterns 'locked', 'set', 'yes' likely don't match the actual output
-    if [[ ${status} =~ 'locked' ]] # This checks if the *variable* contains 'locked'
+    if [[ ${status} =~ 'locked' ]]
     then
         echo "${user} is LOCKED"
-    elif [[ ${status} =~ 'set' ]] # This checks if the *variable* contains 'set'
+    elif [[ ${status} =~ 'set' ]]
     then
-        # This message might be misleading depending on actual status (e.g., could be locked)
         echo "${user} password is NOT SET"
-    elif [[ ${status} =~ 'yes' ]] # This checks if the *variable* contains 'yes'
+    elif [[ ${status} =~ 'yes' ]]
     then
         echo "${user} password is SET"
-    # Consider adding an 'else' to catch users where status wasn't determined
-    # else
-    #    echo "${user} status UNKNOWN (${status})"
+    else
+        echo "${user} status UNKNOWN (${status})"
     fi
 done
 

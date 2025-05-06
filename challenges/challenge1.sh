@@ -26,8 +26,6 @@
 # -----------------------------------------------------------------------------
 
 # --- Script Code ---
-# The command below is correct and should not be changed.
-# The problem lies in how the script itself is being started.
 
 echo "Hello, world!"
 

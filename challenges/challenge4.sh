@@ -58,7 +58,7 @@
 #                   "Expected Output" above.
 # -----------------------------------------------------------------------------
 
-# --- Script Code (Contains Errors) ---
+# --- Script Code ---
 
 # List of files to check
 files_to_list="/path/to/nonexistent/file /etc/passwd /etc/fedora-release /etc/linux_version"

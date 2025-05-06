@@ -66,49 +66,33 @@
 #                    in how Method 3 processes the file compared to 1 and 2).
 # -----------------------------------------------------------------------------
 
-# --- Script Code (Contains Errors) ---
+# --- Script Code ---
 
-# Problem 1: Incorrect Shebang
-#!/usr/bin/environment bash/korn
-
-InFile="${1}" # Use quotes for robustness
+InFile="${1}"
 OutFile="tempfile.out"
 
 # Color Variables
-# CB='\e[0;30m' # Black - Regular (Unused)
 CR='\e[0;31m' # Red
 CG='\e[0;32m' # Green
 CY='\e[0;33m' # Yellow
-# CL='\e[0;34m' # Blue (Unused)
-# CP='\e[0;35m' # Purple (Unused)
-# CC='\e[0;36m' # Cyan (Unused)
 CW='\e[0;37m' # White
 
-# Method 1: Reads line by line, but uses an unnecessary 'cat' process.
 function method1(){
     echo -e "${CG}Method 1: Using cat piped to 'while read'${CY}"
-    # Note: While functional, 'cat file | while read ...' is less efficient than redirection.
-    cat "${InFile}" | while IFS= read -r LINE || [[ -n "$LINE" ]]; do # Added IFS= and -r for robustness
+    cat "${InFile}" | while IFS= read -r LINE || [[ -n "$LINE" ]]; do 
         echo "${LINE}" >> "${OutFile}"
-        # ':' is a null command, effectively a no-op. Can be removed.
-        :
     done
 }
 
-# Method 2: Preferred 'while read' approach using redirection. Reads line by line.
 function method2(){
     echo -e "${CG}Method 2: Using 'while read' with input redirection${CY}"
-    while IFS= read -r LINE || [[ -n "$LINE" ]]; do # Added IFS= and -r for robustness
+    while IFS= read -r LINE || [[ -n "$LINE" ]]; do
         echo "${LINE}" >> "${OutFile}"
-        # ':' is a null command, effectively a no-op. Can be removed.
-        :
     done < "${InFile}"
 }
 
-# Method 3: Incorrectly uses 'for' loop with command substitution for line processing.
 function method3(){
     echo -e "${CG}Method 3: Using 'for' loop over '$(cat file)' (Processes words, not lines)${CY}"
-    # Problem 3: This loop iterates over WORDS separated by whitespace, not lines.
     for LINE in $(cat "${InFile}")
     do
         echo "${LINE}" >> "${OutFile}"
@@ -119,14 +103,13 @@ function method3(){
 
 # Check for exactly one parameter
 if (( $# != 1 )); then
-    echo -e "${CR}Error: A target filename is required as the first argument.${CW}" >&2 # Improved message
+    echo -e "${CR}Error: A target filename is required as the first argument.${CW}" >&2
     exit 1
 fi
 
 # Check if the argument exists as a regular file
-# Problem 2: Incorrectly checks for the literal '1' instead of the filename argument.
 if [[ ! -f 1 ]]; then
-    echo -e "${CR}Error: Input file '$1' not found or is not a regular file.${CW}" >&2 # Improved message
+    echo -e "${CR}Error: Input file '$1' not found or is not a regular file.${CW}" >&2
     exit 2
 fi
 
@@ -135,21 +118,19 @@ methods=(method1 method2 method3)
 
 # Loop through each method, time it, and run it
 for method in "${methods[@]}"; do
-    # Zero out the $OutFile before each run
     >"${OutFile}"
-    echo "--- Timing ${method} ---" # Added separator for clarity
-    # Use time builtin for more accurate timing if available, otherwise standard time
+    echo "--- Timing ${method} ---"
     if command -v time &>/dev/null && [[ "$(type -t time)" == "keyword" || "$(type -t time)" == "builtin" ]]; then
-       time $method # Use bash builtin time
+       time $method
     else
-       /usr/bin/time -p $method # Use external time command
+       /usr/bin/time -p $method
     fi
     echo -e "--- End Timing ${method} ---${CW}"
-    echo "" # Add space between methods
+    echo ""
 done
 
 # Clean up the temporary file
-rm -f "${OutFile}" # Use -f to avoid error if file doesn't exist
+rm -f "${OutFile}"
 
 echo "Processing complete."
 

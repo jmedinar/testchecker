@@ -50,10 +50,8 @@
 #                   "Expected Output" format, including the current year.
 # -----------------------------------------------------------------------------
 
-# --- Script Code (Contains Errors) ---
+# --- Script Code ---
 
-# Problem Area: Single quotes prevent command substitution.
-#               Also, the syntax for some $(...) parts is incorrect.
 echo '$(echo We are in the era) of $(AI) and agriculture is still more important in the year (date +"%Y")!'
 
 # --- End of Script ---

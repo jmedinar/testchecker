@@ -73,72 +73,50 @@
 #                      `./testString.sh a1b2`
 # -----------------------------------------------------------------------------
 
-# --- Script Code (Contains Errors) ---
+# --- Script Code ---
 
-# Problem 1: Incorrect Shebang
-#!/usr/bin/env trash
-
-# Purpose: This script is used to test a character
-#          string, or variable, for its composition.
-# Examples: numeric, lowercase or uppercase, characters, and alpha-numeric characters
-
-# turn on extended globbing (This part is correct)
+# turn on extended globbing
 shopt -s extglob
 
-# Function definition (The logic inside is complex but syntactically okay if extglob is on)
+# Function definition
 function test_string () {
     # This function tests a character string
-
     # Assigning the first argument received from the function call
-    local LOCALSTRING="$1" # Use local and quotes
+    local LOCALSTRING="$1"
 
     # Testing the given string and printing the recognized pattern
-    # Note: The order and specificity of these patterns determine the output.
-    case "${LOCALSTRING}" in # Use quotes
+    case "{LOCALSTRING}" in
         +([0-1])) echo "Binary or positive integer" ;;
         +([0-7])) echo "Octal or positive integer" ;;
         +([0-9])) echo "Integer" ;;
-        # Note: This pattern for negative numbers is likely too simple.
-        # It matches '-1' to '-9' but not '-10', '-123', etc.
-        # A better pattern might be '-'+([0-9])
         +([-1-9])) echo "Negative whole number" ;;
-        # Note: This pattern only matches simple X.Y floats, not X.YZ or XY.Z
-        +([0-9])\.+([0-9])) echo "Floating point" ;; # Corrected pattern slightly
+        +([0-9])\.+([0-9])) echo "Floating point" ;;
         +([a-f])) echo "Hexadecimal or all lowercase" ;;
-        +([a-f0-9])) echo "Hexadecimal or all lowercase alphanumeric" ;; # Corrected pattern
+        +([a-f0-9])) echo "Hexadecimal or all lowercase alphanumeric" ;;
         +([A-F])) echo "Hexadecimal or all uppercase" ;;
-        +([A-F0-9])) echo "Hexadecimal or all uppercase alphanumeric" ;; # Corrected pattern
-        +([a-fA-F])) echo "Hexadecimal or mixedcase" ;; # Corrected pattern
-        +([a-fA-F0-9])) echo "Hexadecimal or mixedcase alphanumeric" ;; # Corrected pattern
+        +([A-F0-9])) echo "Hexadecimal or all uppercase alphanumeric" ;;
+        +([a-fA-F])) echo "Hexadecimal or mixedcase" ;;
+        +([a-fA-F0-9])) echo "Hexadecimal or mixedcase alphanumeric" ;;
         +([a-z])) echo "all lowercase" ;;
         +([A-Z])) echo "all uppercase" ;;
-        +([a-zA-Z])) echo "mixedcase" ;; # Corrected pattern
-        # Consider adding a pattern for general alphanumeric: +([a-zA-Z0-9])
-        *) echo "Contains symbols or is empty/unclassified" ;; # Clarified fallback
+        +([a-zA-Z])) echo "mixedcase" ;;
+        *) echo "Contains symbols or is empty/unclassified" ;;
     esac
 }
 
 # --- Main Script ---
 
 # Check for exactly one command-line argument
-# Problem 2: Incorrect syntax for comparison within ((...))
 if (( $# ! = 1 ))
 then
-    # Error message is okay, but the condition above is flawed.
-    echo "Error: Exactly one string argument is required." >&2 # Clarified message
+    echo "Error: Exactly one string argument is required." >&2
     echo "Examples: ./testString.sh Hello" >&2
     echo "          ./testString.sh 12345" >&2
     echo "          ./testString.sh HELLO" >&2
     exit 1
 fi
 
-# Everything looks okay if we got here. Assign the
-# single command-line argument to the variable "GLOBAL_STRING"
-GLOBAL_STRING="${1}" # Use quotes
-
-# Call the "test_string" function to test the composition
-# of the character string stored in the $GLOBAL_STRING variable.
-test_string "${GLOBAL_STRING}" # Pass argument with quotes
+GLOBAL_STRING="${1}" 
+test_string "${GLOBAL_STRING}" 
 
 # --- End of Script ---
-# Original script had "End Of File" here, removed for standard practice.

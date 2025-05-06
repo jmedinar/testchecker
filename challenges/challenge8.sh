@@ -43,18 +43,14 @@
 #                   "Expected Output" above.
 # -----------------------------------------------------------------------------
 
-# --- Script Code (Contains Errors) ---
+# --- Script Code ---
 
 FILE="/etc/passwd"
 
-# Problem Area: The '-b' operator checks if the file exists AND is a block special file.
-#               This is incorrect for checking the existence of a regular file like /etc/passwd.
 if [[ -b $FILE ]]
 then
-    # This block will likely not execute for /etc/passwd
     echo "$FILE exists!"
 else
-    # This block will likely execute incorrectly because -b is the wrong test
     echo "$FILE does not exist!"
 fi
 

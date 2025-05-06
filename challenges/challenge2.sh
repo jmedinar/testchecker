@@ -50,7 +50,7 @@
 #                   "Expected Output" above, including the color on the word "Linux".
 # -----------------------------------------------------------------------------
 
-# --- Script Code (Contains Errors) ---
+# --- Script Code ---
 
 message="Welcome
 red='\e[0;31m'
@@ -61,4 +61,4 @@ class "Linux" # This is not valid variable assignment syntax
 # Problem Area 2: The echo command has syntax errors and doesn't use variables correctly
 echo -e "${message} ${parameter1}to the red$class$white} class!"
 
-#--- End of Script ---
+# --- End of Script ---

@@ -56,24 +56,17 @@
 #                   "Expected Output" above exactly.
 # -----------------------------------------------------------------------------
 
-# --- Script Code (Contains Errors) ---
+# --- Script Code ---
 
 NUM1=10
 NUM2=5
 
-# Problem Area 1: Incorrect syntax for arithmetic and command substitution
 ADD=$($NUM1 + $NUM2)
 echo "Addition: $ADD"
-
-# Problem Area 2: Echoing the expression literally instead of calculating/printing result
 echo "Subraction: ((NUM1 - NUM2))"
-
-# Problem Area 3: Incorrect operator 'x' and nested command substitution syntax
 MUL=$($(($NUM1 x $NUM2)))
 echo "Multiplication: $MUL"
-
-# Problem Area 4: Incorrect operator '%' for division and echoing the variable name literally
-DIV=$(($NUM1 % $NUM2)) # % is modulo (remainder), not division
-echo "Division: DIV"   # Prints the literal string "DIV"
+DIV=$(($NUM1 % $NUM2))
+echo "Division: DIV" 
 
 # --- End of Script ---

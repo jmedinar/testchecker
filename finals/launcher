@@ -3,21 +3,83 @@
 # Author: Prof. Juan Medina
 # Email: jmedina@collin.edu
 # Date: Mar 2025
-# Description: Mid-Term and Final Test Launcher
+# Description: Mid-Term and Final Test Launcher.
+#              This script validates input and then calls the main test execution script.
 
-if [ -z "$1" ]; then
-  echo "Error: No parameter provided."
-  echo "Usage: $0 <midterm|final>"
-  exit 1
+# Exit immediately if a command exits with a non-zero status.
+set -e
+# Treat unset variables as an error when substituting.
+set -u
+# Cause pipelines to return the exit status of the last command that failed.
+set -o pipefail
+
+# --- Configuration ---
+
+MAIN_TEST_SCRIPT="/usr/bin/final"
+
+# Color Codes (Optional, for better message visibility)
+CR='\e[0;31m' # Red
+CG='\e[0;32m' # Green
+CY='\e[0;33m' # Yellow
+CW='\e[0;37m' # White (reset)
+
+function _usage() {
+    echo -e "${CR}Error: Invalid usage.${CW}" >&2
+    echo -e "Usage: $0 <midterm|final>" >&2
+    echo -e "Example: $0 midterm" >&2
+    exit 1
+}
+
+# --- Main Script Logic ---
+
+# 1. Check if exactly one parameter is provided
+if [ "$#" -ne 1 ]; then
+    echo -e "${CR}Error: No parameter or too many parameters provided.${CW}" >&2
+    _usage
 fi
 
-if [ "$1" = "midterm" ] || [ "$1" = "final" ]
-then
-  username=$(id -un)
-  read -p "Enter your numeric student id: " student_id
-  sudo /usr/bin/final ${1} ${student_id} ${username}
-else
-  echo "Error: Invalid parameter '$1'."
-  echo "Usage: $0 <midterm|final>"
-  exit 1
+test_type="${1}" # Assign the first argument to a variable
+
+# 2. Validate the parameter
+if [ "${test_type}" != "midterm" ] && [ "${test_type}" != "final" ]; then
+    echo -e "${CR}Error: Invalid parameter '${test_type}'.${CW}" >&2
+    _usage
 fi
+
+# 3. Get current username
+# Using 'id -un' is generally reliable.
+# Ensure it's not empty, though 'set -u' would catch this if 'id -un' failed.
+current_username=$(id -un)
+if [ -z "${current_username}" ]; then
+    echo -e "${CR}Error: Could not determine the current username.${CW}" >&2
+    exit 1
+fi
+echo -e "${CY}Current user identified as: ${current_username}${CW}"
+
+# 4. Prompt for numeric student ID and validate
+student_id=""
+while true; do
+    read -p "Enter your numeric student ID: " student_id
+    # Check if the input is not empty and contains only digits
+    if [[ -n "${student_id}" && "${student_id}" =~ ^[0-9]+$ ]]; then
+        break # Valid input, exit loop
+    else
+        echo -e "${CR}Invalid input. Student ID must be numeric. Please try again.${CW}" >&2
+    fi
+done
+echo -e "${CY}Student ID entered: ${student_id}${CW}"
+
+# 5. Execute the main test script with sudo
+echo -e "${CY}Attempting to launch the ${test_type} environment...${CW}"
+sleep 5
+if [ ! -x "${MAIN_TEST_SCRIPT}" ]; then
+    echo -e "${CR}Error: The main test script '${MAIN_TEST_SCRIPT}' was not found or is not executable.${CW}" >&2
+    echo -e "${CR}Please contact your instructor.${CW}" >&2
+    exit 1
+fi
+
+# Call the main script using sudo, passing the validated parameters
+# The MAIN_TEST_SCRIPT is expected to handle the Terminator setup.
+sudo "${MAIN_TEST_SCRIPT}" "${test_type}" "${student_id}" "${current_username}"
+
+exit 0

@@ -44,7 +44,7 @@
 #                   "Expected Output" above.
 # -----------------------------------------------------------------------------
 
-# --- Script Code (Contains Errors) ---
+# --- Script Code ---
 
 GREETING=`Hello,`
 NAME="Alice"

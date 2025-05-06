@@ -48,10 +48,7 @@
 #                   Verify the output matches the "Expected Output" exactly.
 # -----------------------------------------------------------------------------
 
-# --- Script Code (Contains Errors) ---
-
-# Problem Area: The order of positional parameters below is incorrect
-#               and will not produce the expected sentence given the required input.
+# --- Script Code ---
 
 echo "${1} ${3} is ${4} but ${7} is ${9} ${10} and ${2} ${5} ${6}"
 

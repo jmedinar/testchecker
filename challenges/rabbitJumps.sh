@@ -61,23 +61,18 @@
 #                   Verify the output matches the multi-line "Expected Output" sequence exactly.
 # -----------------------------------------------------------------------------
 
-# --- Script Code (Contains Errors) ---
+# --- Script Code ---
 
-#!/usr/bin/env bash
-
-# Problem 2: Incorrect multi-variable assignment syntax
-finish=10 pos=0
+finish=10
+pos=0
 field="START --0--1--2--3--4--5--6--7--8--9--10-- FINISH"
 
-# Function to move position forward
-function _jump_forward(){
-    # Problem 4: Incorrect arithmetic syntax (spacing)
+function _jump_forward() {
     (( pos + = 2 ))
 }
 
-# Problem 3: Incorrect function definition syntax
-_jump_backwards(){
-    ((pos-=1)) # This arithmetic syntax is correct
+_jump_backwards() {
+    ((pos-=1))
 }
 
 # Print initial state
@@ -87,21 +82,14 @@ echo ${field}
 while [[ ${pos} -ne ${finish} ]]
 do
     # Visualize position after forward jump
-    echo "${field}" | sed -e "s/--$pos--/--X--/g" # This sed call is correct
+    echo "${field}" | sed -e "s/--$pos--/--X--/g
     _jump_forward
 
     # Visualize position after backward jump
-    # Problem 5: Missing 'sed' command keyword
-    echo "${field}" | sed -e "s/--$pos--/--X--/g" # This line is intended to show the state *after* jumping back
+    echo ${field}" | sed -e "s/--$pos--/--X--/g"
     _jump_backwards
 done
 
-# Final success message (should print after the loop finishes)
-# Need to ensure the final state (pos=10) is printed correctly before this.
-# The current loop exits when pos == finish, maybe the final state needs printing *after* the loop?
-# Or maybe the last backward jump inside the loop shouldn't happen if pos reaches finish after the forward jump? (Consider loop condition placement)
-
-# Let's assume the expected output implies the final state (pos=10, no 'X') is implicitly shown before this message.
 echo "The Rabbit made it!"
 
 # --- End of Script ---
