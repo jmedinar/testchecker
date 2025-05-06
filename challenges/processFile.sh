@@ -1,82 +1,156 @@
 #!/usr/bin/environment bash/korn
+# -----------------------------------------------------------------------------
+# Challenge Name:   processFile.sh
+# Student Task:     Fix errors related to shebang, file testing, and file processing loops.
+# Description:      This script demonstrates different methods (some flawed) for reading
+#                   a file line-by-line in Bash. It takes a filename as a command-line
+#                   argument and processes it using three distinct functions. It contains
+#                   errors in its setup, argument handling, and one of the processing methods.
+# Script Purpose:   To compare three different techniques for reading file content within a script.
+#                   Method 1 uses `cat` piped to `while read`.
+#                   Method 2 uses `while read` with input redirection.
+#                   Method 3 uses a `for` loop with command substitution (incorrectly).
+#                   The script times each method and writes the processed lines to a temporary file.
+# -----------------------------------------------------------------------------
+# Problem:          The script fails to execute correctly or produces unexpected results
+#                   due to several issues:
+#                   1. Incorrect Shebang: The `#!/usr/bin/environment bash/korn` line is invalid.
+#                      It attempts to use `environment` as a command and provides an incorrect
+#                      path for an interpreter.
+#                   2. Incorrect File Existence Check: The script checks `[[ ! -f 1 ]]` instead
+#                      of checking the actual input filename provided by the user (`$1` or `${InFile}`).
+#                   3. Flawed Loop Logic (Method 3): The `for LINE in $(cat ${InFile})` loop does
+#                      *not* read the file line by line. Command substitution `$(...)` undergoes
+#                      word splitting based on spaces, tabs, and newlines. Each *word* from the
+#                      file will be assigned to `LINE` in separate loop iterations, not each line.
+#                   4. Misleading Expected Output Comment: The original comment "Expected Output: Hello, world!"
+#                      does not match what this script actually does (it prints method descriptions
+#                      and timing information). The *real* expected behavior involves successfully
+#                      running the methods and observing their timing/output differences (though
+#                      Method 3's output will be incorrect due to word splitting).
 #
-# Challenge name:        processFile.sh
-# Description:           Using correct script formatting rules for shell scripts,
-#                        identify and fix any issues in the provided script to
-#                        ensure that it produces the expected results.
-# Script Purpose:        This script will test three different methods for parsing
-#                        a file, a file must be given as the first argument.
+# Your Task:        Identify and correct the errors:
+#                   1. Fix the shebang line (`#!/bin...`) to use the correct Bash interpreter.
+#                   2. Correct the file existence check (`if [[ ! -f ... ]]`) to test the
+#                      filename passed as an argument (`$1` or `${InFile}`).
+#                   3. (Optional but Recommended for Understanding): Observe why Method 3 produces
+#                      incorrect output in `tempfile.out` compared to Methods 1 and 2 when processing
+#                      a file with multiple words per line. Understand that fixing Method 3 to read
+#                      line-by-line would require a different approach (like `while read` or `mapfile`).
+#                      *For this challenge, simply fixing the shebang and file test might be sufficient
+#                      to make the script runnable, even if Method 3 remains logically flawed for line processing.*
 #
-# Expected Output:       Hello, world!
+# Expected Behavior (After Fixes):
+#                   - The script should run without syntax errors when given a valid filename as input.
+#                   - It should correctly check if the input file exists.
+#                   - It should execute Methods 1, 2, and 3, printing their descriptions and timing.
+#                   - Methods 1 and 2 should correctly copy the input file line-by-line to `tempfile.out`
+#                     (though the file is overwritten each time and deleted at the end).
+#                   - Method 3 will process the file word-by-word, resulting in different content
+#                     in `tempfile.out` during its execution.
 #
-# Testing:               After making the required modifications, execute the script
-#                        and verify that it behaves as expected.
+# Hints:
+#                   * What is the standard shebang for Bash scripts? (`#!/bin...`)
+#                   * How do you refer to the first command-line argument in a script? (`$1` or `${1}`)
+#                   * How does command substitution `$(...)` handle whitespace (spaces, newlines) in its output?
+#                     Does `for var in $(command)` iterate over lines or words?
+#                   * Review the `while read` loop structure with input redirection (`< file`).
 #
+# Testing:          After making the required modifications:
+#                   1. Create a test file (e.g., `test.txt`) with multiple lines and words per line.
+#                   2. Make the script executable (`chmod +x processFile.sh`).
+#                   3. Run it with the test file: `./processFile.sh test.txt`
+#                   4. Verify it runs without errors and prints the method descriptions and timing.
+#                   (You could temporarily comment out `>${OutFile}` and `rm -rf ${OutFile}`
+#                    and add `cat ${OutFile}` after each method call to see the difference
+#                    in how Method 3 processes the file compared to 1 and 2).
+# -----------------------------------------------------------------------------
 
-InFile=${1}
-OutFile=tempfile.out
+# --- Script Code (Contains Errors) ---
+
+# Problem 1: Incorrect Shebang
+#!/usr/bin/environment bash/korn
+
+InFile="${1}" # Use quotes for robustness
+OutFile="tempfile.out"
 
 # Color Variables
-CB='\e[0;30m' # Black - Regular
+# CB='\e[0;30m' # Black - Regular (Unused)
 CR='\e[0;31m' # Red
 CG='\e[0;32m' # Green
 CY='\e[0;33m' # Yellow
-CL='\e[0;34m' # Blue
-CP='\e[0;35m' # Purple
-CC='\e[0;36m' # Cyan
+# CL='\e[0;34m' # Blue (Unused)
+# CP='\e[0;35m' # Purple (Unused)
+# CC='\e[0;36m' # Cyan (Unused)
 CW='\e[0;37m' # White
 
+# Method 1: Reads line by line, but uses an unnecessary 'cat' process.
 function method1(){
-    echo -e "${CG} Method 1: Using cat to print the file while reading line by line ${CY}"
-    cat ${InFile} | while read LINE
-    do
-        echo "${LINE}" >> ${OutFile}
+    echo -e "${CG}Method 1: Using cat piped to 'while read'${CY}"
+    # Note: While functional, 'cat file | while read ...' is less efficient than redirection.
+    cat "${InFile}" | while IFS= read -r LINE || [[ -n "$LINE" ]]; do # Added IFS= and -r for robustness
+        echo "${LINE}" >> "${OutFile}"
+        # ':' is a null command, effectively a no-op. Can be removed.
         :
     done
 }
 
+# Method 2: Preferred 'while read' approach using redirection. Reads line by line.
 function method2(){
-    echo -e "${CG} Method 2: Directly reading the line in a while ${CY}"
-    while read LINE
-    do
-        echo "${LINE}" >> ${OutFile}
+    echo -e "${CG}Method 2: Using 'while read' with input redirection${CY}"
+    while IFS= read -r LINE || [[ -n "$LINE" ]]; do # Added IFS= and -r for robustness
+        echo "${LINE}" >> "${OutFile}"
+        # ':' is a null command, effectively a no-op. Can be removed.
         :
-    done < ${InFile}
+    done < "${InFile}"
 }
 
+# Method 3: Incorrectly uses 'for' loop with command substitution for line processing.
 function method3(){
-    echo -e "${CG} Method 3: Using a for to loop the lines of a file printed using cat ${CY}"
-    for LINE in $(cat ${InFile})
+    echo -e "${CG}Method 3: Using 'for' loop over '$(cat file)' (Processes words, not lines)${CY}"
+    # Problem 3: This loop iterates over WORDS separated by whitespace, not lines.
+    for LINE in $(cat "${InFile}")
     do
-        echo "${LINE}" >> ${OutFile}
+        echo "${LINE}" >> "${OutFile}"
     done
 }
 
-# Main 
+# --- Main Script ---
 
-# Looking for exactly one parameter
-if (( $# != 1 ))
-then 
-    echo -e "${CR} A target file is required as parameter ${CW}"
+# Check for exactly one parameter
+if (( $# != 1 )); then
+    echo -e "${CR}Error: A target filename is required as the first argument.${CW}" >&2 # Improved message
     exit 1
 fi
 
-# Does the file exist as a regular file?
-if [[ ! -f 1 ]]
-then 
-    echo -e "${CR} $1 file doesn't exist ${CW}"
+# Check if the argument exists as a regular file
+# Problem 2: Incorrectly checks for the literal '1' instead of the filename argument.
+if [[ ! -f 1 ]]; then
+    echo -e "${CR}Error: Input file '$1' not found or is not a regular file.${CW}" >&2 # Improved message
     exit 2
 fi
 
+# Array of method function names
 methods=(method1 method2 method3)
-for method in ${methods[@]}
-do
-    # Zero out the $OutFile
-    >${OutFile}
-    time $method
-    echo -e "${CW}"
+
+# Loop through each method, time it, and run it
+for method in "${methods[@]}"; do
+    # Zero out the $OutFile before each run
+    >"${OutFile}"
+    echo "--- Timing ${method} ---" # Added separator for clarity
+    # Use time builtin for more accurate timing if available, otherwise standard time
+    if command -v time &>/dev/null && [[ "$(type -t time)" == "keyword" || "$(type -t time)" == "builtin" ]]; then
+       time $method # Use bash builtin time
+    else
+       /usr/bin/time -p $method # Use external time command
+    fi
+    echo -e "--- End Timing ${method} ---${CW}"
+    echo "" # Add space between methods
 done
 
-rm -rf ${OutFile}
+# Clean up the temporary file
+rm -f "${OutFile}" # Use -f to avoid error if file doesn't exist
 
-# EOF
+echo "Processing complete."
+
+# --- End of Script ---

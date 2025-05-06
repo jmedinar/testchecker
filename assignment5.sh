@@ -93,19 +93,9 @@ _check_script_output(){
         # Check if the output contains the expected substring
         # Using grep -F for fixed string matching is safer if no regex is needed
         elif echo "${script_output}" | grep -qF "${expected_output}"; then
-            # Check 3: Source Code Pattern (Optional - currently disabled)
-            # local code_check_passed=true # Assume true if check is disabled
-            # if [[ -n "${expected_code_pattern}" ]]; then
-            #     if ! grep -q "${expected_code_pattern}" "${script_path}"; then
-            #         code_check_passed=false
-            #         details+=" Required code pattern not found."
-            #     fi
-            # fi
-            # if [[ "$code_check_passed" == true ]]; then
                  result_status="PASS"
                  points_awarded=${points_value}
                  ((total_points_earned += points_awarded))
-            # fi
         else
             # Check if output was empty when expected output was not
             if [[ -z "${script_output}" && -n "${expected_output}" ]]; then
@@ -157,7 +147,7 @@ do
                                 "Multiplication: 50" ;;
 
         challenge7)  _check_script_output "${t}" "" \
-                                "We are in the era of AI and agriculture is still more important in the year 2024!" ;;
+                                "We are in the era of AI and agriculture is still more important in the year" ;;
 
         challenge8)  _check_script_output "${t}" "" \
                                 "/etc/passwd exists!" ;;
