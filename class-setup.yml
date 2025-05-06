@@ -220,7 +220,6 @@
             mode: '0755'
             owner: "{{ username }}"
             group: "{{ username }}"
-          no_log: true
           loop:
             - challenges/challenge1.sh
             - challenges/challenge2.sh
