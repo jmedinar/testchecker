@@ -232,7 +232,6 @@
             - challenges/challenge8.sh
             - challenges/challenge9.sh
             - challenges/homeChecker.sh
-            - challenges/passwordGenerator.sh
             - challenges/processFile.sh
             - challenges/rabbitJumps.sh
             - challenges/testString.sh
