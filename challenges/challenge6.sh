@@ -31,10 +31,10 @@
 #                      perform the calculation (or print the calculated variable) rather
 #                      than printing literal strings.
 #
-# Expected Output:  When executed correctly (e.g., ./challenge6.sh), the
-#                   script should print exactly:
+# Expected Output:  When executed correctly the script should print exactly:
+#
 #                   Addition: 15
-#                   Subraction: 5
+#                   Subtraction: 5
 #                   Multiplication: 50
 #                   Division: 2
 #
@@ -49,11 +49,6 @@
 #                     (e.g., `echo "Result: $RESULT"`)
 #                   * Can you perform the calculation directly within the echo statement
 #                     if needed? (e.g., `echo "Result: $((NUM1 - NUM2))"`)
-#
-# Testing:          After making the required modifications, make the script
-#                   executable (`chmod +x challenge6.sh`) and run it
-#                   (`./challenge6.sh`). Verify the output matches the
-#                   "Expected Output" above exactly.
 # -----------------------------------------------------------------------------
 
 # --- Script Code ---
@@ -63,7 +58,7 @@ NUM2=5
 
 ADD=$($NUM1 + $NUM2)
 echo "Addition: $ADD"
-echo "Subraction: ((NUM1 - NUM2))"
+echo "Subtraction: ((NUM1 - NUM2))"
 MUL=$($(($NUM1 x $NUM2)))
 echo "Multiplication: $MUL"
 DIV=$(($NUM1 % $NUM2))

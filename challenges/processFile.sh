@@ -44,10 +44,6 @@
 #                   - The script should run without syntax errors when given a valid filename as input.
 #                   - It should correctly check if the input file exists.
 #                   - It should execute Methods 1, 2, and 3, printing their descriptions and timing.
-#                   - Methods 1 and 2 should correctly copy the input file line-by-line to `tempfile.out`
-#                     (though the file is overwritten each time and deleted at the end).
-#                   - Method 3 will process the file word-by-word, resulting in different content
-#                     in `tempfile.out` during its execution.
 #
 # Hints:
 #                   * What is the standard shebang for Bash scripts? (`#!/bin...`)
@@ -55,15 +51,6 @@
 #                   * How does command substitution `$(...)` handle whitespace (spaces, newlines) in its output?
 #                     Does `for var in $(command)` iterate over lines or words?
 #                   * Review the `while read` loop structure with input redirection (`< file`).
-#
-# Testing:          After making the required modifications:
-#                   1. Create a test file (e.g., `test.txt`) with multiple lines and words per line.
-#                   2. Make the script executable (`chmod +x processFile.sh`).
-#                   3. Run it with the test file: `./processFile.sh test.txt`
-#                   4. Verify it runs without errors and prints the method descriptions and timing.
-#                   (You could temporarily comment out `>${OutFile}` and `rm -rf ${OutFile}`
-#                    and add `cat ${OutFile}` after each method call to see the difference
-#                    in how Method 3 processes the file compared to 1 and 2).
 # -----------------------------------------------------------------------------
 
 # --- Script Code ---

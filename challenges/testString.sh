@@ -46,9 +46,7 @@
 #                   - The script should run without syntax errors.
 #                   - It should exit with an error message if not exactly one argument is provided.
 #                   - If one argument is provided, it should print a classification message
-#                     based on the `case` statement logic (e.g., "Integer", "all lowercase",
-#                     "mixedcase", etc.). The exact message depends on the input string
-#                     and the matching pattern.
+#                     based on the `case` statement logic.
 #
 # Hints:
 #                   * What is the standard shebang for Bash scripts? (`#!/bin...`)
@@ -58,19 +56,6 @@
 #                   * The `shopt -s extglob` command enables extended pattern matching features used
 #                     in the `case` statement (like `+(...)`).
 #                   * The order of patterns in a `case` statement matters; the first matching pattern wins.
-#
-# Testing:          After making the required modifications:
-#                   1. Make the script executable (`chmod +x testString.sh`).
-#                   2. Run it with no arguments: `./testString.sh` (should show usage error).
-#                   3. Run it with more than one argument: `./testString.sh hello world` (should show usage error).
-#                   4. Run it with different single arguments and observe the output:
-#                      `./testString.sh 101`
-#                      `./testString.sh abc`
-#                      `./testString.sh ABC`
-#                      `./testString.sh Abc1`
-#                      `./testString.sh 1.2`
-#                      `./testString.sh abcDEF`
-#                      `./testString.sh a1b2`
 # -----------------------------------------------------------------------------
 
 # --- Script Code ---

@@ -29,6 +29,7 @@
 #
 # Expected Output:  When executed correctly with the required input arguments shown above,
 #                   the script should print exactly:
+#
 #                   Learning Linux is challenging but it is also fun and very rewarding
 #
 # Hints:
@@ -40,12 +41,6 @@
 #                   * Example: The first word in the output is "Learning", which is the
 #                     first input argument (`$1`). The second word is "Linux", which is the
 #                     third input argument (`$3`). Continue this mapping.
-#
-# Testing:          After making the required modifications, make the script
-#                   executable (`chmod +x challenge5.sh`) and run it *with the
-#                   correct arguments*:
-#                   `./challenge5.sh Learning very Linux challenging is rewarding fun it also but`
-#                   Verify the output matches the "Expected Output" exactly.
 # -----------------------------------------------------------------------------
 
 # --- Script Code ---

@@ -49,10 +49,12 @@
 #                   - It should iterate through users with login shells.
 #                   - For each user, it should print a message indicating whether their password
 #                     is SET, NOT SET, or if the account is LOCKED, based on reliable status checks.
+#
 #                   - Example Output Lines (will vary based on system users):
+#
 #                     root password is SET
 #                     bin password is NOT SET
-#                     sync is LOCKED  (due to the temporary lock in the script)
+#                     sync is LOCKED
 #                     student password is SET
 #                     ... etc. ...
 #
@@ -65,12 +67,6 @@
 #                     parts of the command output (e.g., the status field from `passwd -S`)?
 #                   * Adjust the patterns in the `if/elif` conditions (`=~ '...'` or string comparisons `== "..."`)
 #                     to match the actual status indicators you find in the command output.
-#
-# Testing:          After making the required modifications:
-#                   1. Make the script executable (`chmod +x userValidator.sh`).
-#                   2. Run it *with sudo*: `sudo ./userValidator.sh`
-#                   3. Verify it runs without errors and prints status messages for users. Check if the
-#                      status reported for users like `root`, `bin`, `sync`, and your own user seems correct.
 # -----------------------------------------------------------------------------
 
 # --- Script Code ---

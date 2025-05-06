@@ -42,11 +42,10 @@
 #                   5. Ensure the loop correctly calls the jump functions and prints the field state
 #                      using `sed` after each jump (forward and backward) until the finish line is reached.
 #
-# Expected Output:  When executed correctly (e.g., ./rabbitJumps.sh), the script should print
-#                   a sequence of lines showing the rabbit's position ('X') moving forward
-#                   and backward, eventually reaching position 10, followed by the final message.
-#                   (See the detailed multi-line expected output in the original description).
-#                   The final line should be:
+# Expected Output:  When executed correctly the script should print a sequence of lines showing 
+#                   the rabbit's position ('X') moving forward and backward, eventually reaching
+#                   position 10, followed by the final message.
+#
 #                   The Rabbit made it!
 #
 # Hints:
@@ -55,10 +54,6 @@
 #                   * Review Bash arithmetic syntax: `$((...))` or `((...))`. Check spacing rules for operators like `+=`, `-=`.
 #                   * The `sed` command needs to be explicitly called: `sed -e '...'`.
 #                   * Ensure the loop structure correctly reflects the "jump forward, print, jump back, print" sequence.
-#
-# Testing:          After making the required modifications, make the script executable
-#                   (`chmod +x rabbitJumps.sh`) and run it (`./rabbitJumps.sh`).
-#                   Verify the output matches the multi-line "Expected Output" sequence exactly.
 # -----------------------------------------------------------------------------
 
 # --- Script Code ---

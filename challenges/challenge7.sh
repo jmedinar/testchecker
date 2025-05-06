@@ -31,9 +31,9 @@
 #                      `echo AI`, `date +"%Y"`) are actually executed and their
 #                      output is inserted into the final sentence.
 #
-# Expected Output:  When executed correctly (e.g., ./challenge7.sh), the
-#                   script should print a sentence like the following, where
-#                   `<YEAR>` is replaced by the current 4-digit year:
+# Expected Output:  When executed correctly the script should print a sentence like 
+#                   the following, where <YEAR> is replaced by the current 4-digit year:
+#
 #                   We are in the era of AI and agriculture is still more important in the year <YEAR>!
 #                   (Example: We are in the era of AI and agriculture is still more important in the year 2025!)
 #
@@ -43,11 +43,6 @@
 #                   * The correct syntax for command substitution is `$(command)`.
 #                   * Ensure that the commands inside `$(...)` are valid commands
 #                     that produce the desired text fragments (e.g., `echo AI`, `date +"%Y"`).
-#
-# Testing:          After making the required modifications, make the script
-#                   executable (`chmod +x challenge7.sh`) and run it
-#                   (`./challenge7.sh`). Verify the output matches the
-#                   "Expected Output" format, including the current year.
 # -----------------------------------------------------------------------------
 
 # --- Script Code ---

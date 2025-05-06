@@ -31,17 +31,12 @@
 #                      print the correct message ("found" or "not found") based on the
 #                      corrected exit code check.
 #
-# Expected Output:  When executed correctly (e.g., ./challenge4.sh), the
-#                   script should print exactly:
+# Expected Output:  When executed correctly the script should print exactly:
 #
 #                   File /path/to/nonexistent/file not found
 #                   File /etc/passwd found
 #                   File /etc/fedora-release found
 #                   File /etc/linux_version not found
-#
-#                   (Note: /etc/linux_version might exist on some very old systems,
-#                    but is typically absent on modern Fedora, making "not found"
-#                    the expected result here).
 #
 # Hints:
 #                   * What does an exit code of 0 usually signify for a command?
@@ -51,11 +46,6 @@
 #                     and `ls /nonexistentfile; echo $?`)
 #                   * How should the `if [[ $? -eq ... ]]` condition be written to
 #                     correctly identify success (file found)?
-#
-# Testing:          After making the required modifications, make the script
-#                   executable (`chmod +x challenge4.sh`) and run it
-#                   (`./challenge4.sh`). Verify the output matches the
-#                   "Expected Output" above.
 # -----------------------------------------------------------------------------
 
 # --- Script Code ---

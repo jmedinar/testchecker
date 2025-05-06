@@ -37,8 +37,8 @@
 #                   3. Remove the incorrect call to the `hello` function and the literal
 #                      word "hello" if they are not needed for the expected output.
 #
-# Expected Output:  When executed correctly (e.g., ./challenge9.sh), the
-#                   script should print *exactly*:
+# Expected Output:  When executed correctly the script should print *exactly*:
+#
 #                   Hello student!
 #                   Goodbye student!
 #                   Hey! student. Like in the Beatles song, Hello, Goodbye!
@@ -51,11 +51,6 @@
 #                     `beatles` function with the last line of the "Expected Output".
 #                   * Does the last line of the expected output contain the output of the
 #                     `hello` function? Does it contain the literal word "hello"?
-#
-# Testing:          After making the required modification to the `beatles` function,
-#                   make the script executable (`chmod +x challenge9.sh`) and run it
-#                   (`./challenge9.sh`). Verify the output matches the "Expected Output"
-#                   above exactly.
 # -----------------------------------------------------------------------------
 
 # --- Script Code ---

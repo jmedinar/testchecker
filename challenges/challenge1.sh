@@ -11,18 +11,11 @@
 # Problem:          The script fails to execute or produces an error because
 #                   it's not being interpreted by the correct program.
 #
-# Expected Output:  When executed correctly (e.g., ./challenge1.sh), the
-#                   script should print exactly:
+# Expected Output:  When executed correctly the script should print exactly:
 #
 #                   Hello, world!
 #
-# Hint:             Look up the term "shebang" in the context of Linux shell
-#                   scripts.
-#
-# Testing:          After making the required modification, make the script
-#                   executable (`chmod +x challenge1.sh`) and run it
-#                   (`./challenge1.sh`). Verify the output matches the
-#                   "Expected Output" above.
+# Hint:             Look up the term "shebang" in the context of Linux shell scripts.
 # -----------------------------------------------------------------------------
 
 # --- Script Code ---

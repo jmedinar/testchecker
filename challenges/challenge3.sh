@@ -25,8 +25,7 @@
 #                      expected sentence. Pay attention to how different quote types
 #                      affect variable expansion.
 #
-# Expected Output:  When executed correctly (e.g., ./challenge3.sh), the
-#                   script should print exactly:
+# Expected Output:  When executed correctly the script should print exactly:
 #
 #                   Hello Alice, Welcome to Wonderland!
 #
@@ -37,11 +36,6 @@
 #                   * Which type of quote prevents variable expansion?
 #                   * What are backticks used for? Is that needed for `GREETING`?
 #                   * How should you assign a simple string like "Hello," to a variable?
-#
-# Testing:          After making the required modifications, make the script
-#                   executable (`chmod +x challenge3.sh`) and run it
-#                   (`./challenge3.sh`). Verify the output matches the
-#                   "Expected Output" above.
 # -----------------------------------------------------------------------------
 
 # --- Script Code ---

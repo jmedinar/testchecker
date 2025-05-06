@@ -37,14 +37,10 @@
 #                      one line, UID:GID on the next). Consider how `-printf` or
 #                      alternative ways to use `-exec` might achieve this.
 #
-# Expected Output:  When executed correctly (e.g., sudo ./homeChecker.sh), the
-#                   script should print *exactly* two lines:
+# Expected Output:  When executed correctly the script should print exactly:
+#
 #                   /home/goneuser
 #                   1010:1010
-#                   (Note: The UID/GID `1010:1010` assumes the `goneuser` was assigned
-#                    this specific ID. Your task is to make the script produce this
-#                    *exact* output format, even if the underlying mechanism relies
-#                    on `stat` printing the actual ID left behind.)
 #
 # Hints:
 #                   * What is the standard shebang for Bash scripts? (`#!/bin...`)
@@ -57,11 +53,6 @@
 #                       output formatting, including newlines (`\n`)?
 #                     - Could you use `-exec` to run a small shell command that combines
 #                       `echo` and `stat`?
-#
-# Testing:          After making the required modifications, make the script
-#                   executable (`chmod +x homeChecker.sh`) and run it *with sudo*:
-#                   `sudo ./homeChecker.sh`
-#                   Verify the output matches the "Expected Output" exactly.
 # -----------------------------------------------------------------------------
 
 # --- Script Code ---

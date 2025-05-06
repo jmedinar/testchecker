@@ -27,11 +27,10 @@
 #                   the color codes properly. Assume the script should use the
 #                   word "student" where `$parameter1` might have been intended.
 #
-# Expected Output:  When executed correctly (e.g., ./challenge2.sh), the
-#                   script should print the following colored sentence (where
-#                   "Linux" is red):
-#                   Welcome student to the <RED_TEXT>Linux</RED_TEXT> class!
-#                   (Note: <RED_TEXT> indicates where the color should change)
+# Expected Output:  When executed correctly the script should print the following
+#                   colored sentence (where "Linux" is red):
+#
+#                   Welcome student to the Linux class!
 #
 # Hints:
 #                   * How do you assign a multi-line string to a variable?
@@ -43,11 +42,6 @@
 #                   * Pay close attention to quotes (`"` vs `'`) when using variables
 #                     and escape sequences (`\e[...]`) with `echo -e`.
 #                   * Ensure the color codes are applied correctly around the word "Linux".
-#
-# Testing:          After making the required modifications, make the script
-#                   executable (`chmod +x challenge2.sh`) and run it
-#                   (`./challenge2.sh`). Verify the output matches the
-#                   "Expected Output" above, including the color on the word "Linux".
 # -----------------------------------------------------------------------------
 
 # --- Script Code ---

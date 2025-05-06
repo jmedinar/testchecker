@@ -23,8 +23,8 @@
 #                      correct operator to check if the file specified by the `$FILE`
 #                      variable *exists*.
 #
-# Expected Output:  When executed correctly (e.g., ./challenge8.sh), the
-#                   script should print exactly:
+# Expected Output:  When executed correctly the script should print exactly:
+#
 #                   /etc/passwd exists!
 #
 # Hints:
@@ -36,11 +36,6 @@
 #                     but one is more general.
 #                   * The `-b` operator is for block devices. `/etc/passwd` is a
 #                     regular text file.
-#
-# Testing:          After making the required modification, make the script
-#                   executable (`chmod +x challenge8.sh`) and run it
-#                   (`./challenge8.sh`). Verify the output matches the
-#                   "Expected Output" above.
 # -----------------------------------------------------------------------------
 
 # --- Script Code ---
