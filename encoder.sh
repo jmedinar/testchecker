@@ -60,7 +60,10 @@ fi
 
 # --- Construct and Encode Data ---
 
+# Get the username from the environment variable set by sudo
+# Assumes the parent script (testChecker.sh) already validated SUDO_USER
 realuser=$(bash -c 'echo $SUDO_USER')
+
 # Create comma-separated string
 # Format: UUID,Username,Grade,AssignmentIdentifier,Hostname,Timestamp
 data_string="${system_uuid},${realuser},${grade},${formatted_assignment_id},${fqdn_hostname},${current_datetime}"
