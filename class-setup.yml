@@ -111,7 +111,7 @@
           - firefox
           - flatpak
           - gnome-tweaks
-          - google-chrome
+          # - google-chrome
           - vim
           - wget
           - fuse-sshfs
