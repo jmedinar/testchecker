@@ -405,8 +405,6 @@
             owner: "{{ username }}"
             group: "{{ username }}"
           loop:
-            - https://images.wallpapersden.com/image/download/linux-8k-ultra-hd-art_bWVnaGmUmZqaraWkpJRmZWdpZa1qbGtm.jpg
-            - https://images.wallpapersden.com/image/download/linux-os-bw_Z2hraG6UmZqaraWkpJRma2VlrWZnZWU.jpg
             - https://podman-desktop.io/assets/images/onboarding-selkies-3ddb7cb6ee2cf9abed002b01f63b1822.png
             - https://podman-desktop.io/assets/images/renovations-21ad5798164b1bb1beceb19646b2a762.png
             - https://middleware.io/wp-content/uploads/2022/03/Microservices-Dockerization-1-2.png
