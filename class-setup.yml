@@ -104,33 +104,33 @@
         state: present
         skip_broken: true
         name:
-          - geany
-          - geany-plugins-*
-          - geany-themes.noarch
-          - gtkd-geany-tags.noarch
-          - firefox
-          - flatpak
+          # - geany
+          # - geany-plugins-*
+          # - geany-themes.noarch
+          # - gtkd-geany-tags.noarch
+          # - firefox
+          # - flatpak
           - gnome-tweaks
           # - google-chrome
           - vim
           - wget
-          - fuse-sshfs
+          # - fuse-sshfs
           - terminator
           - git
           - ranger
-          - powerline-fonts
+          # - powerline-fonts
           - code
-          - kernel-devel
-          - ncurses-devel
-          - ncurses-libs
-          - ncurses-static
-          - ncurses
+          # - kernel-devel
+          # - ncurses-devel
+          # - ncurses-libs
+          # - ncurses-static
+          # - ncurses
           - screen
           - bash-completion
           - libguestfs-bash-completion
           - stress-ng
           - pamtester
-          - gparted
+          # - gparted
 
     - name: Setting up Configurations
       tags: configurations
