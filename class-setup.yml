@@ -273,7 +273,22 @@
 
         - name: Install Cockpit
           ansible.builtin.dnf:
-            name: cockpit*
+            name: 
+              - cockpit
+              - cockpit-composer
+              - cockpit-file-sharing
+              - cockpit-files
+              - cockpit-machines
+              - cockpit-navigator
+              - cockpit-networkmanager
+              - cockpit-ostree
+              - cockpit-packagekit
+              - cockpit-podman
+              - cockpit-selinux
+              - cockpit-storaged
+              - cockpit-system
+              - cockpit-ws
+              - cockpit-ws-selinux
             state: present
             skip_broken: true
 
