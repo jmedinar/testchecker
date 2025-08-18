@@ -7,9 +7,10 @@
 set -o pipefail
 
 # --- Configuration ---
-PLAYBOOK_URL="https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/class-setup.yml"
+CURRENT_PLAYBOOK="class-setup-v2.yml"
+PLAYBOOK_URL="https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/${CURRENT_PLAYBOOK}"
 # Tags to run from the playbook
-PLAYBOOK_TAGS="repos,extra_packages,configurations,security,cockpit,looks,background,linux_looks,final"
+# PLAYBOOK_TAGS="repos,extra_packages,configurations,security,cockpit,looks,background,linux_looks,final"
 # --- End Configuration ---
 
 # === Pre-flight Checks ===
@@ -65,7 +66,8 @@ fi
 
 # === Execution ===
 
-ansible-playbook "$TEMP_PLAYBOOK" --tags "$PLAYBOOK_TAGS"
+# ansible-playbook "$TEMP_PLAYBOOK" --tags "$PLAYBOOK_TAGS"
+ansible-playbook "$TEMP_PLAYBOOK"
 
 # === Completion ===
 
@@ -74,5 +76,5 @@ echo "The system will automatically reboot in 20 seconds..."
 echo "      press Ctrl+c if you need to cancel the reboot process"
 sleep 20
 echo "Rebooting now!"
-rm -rf /tmp/class-setup.yml
+rm -rf /tmp/${CURRENT_PLAYBOOK}
 reboot

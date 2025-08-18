@@ -120,9 +120,11 @@ if [[ -f "${report_path}" ]]; then
         _fail
     fi
 
-    # 9. Check for 'apropos uname' Output
-    _msg "Report contains 'apropos uname' output"
-    if grep -q 'uname (2)' "${report_path}"; then
+    # 9. Check for 'apropos uname' Output (excluding 'kernel')
+    _msg "Report contains 'apropos uname' output (without 'kernel')"
+    # Use a pipeline: find lines with 'uname', then exclude lines with 'kernel'
+    # grep -q returns true if *any* line matches the combined condition
+    if grep 'uname' "${report_path}" | grep -qv 'kernel'; then
         _pass
     else
         _fail

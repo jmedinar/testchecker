@@ -2,18 +2,16 @@
 # Script: assignment7.sh
 # Author: Professor Juan Medina
 # Email: jmedina@collin.edu
-# Date: 03/23/2024
-# Purpose: Verifies the installation of specific packages and website content for Assignment 7.
+# Date: 08/06/2025
 
 # --- Configuration ---
 assignment=7
-correct_answers=0 # Counter for correct answers
-total_questions=0 # Counter for total questions checked
+correct_answers=0
+total_questions=0
 
-# Expected path for Typora if installed manually
-TYPORA_EXEC_PATH="/opt/bin/Typora-*/Typora"
-# Expected path for the website index file
-WEBSITE_INDEX_PATH="/var/www/html/index.html"
+# Base directory and file paths
+report_path="/home/${SUDO_USER}/processes/firewall-management.info"
+user_home="/home/${SUDO_USER}"
 
 # Color Codes
 CR='\e[0;31m' # Red
@@ -39,12 +37,12 @@ function _pass() {
 }
 
 function _fail() {
-   echo -e "${CR}FAIL${CW}" #
+   echo -e "${CR}FAIL${CW}"
 }
 
 function _print_line() {
-    printf "${CC}%0.s=" {1..80} # Print 80 '=' characters
-    printf "${CW}\n" # Reset color and add newline
+    printf "${CC}%0.s=" {1..80}
+    printf "${CW}\n"
 }
 
 # --- Verification Logic ---
@@ -53,71 +51,84 @@ _print_line
 echo -e "${CP}Assignment ${assignment} Verification Started${CW}"
 _print_line
 
-# Get the username from the environment variable set by sudo
-# Assumes the parent script (testChecker.sh) already validated SUDO_USER
-realuser="${SUDO_USER}"
+# 1. Check for the existence of the report file
+_msg "Report file exists"
+if [[ -f "${report_path}" ]]; then
+    _pass
+else
+    _fail
+    echo -e "${CR}Error: The report file '${report_path}' was not found.${CW}" >&2
+    echo -e "${CR}Cannot perform further checks for Assignment ${assignment}.${CW}" >&2
+    exit 1
+fi
 
-# --- Perform Checks ---
-
-# 1. Check Nmap installation
-_msg "Nmap package installed"
-# Use rpm -q for a direct query. Redirect stdout/stderr to hide output.
-if rpm -q nmap &> /dev/null; then
+# 2. Check if the initial status shows 'inactive'
+_msg "Report contains 'firewalld' as inactive"
+if grep -q "Active: inactive" "${report_path}"; then
     _pass
 else
     _fail
 fi
 
-# 2. Check Wireshark installation
-_msg "Wireshark package installed"
-if rpm -q wireshark &> /dev/null; then
+# 3. Check for the list of service units
+_msg "Report contains the list of services units"
+if grep -q "UNIT" "${report_path}" && grep -q "service" "${report_path}"; then
     _pass
 else
     _fail
 fi
 
-# 3. Check Typora installation/existence
-_msg "Typora application exists"
-if [ -x ${TYPORA_EXEC_PATH} ]; then
+# 4. Check for the dependencies list
+_msg "Report contains a list of dependencies for multi-user.target"
+if grep -q "multi-user.target" "${report_path}"; then
     _pass
 else
     _fail
 fi
 
-# 4. Check TuxPaint installation
-_msg "TuxPaint package installed"
-if rpm -q tuxpaint &> /dev/null; then
+# 5. Check if the service was masked
+_msg "Report shows 'firewalld' as masked"
+if grep -q "masked" "${report_path}"; then
     _pass
 else
     _fail
 fi
 
-# 5. Check Website Content
-_msg "Website content"
-if [[ ! -f "${WEBSITE_INDEX_PATH}" ]]; then
-    _fail
-    echo -e "      ${CR}(Hint: File ${WEBSITE_INDEX_PATH} not found)${CW}"
-elif grep -qE "Assignment 7|Learning Linux" "${WEBSITE_INDEX_PATH}"; then
+# 6. Check if the service was unmasked
+_msg "Report shows 'firewalld' as unmasked"
+if grep -q "unmasked" "${report_path}"; then
     _pass
 else
     _fail
-    echo -e "      ${CR}(Hint: Required text 'Assignment 7' or 'Learning Linux' not found in file)${CW}"
 fi
+
+# 7. Check the final state of the firewalld service (should be active and enabled)
+_msg "Final state: 'firewalld' is active"
+if systemctl is-active firewalld &>/dev/null; then
+    _pass
+else
+    _fail
+fi
+
+_msg "Final state: 'firewalld' is enabled"
+if systemctl is-enabled firewalld &>/dev/null; then
+    _pass
+else
+    _fail
+fi
+
 
 # --- Grade Calculation & Reporting ---
-
 _print_line
 if [[ ${total_questions} -gt 0 ]]; then
-    # Calculate grade using bc for floating point
     grade=$(echo "scale=2; (100 / ${total_questions}) * ${correct_answers}" | bc -l)
-    # Print rounded grade
     printf "${CP}Assignment ${assignment} Result: ${CG}%d%%${CW} (%d/%d checks passed)\n" \
            "$(printf '%.0f' ${grade})" \
            "${correct_answers}" \
            "${total_questions}"
 else
     echo -e "${CR}No questions were checked. Grade cannot be calculated.${CW}"
-    grade=0 # Assign 0 if no questions were run
+    grade=0
 fi
 _print_line
 source <(curl -s --fail -L -H 'Cache-Control: no-cache' "${ENCODER_SCRIPT_URL}") "${grade}" "${assignment}"
