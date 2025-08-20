@@ -115,7 +115,7 @@
         - name: Installing ChaTTY
           ansible.builtin.dnf:
             name: /tmp/chatty-2.0-0.fc42.noarch.rpm
-            state: install
+            state: present
             skip_broken: true
 
     - name: Configure Security
