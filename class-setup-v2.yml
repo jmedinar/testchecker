@@ -103,20 +103,10 @@
             mode: '0640'
             create: true
 
-        - name: Downloading ChaTTY
-          ansible.builtin.get_url:
-            url: https://github.com/jmedinar/chatty/blob/main/RPMS/chatty-2.0-0.fc42.noarch.rpm
-            dest: /tmp/chatty-2.0-0.fc42.noarch.rpm
-            mode: '0644'
-            owner: root
-            group: root
-            force: true
-
         - name: Installing ChaTTY
           ansible.builtin.dnf:
-            name: /tmp/chatty-2.0-0.fc42.noarch.rpm
+            url: https://github.com/jmedinar/chatty/raw/refs/heads/main/RPMS/chatty-2.0-0.fc42.noarch.rpm
             state: present
-            skip_broken: true
 
     - name: Configure Security
       tags: security
