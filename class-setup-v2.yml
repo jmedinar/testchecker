@@ -107,6 +107,7 @@
           ansible.builtin.dnf:
             name: https://github.com/jmedinar/chatty/raw/refs/heads/main/RPMS/chatty-2.0-0.fc42.noarch.rpm
             state: present
+            disable_gpg_check: true
 
     - name: Configure Security
       tags: security
