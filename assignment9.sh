@@ -6,7 +6,7 @@
 # Purpose: Displays a congratulatory farewell message to students.
 
 # --- Configuration ---
-assignment=8
+assignment=9
 
 # Color Codes
 CR='\e[0;31m' # Red

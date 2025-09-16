@@ -6,7 +6,7 @@
 
 # --- Configuration ---
 
-assignment=5
+assignment=6
 correct_answers=0
 total_questions=0
 

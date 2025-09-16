@@ -8,7 +8,7 @@
 # Note: set -e and set -o pipefail are expected to be inherited from the parent script (testChecker.sh)
 
 # --- Configuration ---
-assignment=4
+assignment=5
 correct_answers=0 # Counter for correct answers
 total_questions=0 # Counter for total questions checked (dynamically calculated)
 
