@@ -100,7 +100,7 @@ else
 fi
 
 _msg "Package group '${package_group}' is installed"
-if dnf group info d-development 2>/dev/null | grep Installed | grep -q yes; then
+if dnf group info development-tools 2>/dev/null | grep Installed | grep -q yes; then
     _pass
 else
     _fail
