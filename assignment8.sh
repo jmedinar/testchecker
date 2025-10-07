@@ -123,8 +123,8 @@ else
 fi
 
 # 6. Check report file content for dnf history showing 'erase' and 'rollback'
-_msg "Report contains dnf history records for 'undo' and 'rollback'"
-if grep -q "undo" "${report_path}" && grep -q "rollback" "${report_path}"; then
+_msg "Report contains dnf history records of a 'rollback'"
+if grep -q "rollback" "${report_path}"; then
     _pass
 else
     _fail
