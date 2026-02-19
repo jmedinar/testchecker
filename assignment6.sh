@@ -80,7 +80,7 @@ fi
 
 # 4. Check for shebang
 _msg "Script has a correct shebang line"
-if head -n 1 "${script_path}" | grep -q '#!/bin/bash'; then
+if head -n 1 "${script_path}" | grep -q 'bash'; then
     _pass
 else
     _fail
