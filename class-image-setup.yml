@@ -1,7 +1,9 @@
 ---
 # Professor / image bake playbook.
 # Run while building the classroom VM (system-wide only).
-# Example: sudo ansible-playbook class-image-setup.yml
+# sudo dnf install ansible -y
+# ansible-playbook -K class-image-setup.yml
+
 - name: Preparing Class Image (System Wide)
   hosts: localhost
   connection: local
@@ -20,11 +22,6 @@
         - name: Third party
           ansible.builtin.dnf:
             name: fedora-workstation-repositories
-            state: present
-
-        - name: RPM Fusion
-          ansible.builtin.dnf:
-            name: rpmfusion-*-release
             state: present
 
     - name: Installing Extra Packages

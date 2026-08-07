@@ -21,11 +21,6 @@
             name: fedora-workstation-repositories
             state: present
 
-        - name: RPM Fusion
-          ansible.builtin.dnf:
-            name: rpmfusion-*-release
-            state: present
-
     - name: Installing Extra Packages
       tags: extra_packages
       ansible.builtin.dnf:

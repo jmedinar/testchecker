@@ -8,7 +8,7 @@
 set -o pipefail
 
 # --- Configuration ---
-CURRENT_PLAYBOOK="class-user-setup.yml"
+CURRENT_PLAYBOOK="class-setup-v2.yml"
 PLAYBOOK_URL="https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/${CURRENT_PLAYBOOK}"
 BOOTSTRAP_USERS="setup setupaccount liveuser vboxuser"
 # --- End Configuration ---
