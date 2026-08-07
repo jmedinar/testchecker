@@ -1,0 +1,258 @@
+---
+- name: Preparing Student Workstation
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  become: true
+
+  vars:
+    username: "{{ lookup('env', 'SUDO_USER') }}"
+    rpmfusion: "https://download1.rpmfusion.org"
+    repo_path: "https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/"
+
+  tasks:
+
+    - name: Enabling extra repositories
+      tags: repos
+      block:
+
+        - name: Third party
+          ansible.builtin.dnf:
+            name: fedora-workstation-repositories
+            state: present
+
+        - name: RPM Fusion
+          ansible.builtin.dnf:
+            name: rpmfusion-*-release
+            state: present
+
+    - name: Installing Extra Packages
+      tags: extra_packages
+      ansible.builtin.dnf:
+        state: present
+        skip_broken: true
+        name:
+          - gnome-tweaks
+          - vim
+          - wget
+          - terminator
+          - git
+          - ranger
+          - bash-completion
+          - stress-ng
+          - pamtester
+          - gparted
+
+    - name: Setting up Configurations
+      tags: configurations
+      block:
+
+        - name: Configure vimrc
+          ansible.builtin.copy:
+            dest: /etc/vimrc.local
+            mode: "0644"
+            owner: "root"
+            group: "root"
+            content: |
+              syntax on
+              set nocompatible
+              set autoindent
+              set smartindent
+              set nowrap
+              set expandtab
+              set tabstop=3
+              set softtabstop=3
+              set shiftwidth=3
+              set number
+              set cursorline
+              set cursorcolumn
+              set showmatch
+              set scrolloff=5
+              set sidescrolloff=5
+              set wildmenu
+              set wildmode=longest:full
+              set clipboard=unnamedplus
+              set mouse=a
+              set background=dark
+              set laststatus=2
+              set showcmd
+              set title
+              set paste
+              set ignorecase
+              set smartcase
+              set incsearch
+              set hlsearch
+              set lazyredraw
+              set ttyfast
+              filetype plugin indent on
+              let mapleader = ","
+            force: false
+
+        - name: Setup Testchecker Tool
+          ansible.builtin.get_url:
+            url: "{{ repo_path }}/testchecker.sh"
+            dest: /usr/bin/testchecker
+            mode: '0755'
+            owner: root
+            group: root
+
+        - name: Setup Alias for Testchecker Tool
+          ansible.builtin.lineinfile:
+            path: "/home/{{ username }}/.bashrc"
+            line: 'alias testchecker="sudo testchecker"'
+            mode: '0640'
+            create: true
+
+        - name: Installing ChaTTY
+          ansible.builtin.dnf:
+            name: https://github.com/jmedinar/chatty/raw/refs/heads/main/RPMS/chatty-latest.rpm
+            state: present
+            disable_gpg_check: true
+
+    - name: Configure Security
+      tags: security
+      block:
+
+        - name: Configure sudo without a password for user {{ username }}
+          ansible.builtin.copy:
+            dest: /etc/sudoers.d/{{ username }}
+            content: "{{ username }} ALL=(ALL) NOPASSWD: ALL"
+            mode: '0440'
+            owner: root
+            group: root
+
+        - name: Append custom Bash prompt configuration to /etc/bashrc
+          ansible.builtin.blockinfile:
+            path: /etc/bashrc
+            block: |
+              rc="\[\e[31m\]"
+              gc="\[\e[32m\]"
+              rs="\[\e[0m\]"
+              if [ $EUID -eq 0 ]
+              then
+                  export PS1="${rc}\u@\h \w${rs}# "
+              else
+                  export PS1="${gc}\u@\h \w${rs}\$ "
+              fi
+            marker: "# {mark} ANSIBLE MANAGED BLOCK - BASH PROMPT"
+            owner: root
+            group: root
+            mode: '0644'
+
+        - name: Set the hostname on Fedora
+          ansible.builtin.hostname:
+            name: "fedora"
+
+        - name: Enable SSH Service
+          ansible.builtin.service:
+            name: sshd
+            state: started
+            enabled: true
+
+    - name: Configure Look & Feel
+      tags: looks
+      block:
+
+        - name: Prepare look & feel folders
+          ansible.builtin.file:
+            path: "{{ item }}"
+            state: directory
+            mode: '0755'
+            owner: "{{ username }}"
+            group: "{{ username }}"
+          loop:
+            - '/home/{{ username }}/.icons'
+            - '/home/{{ username }}/.themes'
+
+        - name: Set terminator configuration folder
+          ansible.builtin.file:
+            path: /etc/xdg/terminator
+            state: directory
+            mode: "0755"
+            owner: root
+            group: root
+
+        - name: Download Terminator Configuration
+          ansible.builtin.get_url:
+            url: https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/config
+            dest: "/etc/xdg/terminator/config"
+            mode: '0666'
+            owner: root
+            group: root
+
+        - name: Set Terminator custom-keybindings
+          become: true
+          become_user: "{{ username }}"
+          vars:
+            custom0: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/
+          ansible.builtin.shell: |
+            gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['{{ custom0 }}']"
+            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{{ custom0 }} name 'Terminator'
+            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{{ custom0 }} command 'terminator'
+            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{{ custom0 }} binding '<Super>t'
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+          changed_when: false
+
+        - name: Set keybindings
+          become: true
+          become_user: "{{ username }}"
+          ansible.builtin.shell: |
+            gsettings set org.gnome.settings-daemon.plugins.media-keys home "['<Super>e']"
+            gsettings set org.gnome.settings-daemon.plugins.media-keys www "['<Super>w']"
+            gsettings set org.gnome.settings-daemon.plugins.media-keys control-center "['<Super>s']"
+            gsettings set org.gnome.settings-daemon.plugins.media-keys search "['<Super>f']"
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+          changed_when: false
+
+        - name: Set Window Icons Preferences
+          become: true
+          become_user: "{{ username }}"
+          ansible.builtin.shell: |
+            gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close'
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+          changed_when: false
+
+        - name: Set Idle Delay Preferences
+          become: true
+          become_user: "{{ username }}"
+          ansible.builtin.shell: |
+            gsettings set org.gnome.desktop.session idle-delay 0
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+          changed_when: false
+
+    - name: Configure looks and Icons
+      tags: background
+      become: true
+      become_user: "{{ username }}"
+      block:
+
+        - name: Set Launcher Icons for Linux
+          become: true
+          become_user: "{{ username }}"
+          vars:
+            a1: org.mozilla.firefox.desktop
+            a2: terminator.desktop
+            a3: ranger.desktop
+            a4: geany.desktop
+            a5: org.gnome.Nautilus.desktop
+          ansible.builtin.shell: |
+            gsettings set org.gnome.shell favorite-apps "['{{ a1 }}','{{ a2 }}','{{ a3 }}','{{ a4 }}','{{ a5 }}']"
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+          changed_when: false
+
+    - name: Final Touches
+      become: true
+      tags: final
+      block:
+
+        - name: Upgrade System
+          ansible.builtin.dnf:
+            name: '*'
+            state: latest
+            security: true
+            update_only: true

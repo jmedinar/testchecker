@@ -1,0 +1,143 @@
+---
+# Student account playbook.
+# Run after the student has created their own user, logged in as that user,
+# and can sudo. Invoked by init.sh.
+- name: Preparing Student Account
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  become: true
+
+  vars:
+    username: "{{ lookup('env', 'SUDO_USER') }}"
+    user_uid: "{{ lookup('pipe', 'id -u ' ~ username) | trim }}"
+    bootstrap_users:
+      - setup
+      - setupaccount
+      - liveuser
+      - vboxuser
+
+  tasks:
+
+    - name: Validate student account context
+      tags: always
+      block:
+
+        - name: Ensure SUDO_USER is set
+          ansible.builtin.assert:
+            that:
+              - username | length > 0
+            fail_msg: "SUDO_USER is empty. Run this playbook with sudo from your student account."
+
+        - name: Reject bootstrap / reserved accounts
+          ansible.builtin.assert:
+            that:
+              - username not in bootstrap_users
+            fail_msg: >-
+              Do not run account setup as '{{ username }}'.
+              Create your own user, log in as that user, then run sudo init.sh.
+
+    - name: Configure Security
+      tags: security
+      block:
+
+        - name: Configure sudo without a password for user {{ username }}
+          ansible.builtin.copy:
+            dest: /etc/sudoers.d/{{ username }}
+            content: "{{ username }} ALL=(ALL) NOPASSWD: ALL"
+            mode: '0440'
+            owner: root
+            group: root
+
+    - name: Prepare user home folders
+      tags: looks
+      block:
+
+        - name: Prepare look & feel folders
+          ansible.builtin.file:
+            path: "{{ item }}"
+            state: directory
+            mode: '0755'
+            owner: "{{ username }}"
+            group: "{{ username }}"
+          loop:
+            - '/home/{{ username }}/.icons'
+            - '/home/{{ username }}/.themes'
+
+        - name: Ensure Testchecker alias in user bashrc
+          ansible.builtin.lineinfile:
+            path: "/home/{{ username }}/.bashrc"
+            line: 'alias testchecker="sudo testchecker"'
+            mode: '0640'
+            create: true
+            owner: "{{ username }}"
+            group: "{{ username }}"
+
+    - name: Configure Look & Feel
+      tags: looks
+      block:
+
+        - name: Set Terminator custom-keybindings
+          become: true
+          become_user: "{{ username }}"
+          vars:
+            custom0: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/
+          ansible.builtin.shell: |
+            gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['{{ custom0 }}']"
+            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{{ custom0 }} name 'Terminator'
+            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{{ custom0 }} command 'terminator'
+            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{{ custom0 }} binding '<Super>t'
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ user_uid }}/bus"
+          changed_when: false
+
+        - name: Set keybindings
+          become: true
+          become_user: "{{ username }}"
+          ansible.builtin.shell: |
+            gsettings set org.gnome.settings-daemon.plugins.media-keys home "['<Super>e']"
+            gsettings set org.gnome.settings-daemon.plugins.media-keys www "['<Super>w']"
+            gsettings set org.gnome.settings-daemon.plugins.media-keys control-center "['<Super>s']"
+            gsettings set org.gnome.settings-daemon.plugins.media-keys search "['<Super>f']"
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ user_uid }}/bus"
+          changed_when: false
+
+        - name: Set Window Icons Preferences
+          become: true
+          become_user: "{{ username }}"
+          ansible.builtin.shell: |
+            gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close'
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ user_uid }}/bus"
+          changed_when: false
+
+        - name: Set Idle Delay Preferences
+          become: true
+          become_user: "{{ username }}"
+          ansible.builtin.shell: |
+            gsettings set org.gnome.desktop.session idle-delay 0
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ user_uid }}/bus"
+          changed_when: false
+
+    - name: Configure looks and Icons
+      tags: background
+      become: true
+      become_user: "{{ username }}"
+      block:
+
+        - name: Set Launcher Icons for Linux
+          become: true
+          become_user: "{{ username }}"
+          vars:
+            a1: org.mozilla.firefox.desktop
+            a2: terminator.desktop
+            a3: ranger.desktop
+            a4: geany.desktop
+            a5: org.gnome.Nautilus.desktop
+          ansible.builtin.shell: |
+            gsettings set org.gnome.shell favorite-apps "['{{ a1 }}','{{ a2 }}','{{ a3 }}','{{ a4 }}','{{ a5 }}']"
+          environment:
+            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ user_uid }}/bus"
+          changed_when: false

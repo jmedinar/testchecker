@@ -1,0 +1,182 @@
+---
+# Professor / image bake playbook.
+# Run while building the classroom VM (system-wide only).
+# Example: sudo ansible-playbook class-image-setup.yml
+- name: Preparing Class Image (System Wide)
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  become: true
+
+  vars:
+    repo_path: "https://raw.githubusercontent.com/jmedinar/testchecker/refs/heads/main/"
+
+  tasks:
+
+    - name: Enabling extra repositories
+      tags: repos
+      block:
+
+        - name: Third party
+          ansible.builtin.dnf:
+            name: fedora-workstation-repositories
+            state: present
+
+        - name: RPM Fusion
+          ansible.builtin.dnf:
+            name: rpmfusion-*-release
+            state: present
+
+    - name: Installing Extra Packages
+      tags: extra_packages
+      ansible.builtin.dnf:
+        state: present
+        skip_broken: true
+        name:
+          - gnome-tweaks
+          - vim
+          - wget
+          - terminator
+          - git
+          - ranger
+          - bash-completion
+          - stress-ng
+          - pamtester
+          - gparted
+          - ansible
+          - figlet
+          - lolcat
+          - curl
+
+    - name: Setting up System Configurations
+      tags: configurations
+      block:
+
+        - name: Configure vimrc
+          ansible.builtin.copy:
+            dest: /etc/vimrc.local
+            mode: "0644"
+            owner: "root"
+            group: "root"
+            content: |
+              syntax on
+              set nocompatible
+              set autoindent
+              set smartindent
+              set nowrap
+              set expandtab
+              set tabstop=3
+              set softtabstop=3
+              set shiftwidth=3
+              set number
+              set cursorline
+              set cursorcolumn
+              set showmatch
+              set scrolloff=5
+              set sidescrolloff=5
+              set wildmenu
+              set wildmode=longest:full
+              set clipboard=unnamedplus
+              set mouse=a
+              set background=dark
+              set laststatus=2
+              set showcmd
+              set title
+              set paste
+              set ignorecase
+              set smartcase
+              set incsearch
+              set hlsearch
+              set lazyredraw
+              set ttyfast
+              filetype plugin indent on
+              let mapleader = ","
+            force: false
+
+        - name: Setup Testchecker Tool
+          ansible.builtin.get_url:
+            url: "{{ repo_path }}/testchecker.sh"
+            dest: /usr/bin/testchecker
+            mode: '0755'
+            owner: root
+            group: root
+
+        - name: Setup global Testchecker alias
+          ansible.builtin.copy:
+            dest: /etc/profile.d/testchecker.sh
+            mode: "0644"
+            owner: root
+            group: root
+            content: |
+              # Managed by class-image-setup.yml
+              alias testchecker="sudo testchecker"
+
+        - name: Installing ChaTTY
+          ansible.builtin.dnf:
+            name: https://github.com/jmedinar/chatty/raw/refs/heads/main/RPMS/chatty-latest.rpm
+            state: present
+            disable_gpg_check: true
+
+    - name: Configure Security and Services
+      tags: security
+      block:
+
+        - name: Append custom Bash prompt configuration to /etc/bashrc
+          ansible.builtin.blockinfile:
+            path: /etc/bashrc
+            block: |
+              rc="\[\e[31m\]"
+              gc="\[\e[32m\]"
+              rs="\[\e[0m\]"
+              if [ $EUID -eq 0 ]
+              then
+                  export PS1="${rc}\u@\h \w${rs}# "
+              else
+                  export PS1="${gc}\u@\h \w${rs}\$ "
+              fi
+            marker: "# {mark} ANSIBLE MANAGED BLOCK - BASH PROMPT"
+            owner: root
+            group: root
+            mode: '0644'
+
+        - name: Set the hostname on Fedora
+          ansible.builtin.hostname:
+            name: "fedora"
+
+        - name: Enable SSH Service
+          ansible.builtin.service:
+            name: sshd
+            state: started
+            enabled: true
+
+    - name: Configure System Look & Feel Defaults
+      tags: looks
+      block:
+
+        - name: Set terminator configuration folder
+          ansible.builtin.file:
+            path: /etc/xdg/terminator
+            state: directory
+            mode: "0755"
+            owner: root
+            group: root
+
+        - name: Download Terminator Configuration
+          ansible.builtin.get_url:
+            url: "{{ repo_path }}/config"
+            dest: "/etc/xdg/terminator/config"
+            mode: '0666'
+            owner: root
+            group: root
+
+    - name: Final Touches
+      become: true
+      tags: final
+      block:
+
+        - name: Upgrade System
+          ansible.builtin.dnf:
+            name: '*'
+            state: latest
+            security: true
+            update_only: true
