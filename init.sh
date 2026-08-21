@@ -82,7 +82,7 @@ fi
 
 # === Execution ===
 
-ansible-playbook "$TEMP_PLAYBOOK"
+sudo ansible-playbook "$TEMP_PLAYBOOK"
 PLAYBOOK_RC=$?
 rm -f "$TEMP_PLAYBOOK"
 

@@ -32,11 +32,7 @@
           - wget
           - terminator
           - git
-          - ranger
           - bash-completion
-          - stress-ng
-          - pamtester
-          - gparted
 
     - name: Setting up Configurations
       tags: configurations
@@ -148,16 +144,16 @@
       tags: looks
       block:
 
-        - name: Prepare look & feel folders
-          ansible.builtin.file:
-            path: "{{ item }}"
-            state: directory
-            mode: '0755'
-            owner: "{{ username }}"
-            group: "{{ username }}"
-          loop:
-            - '/home/{{ username }}/.icons'
-            - '/home/{{ username }}/.themes'
+        # - name: Prepare look & feel folders
+        #   ansible.builtin.file:
+        #     path: "{{ item }}"
+        #     state: directory
+        #     mode: '0755'
+        #     owner: "{{ username }}"
+        #     group: "{{ username }}"
+        #   loop:
+        #     - '/home/{{ username }}/.icons'
+        #     - '/home/{{ username }}/.themes'
 
         - name: Set terminator configuration folder
           ansible.builtin.file:
@@ -175,70 +171,70 @@
             owner: root
             group: root
 
-        - name: Set Terminator custom-keybindings
-          become: true
-          become_user: "{{ username }}"
-          vars:
-            custom0: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/
-          ansible.builtin.shell: |
-            gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['{{ custom0 }}']"
-            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{{ custom0 }} name 'Terminator'
-            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{{ custom0 }} command 'terminator'
-            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{{ custom0 }} binding '<Super>t'
-          environment:
-            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
-          changed_when: false
+        # - name: Set Terminator custom-keybindings
+        #   become: true
+        #   become_user: "{{ username }}"
+        #   vars:
+        #     custom0: /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/
+        #   ansible.builtin.shell: |
+        #     gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['{{ custom0 }}']"
+        #     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{{ custom0 }} name 'Terminator'
+        #     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{{ custom0 }} command 'terminator'
+        #     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{{ custom0 }} binding '<Super>t'
+        #   environment:
+        #     DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+        #   changed_when: false
 
-        - name: Set keybindings
-          become: true
-          become_user: "{{ username }}"
-          ansible.builtin.shell: |
-            gsettings set org.gnome.settings-daemon.plugins.media-keys home "['<Super>e']"
-            gsettings set org.gnome.settings-daemon.plugins.media-keys www "['<Super>w']"
-            gsettings set org.gnome.settings-daemon.plugins.media-keys control-center "['<Super>s']"
-            gsettings set org.gnome.settings-daemon.plugins.media-keys search "['<Super>f']"
-          environment:
-            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
-          changed_when: false
+        # - name: Set keybindings
+        #   become: true
+        #   become_user: "{{ username }}"
+        #   ansible.builtin.shell: |
+        #     gsettings set org.gnome.settings-daemon.plugins.media-keys home "['<Super>e']"
+        #     gsettings set org.gnome.settings-daemon.plugins.media-keys www "['<Super>w']"
+        #     gsettings set org.gnome.settings-daemon.plugins.media-keys control-center "['<Super>s']"
+        #     gsettings set org.gnome.settings-daemon.plugins.media-keys search "['<Super>f']"
+        #   environment:
+        #     DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+        #   changed_when: false
 
-        - name: Set Window Icons Preferences
-          become: true
-          become_user: "{{ username }}"
-          ansible.builtin.shell: |
-            gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close'
-          environment:
-            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
-          changed_when: false
+        # - name: Set Window Icons Preferences
+        #   become: true
+        #   become_user: "{{ username }}"
+        #   ansible.builtin.shell: |
+        #     gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close'
+        #   environment:
+        #     DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+        #   changed_when: false
 
-        - name: Set Idle Delay Preferences
-          become: true
-          become_user: "{{ username }}"
-          ansible.builtin.shell: |
-            gsettings set org.gnome.desktop.session idle-delay 0
-          environment:
-            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
-          changed_when: false
+        # - name: Set Idle Delay Preferences
+        #   become: true
+        #   become_user: "{{ username }}"
+        #   ansible.builtin.shell: |
+        #     gsettings set org.gnome.desktop.session idle-delay 0
+        #   environment:
+        #     DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+        #   changed_when: false
 
-    - name: Configure looks and Icons
-      tags: background
-      become: true
-      become_user: "{{ username }}"
-      block:
+    # - name: Configure looks and Icons
+    #   tags: background
+    #   become: true
+    #   become_user: "{{ username }}"
+    #   block:
 
-        - name: Set Launcher Icons for Linux
-          become: true
-          become_user: "{{ username }}"
-          vars:
-            a1: org.mozilla.firefox.desktop
-            a2: terminator.desktop
-            a3: ranger.desktop
-            a4: geany.desktop
-            a5: org.gnome.Nautilus.desktop
-          ansible.builtin.shell: |
-            gsettings set org.gnome.shell favorite-apps "['{{ a1 }}','{{ a2 }}','{{ a3 }}','{{ a4 }}','{{ a5 }}']"
-          environment:
-            DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
-          changed_when: false
+    #     - name: Set Launcher Icons for Linux
+    #       become: true
+    #       become_user: "{{ username }}"
+    #       vars:
+    #         a1: org.mozilla.firefox.desktop
+    #         a2: terminator.desktop
+    #         a3: ranger.desktop
+    #         a4: geany.desktop
+    #         a5: org.gnome.Nautilus.desktop
+    #       ansible.builtin.shell: |
+    #         gsettings set org.gnome.shell favorite-apps "['{{ a1 }}','{{ a2 }}','{{ a3 }}','{{ a4 }}','{{ a5 }}']"
+    #       environment:
+    #         DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+    #       changed_when: false
 
     - name: Final Touches
       become: true
